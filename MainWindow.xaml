@@ -1,0 +1,259 @@
+﻿<Window x:Class="Simplist3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Simplist3"
+        Title="Simplist3" Height="660" Width="380"
+        WindowStartupLocation="Manual" Topmost="True" AllowsTransparency="True"
+        ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="True" Background="Transparent"
+        Loaded="Window_Loaded" Activated="Window_Activated" Deactivated="Window_Deactivated">
+    <Grid x:Name="gridRoot" Margin="10" Background="White">
+        <Grid.Effect>
+            <DropShadowEffect x:Name="grideffectShadow" BlurRadius="10" ShadowDepth="1" Direction="270" Color="Black" Opacity="0.6"/>
+        </Grid.Effect>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Tab -->
+        
+        <Grid x:Name="gridNormalTab" Grid.Row="1" Background="{DynamicResource PrimaryBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <local:TabButton x:Name="tabSeason" Grid.Column="0" Width="90" Height="40" Type="season" Source="Resources/season.png" Response="TabButton_Response" ViewMode="Focused"/>
+            <local:TabButton x:Name="tabArchive" Grid.Column="1" Width="90" Height="40" Type="archive" Source="Resources/archive.png" Response="TabButton_Response"/>
+            <local:TabButton x:Name="tabNoti" Grid.Column="2" Width="90" Height="40" Type="noti" Source="Resources/notion.png" Response="TabButton_Response"/>
+            <local:TabButton x:Name="tabSetting" Grid.Column="3" Width="90" Height="40" Type="setting" Source="Resources/setting.png" Response="TabButton_Response"/>
+        </Grid>
+        
+        <!-- Content Area -->
+
+        <local:AniScrollViewer x:Name="scrollSeason" Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <local:Container x:Name="containWeek0" Title="일요일" Response="Container_Response"/>
+                <local:Container x:Name="containWeek1" Title="월요일" Response="Container_Response"/>
+                <local:Container x:Name="containWeek2" Title="화요일" Response="Container_Response"/>
+                <local:Container x:Name="containWeek3" Title="수요일" Response="Container_Response"/>
+                <local:Container x:Name="containWeek4" Title="목요일" Response="Container_Response"/>
+                <local:Container x:Name="containWeek5" Title="금요일" Response="Container_Response"/>
+                <local:Container x:Name="containWeek6" Title="토요일" Response="Container_Response"/>
+            </StackPanel>
+        </local:AniScrollViewer>
+        
+        <local:AniScrollViewer x:Name="scrollArchive" Grid.Row="2" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False">
+            <local:Container x:Name="containArchive" ContainerType="Archive" Response="Container_Response"/>
+        </local:AniScrollViewer>
+
+        <local:AniScrollViewer x:Name="scrollNotice" Grid.Row="2" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False">
+            <StackPanel Height="500" Background="WhiteSmoke"/>
+        </local:AniScrollViewer>
+        
+        <Grid x:Name="gridSetting" Grid.Row="2" Background="Transparent" Opacity="0" IsHitTestVisible="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            
+            <Grid>
+                <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
+                    <TextBlock Text="Simplist" FontSize="18"/>
+                    <TextBlock Text="3" Margin="5,0,0,0" FontSize="18" Foreground="{DynamicResource PrimaryBrush}"/>
+                </StackPanel>
+                
+                <TextBlock x:Name="textVersion" HorizontalAlignment="Right" FontSize="16" Margin="0,0,15,0"/>
+            </Grid>
+
+            <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10"/>
+            <CheckBox x:Name="checkNoti" Content="자막 업로드 알림" Grid.Row="2" Margin="10"/>
+        </Grid>
+
+        <!-- Add + Modify -->
+        
+        <Grid x:Name="gridAddModify" Grid.Row="1" Grid.RowSpan="2" Background="#AA000000" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
+            <Grid Width="40" Background="Transparent" HorizontalAlignment="Right"  MouseDown="gridAddModify_MouseDown"/>
+            <StackPanel x:Name="stackAddModify" Background="White" Width="320" Margin="-320,0,0,0" HorizontalAlignment="Left">
+                <Grid Height="50" Background="{DynamicResource DarkPrimaryBrush}">
+                    <TextBlock x:Name="textAddScript" Text="" Margin="15,0,0,0"
+                               Foreground="White" FontSize="16"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <local:ImageButton x:Name="buttonDisable" HorizontalAlignment="Right" Size="50" Source="Resources/disable.png"
+                               Type="disable" Response="ImageButton_Response" EnterLeave="button_EnterLeave"/>
+                        <local:ImageButton x:Name="buttonDelete" HorizontalAlignment="Right" Source="Resources/delete.png" Size="50"
+                               Type="delete" Response="ImageButton_Response" EnterLeave="button_EnterLeave"/>
+                        <local:ImageButton x:Name="buttonSave" HorizontalAlignment="Right" Size="50" Source="Resources/ok.png" 
+                               Type="save" Response="ImageButton_Response" EnterLeave="button_EnterLeave"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Height="540">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Image Grid.Row="0" Source="Resources/title.png" Width="20" Margin="5,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="제목" FontSize="16" Margin="5,0,0,0"/>
+                    <TextBox x:Name="textboxTitle" Grid.Row="0" Grid.Column="2" Margin="10" ContextMenu="{x:Null}" TextChanged="textboxTitle_TextChanged"/>
+                    <TextBlock x:Name="textCaution" Grid.Row="1" Grid.ColumnSpan="3" Text="" FontSize="16" Margin="10" TextWrapping="Wrap"/>
+
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
+                        <Grid x:Name="gridModifyExtra" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Grid.Row="0" Source="Resources/time.png" Width="20" Margin="5,0,0,0"/>
+                            <Image Grid.Row="1" Source="Resources/synctitle.png" Width="20" Margin="5,0,0,0"/>
+                            <Image Grid.Row="2" Source="Resources/search.png" Width="20" Margin="5,0,0,0"/>
+
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="시간" FontSize="16" Margin="5,0,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="원제" FontSize="16" Margin="5,0,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="검색어" FontSize="16" Margin="5,0,0,0"/>
+
+                            <Grid Grid.Row="0" Grid.Column="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="5"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <ComboBox x:Name="comboboxWeekday" Margin="10" SelectedIndex="0" >
+                                    <ComboBoxItem Content="일"/>
+                                    <ComboBoxItem Content="월"/>
+                                    <ComboBoxItem Content="화"/>
+                                    <ComboBoxItem Content="수"/>
+                                    <ComboBoxItem Content="목"/>
+                                    <ComboBoxItem Content="금"/>
+                                    <ComboBoxItem Content="토"/>
+                                </ComboBox>
+
+                                <TextBox x:Name="textboxHour" Grid.Column="1" Margin="10" ContextMenu="{x:Null}"/>
+                                <TextBlock Grid.Column="2" Text=":" FontSize="16"/>
+                                <TextBox x:Name="textboxMinute" Grid.Column="3" Margin="10" ContextMenu="{x:Null}"/>
+                            </Grid>
+                            <ComboBox x:Name="comboboxSync" Grid.Row="1" Grid.Column="2" Margin="10" SelectedIndex="0"/>
+                            <TextBlock x:Name="textSync" Grid.Row="1" Grid.Column="2" Text="" FontSize="16" Margin="10" Visibility="Collapsed"/>
+                            <TextBox x:Name="textboxSearch" Grid.Row="2" Grid.Column="2" Margin="10" ContextMenu="{x:Null}"/>
+                        </Grid>
+
+                        <Grid x:Name="gridEpisode" Height="50">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Source="Resources/bookmark.png" Width="20" Margin="5,0,0,0"/>
+                            <TextBlock Grid.Column="1" Text="북마크" FontSize="16" Margin="5,0,0,0"/>
+                            <TextBox x:Name="textboxEpisode" Grid.Column="2" Margin="10" ContextMenu="{x:Null}"/>
+                        </Grid>
+
+                        <Grid x:Name="gridAniTable" Height="340">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <StackPanel x:Name="stackTableWeekday" Orientation="Horizontal" Background="{DynamicResource DarkPrimaryBrush}">
+                                <local:TabButton Size="45" Text="Sun" Type="0" Response="Weekday_Click" ViewMode="Focused"/>
+                                <local:TabButton Size="45" Text="Mon" Type="1" Response="Weekday_Click"/>
+                                <local:TabButton Size="45" Text="Tue" Type="2" Response="Weekday_Click"/>
+                                <local:TabButton Size="45" Text="Wed" Type="3" Response="Weekday_Click"/>
+                                <local:TabButton Size="45" Text="Thu" Type="4" Response="Weekday_Click"/>
+                                <local:TabButton Size="45" Text="Fri" Type="5" Response="Weekday_Click"/>
+                                <local:TabButton Size="45" Text="Sat" Type="6" Response="Weekday_Click"/>
+                            </StackPanel>
+                            
+                            <local:AniScrollViewer x:Name="scrollAnitable" Grid.Row="1">
+                                <StackPanel x:Name="stackAnitable">
+                                </StackPanel>
+                            </local:AniScrollViewer>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Download -->
+        
+        <Grid x:Name="gridDown" Grid.Row="1" Margin="0,40,0,0" Grid.RowSpan="2" Background="WhiteSmoke" Opacity="0" IsHitTestVisible="False">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+
+        <Grid x:Name="gridDownTab" Margin="0,-40,0,0" Height="40" VerticalAlignment="Top" Grid.Row="1" Background="{DynamicResource DarkPrimaryBrush}">
+            <local:ImageButton x:Name="buttonBack" Size="40" InnerMargin="5" Source="Resources/left.png"
+                               Type="back" Response="ImageButton_Response" Margin="1,0,0,0"/>
+
+            <TextBlock x:Name="textNewTitle" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+                       TextOptions.TextFormattingMode="Display" HorizontalAlignment="Center" Margin="40,0"/>
+
+            <TextBlock x:Name="textOldNewTitle" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+                       TextOptions.TextFormattingMode="Display" HorizontalAlignment="Center" Opacity="0" Margin="40,0"/>
+        </Grid>
+
+        <!-- Titlebar -->
+        
+        <Grid Grid.Row="0" Background="{DynamicResource PrimaryBrush}" MouseDown="Statusbar_MouseDown">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="textTitle" Text="Season" Grid.Column="1" FontSize="18" Foreground="White"
+                       TextOptions.TextFormattingMode="Display"/>
+            <TextBlock x:Name="textTitleOld" Text="" Grid.Column="1" FontSize="18" Foreground="White"
+                       TextOptions.TextFormattingMode="Display" Opacity="0"/>
+
+            <Grid x:Name="gridNotice" Grid.ColumnSpan="5" Background="{DynamicResource DarkPrimaryBrush}" Opacity="0">
+                <Grid x:Name="gridAlert" Background="Crimson"/>
+                <TextBlock x:Name="textNotice" Text="" Grid.Column="1" FontSize="14" Foreground="White" FontWeight="Bold"
+                       TextOptions.TextFormattingMode="Display"
+                       Margin="50,0,100,0"/>
+            </Grid>
+
+            <local:ImageButton x:Name="buttonAdd" Size="50" Source="Resources/plus.png"
+                               Type="add" Response="ImageButton_Response"/>
+            
+            <local:ImageButton x:Name="buttonShot" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/screenshot.png" Size="50"
+                               Type="shot" InnerMargin="14" Response="ImageButton_Response" />
+            <local:ImageButton x:Name="buttonSort" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/season.png" Size="50"
+                               Type="sort" InnerMargin="14" Response="ImageButton_Response" ViewMode="Hidden"/>
+            <local:ImageButton x:Name="buttonRefresh" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/refresh.png" Size="50"
+                               Type="refresh" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
+            
+            <local:ImageButton Grid.Column="4" HorizontalAlignment="Right" Size="50" Source="Resources/close.png" 
+                               Type="close" Response="ImageButton_Response"/>
+
+            <local:TabButton x:Name="tabTorrent" Grid.Column="2" Size="50" Height="40" Source="Resources/download.png" ViewMode="Hidden"/>
+            <local:TabButton x:Name="tabSubtitle" Grid.Column="3" Size="50" Height="40" Source="Resources/subtitle.png" ViewMode="Hidden"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Simplist3.ListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Simplist3" Margin="0,0,15,0"
+             mc:Ignorable="d" Height="40" d:DesignWidth="360" Opacity="0">
+    
+    <Grid Background="White" PreviewMouseDown="GridMouseDown">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="85"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.ColumnSpan="3" ClipToBounds="True" Width="560">
+            <Ellipse x:Name="circle" Margin="2" Fill="WhiteSmoke" Opacity="0" Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <TextBlock x:Name="textTime" Text="00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="Gray"/>
+        <TextBlock x:Name="textTitle" Text="Very Long Title" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,0"/>
+
+        <Button x:Name="buttonModify" Background="Transparent" Grid.Column="0" Click="Button_Click2"/>
+        <Button x:Name="buttonMain" Background="Transparent" Grid.Column="1" Click="Button_Click"/>
+        
+        <Grid x:Name="gridEpisodeBox" Grid.Column="2" Margin="0,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+            </Grid.ColumnDefinitions>
+
+            <local:ImageButton Size="20" Grid.Column="0" Source="Resources/minus_black.png" InnerMargin="1" VerticalAlignment="Center" Type="-1" Response="ImageButton_Response"/>
+            <TextBlock x:Name="textEpisode" Grid.Column="1" Text="00" FontSize="18" VerticalAlignment="Center" FontFamily="Century Gothic" TextAlignment="Center"/>
+            <local:ImageButton Size="20" Grid.Column="2" Source="Resources/plus_black.png" InnerMargin="1" VerticalAlignment="Center" Type="1" Response="ImageButton_Response"/>
+        </Grid>
+        
+        <Rectangle x:Name="rect" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,0,0" Height="1" VerticalAlignment="Bottom" Fill="{DynamicResource PrimaryBrush}" Opacity="0.3"/>
+    </Grid>
+</UserControl>
