@@ -8,6 +8,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 
 namespace Simplist3 {
@@ -169,6 +172,39 @@ namespace Simplist3 {
 				int v = Convert.ToInt32(c.ToString());
 			} catch { return false; }
 			return true;
+		}
+
+		public static void SaveScreenShot(Panel uie, int margin) {
+			RenderTargetBitmap renderTarget = new RenderTargetBitmap(
+				(int)uie.ActualWidth + margin, (int)uie.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+
+			DrawingVisual dv = new DrawingVisual();
+			using (DrawingContext dc = dv.RenderOpen()) {
+				VisualBrush vb = new VisualBrush(uie);
+
+				dc.DrawRectangle(vb, null, new Rect(new Point(), new Size((int)uie.ActualWidth + margin, (int)uie.ActualHeight)));
+			}
+			renderTarget.Render(dv);
+
+
+			PngBitmapEncoder encoder = new PngBitmapEncoder();
+			BitmapFrame outputFrame = BitmapFrame.Create(renderTarget);
+			encoder.Frames.Add(outputFrame);
+
+			string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			string path = "";
+			for (int i = 1; i <= 1000000; i++) {
+				if (!File.Exists(System.IO.Path.Combine(desktop, string.Format("Simplist{0}.png", i)))) {
+					path = System.IO.Path.Combine(desktop, string.Format("Simplist{0}.png", i));
+					break;
+				}
+			}
+
+			if (path == "") { return; }
+
+			using (var file = File.OpenWrite(path)) {
+				encoder.Save(file);
+			}
 		}
 	}
 }

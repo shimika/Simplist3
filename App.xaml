@@ -447,7 +447,7 @@
         </Style>
         
         <ControlTemplate x:Key="ScrollViewerControlTemplate" TargetType="{x:Type ScrollViewer}">
-            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}" FocusVisualStyle="{x:Null}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>

@@ -95,6 +95,11 @@ namespace Simplist3 {
 					UpdateNotification();
 					break;
 
+				case "shot":
+					Function.SaveScreenShot(stackSeason, 0);
+					Notice("바탕화면에 캡쳐를 저장했습니다");
+					break;
+
 				default:
 					Notice(e.Main);
 					break;
@@ -139,14 +144,14 @@ namespace Simplist3 {
 					break;
 				case "OpenFolder":
 					string dir = string.Format(@"X:Anime\{0}", e.Detail);
-					if (Directory.Exists(dir)) {
-						Process pro = new Process() {
-							StartInfo = new ProcessStartInfo() {
-								FileName = dir
-							}
-						};
-						pro.Start();
-					}
+
+					try {
+						if (!Directory.Exists(dir)) {
+							Notice("폴더가 생성되었습니다");
+							Directory.CreateDirectory(dir);
+						}
+						Function.ExecuteFile(dir);
+					} catch { }
 					break;
 
 				case "CopyClipboard":

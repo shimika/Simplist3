@@ -22,7 +22,6 @@ namespace Simplist3 {
 			AniScrollViewer viewer = property as AniScrollViewer;
 			Console.WriteLine((double)e.NewValue);
 			viewer.ScrollToVerticalOffset((double)e.NewValue);
-
 		}
 
 		/*

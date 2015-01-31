@@ -5,7 +5,14 @@
         Title="Simplist3" Height="660" Width="380"
         WindowStartupLocation="Manual" Topmost="True" AllowsTransparency="True"
         ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="False" Background="Transparent"
-        Loaded="Window_Loaded" Deactivated="Window_Deactivated" Closing="Window_Closing">
+        Loaded="Window_Loaded" Deactivated="Window_Deactivated" Closing="Window_Closing" FocusVisualStyle="{x:Null}">
+    
+    <Window.Resources>
+        <Style TargetType="local:AniScrollViewer">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid x:Name="gridRoot" Margin="10" Background="White">
         <Grid.Effect>
             <DropShadowEffect x:Name="grideffectShadow" BlurRadius="10" ShadowDepth="1" Direction="270" Color="Black" Opacity="0.6"/>
@@ -36,7 +43,7 @@
         <!-- Content Area -->
 
         <local:AniScrollViewer x:Name="scrollSeason" Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
+            <StackPanel x:Name="stackSeason" Background="White">
                 <local:Container x:Name="containWeek0" Title="일요일" Response="Container_Response"/>
                 <local:Container x:Name="containWeek1" Title="월요일" Response="Container_Response"/>
                 <local:Container x:Name="containWeek2" Title="화요일" Response="Container_Response"/>
