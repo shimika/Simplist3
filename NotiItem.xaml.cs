@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,11 +28,64 @@ namespace Simplist3 {
 			this.textTitle.Text = data.Type;
 			this.textEpisode.Text = data.Tag;
 			this.textMaker.Text = data.Title;
-			this.textTime.Text = data.Time;
+			//this.textTime.Text = data.Time;
+
+			this.Time = data.Time;
 		}
 
 		Point MouseDownPoint;
 		Listdata Data { get; set; }
+
+		DateTime UploadTime;
+		string time;
+		string Time {
+			get { return this.time; }
+			set {
+				this.time = value;
+				try {
+					this.UploadTime = DateTime.ParseExact(
+						this.time,
+						"yyyyMMddHHmmss",
+						CultureInfo.InvariantCulture);
+				} catch {
+					this.UploadTime = new DateTime(1900, 1, 1);
+				}
+
+				this.UpdateTime();
+			}
+		}
+
+		public void UpdateTime() {
+			if (UploadTime == null) { return; }
+
+			TimeSpan ts = DateTime.Now - this.UploadTime;
+			if (this.UploadTime.Year == 1900) {
+				this.textTime.Text = "";
+			} else if (ts.TotalSeconds < 0) {
+				this.textTime.Text = "미래";
+			} else if (ts.TotalSeconds < 60) {
+				this.textTime.Text = string.Format("{0}초 전", (int)ts.TotalSeconds);
+			} else if (ts.TotalMinutes < 60) {
+				this.textTime.Text = string.Format("{0}분 전", (int)ts.TotalMinutes);
+			} else if (ts.TotalHours < 24) {
+				this.textTime.Text = string.Format("{0}시간 전", (int)ts.TotalHours);
+			} else {
+				if (this.UploadTime.Year != DateTime.Now.Year) {
+					this.textTime.Text = string.Format("{0}/{1}/{2} {3}:{4:D2}",
+						this.UploadTime.Year, 
+						this.UploadTime.Month, 
+						this.UploadTime.Day, 
+						this.UploadTime.Hour, 
+						this.UploadTime.Minute);
+				} else {
+					this.textTime.Text = string.Format("{0}/{1} {2}:{3:D2}", 
+						this.UploadTime.Month, 
+						this.UploadTime.Day, 
+						this.UploadTime.Hour,
+						this.UploadTime.Minute);
+				}
+			}
+		}
 
 		private void GridMouseDown(object sender, MouseButtonEventArgs e) {
 			MouseDownPoint = e.GetPosition(this);

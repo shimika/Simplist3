@@ -77,17 +77,9 @@ namespace Simplist3 {
 
 				stackNotify.Children.Add(item);
 			}
-			/*
-			using (StreamWriter sw = new StreamWriter("C:\\testtest.txt")) {
-				foreach (Listdata data in e.Result as List<Listdata>) {
-					sw.WriteLine("{0} : {1} : {2} {3} : {4}", data.Time, data.Type, data.Tag, data.Title, data.Url);
-				}
-			}
-			 */
 		}
 
 		private void NotifyItem_Response(object sender, CustomButtonEventArgs e) {
-			//MessageBox.Show(e.ActionType + "\n" + e.Main + "\n" + e.Detail);
 			ShowNotificationDownloadWindow();
 			InitNotify(e.Main, e.Detail);
 		}
@@ -104,7 +96,6 @@ namespace Simplist3 {
 			
 			AnimateDownloadWindow(1, 0);
 		}
-
 		private void InitNotify(string title, string url) {
 			gridSubtitle.Children.Clear();
 
@@ -118,6 +109,13 @@ namespace Simplist3 {
 			StackHistory.Clear();
 
 			RefreshSubtitle("Anime", new Pair(title, url));
+		}
+		private void UpdateNotifyTime() {
+			try {
+				foreach (NotiItem item in stackNotify.Children) {
+					item.UpdateTime();
+				}
+			} catch { }
 		}
 	}
 }

@@ -31,6 +31,7 @@ namespace Simplist3 {
 					break;
 				case "noti":
 					Tab = TabMode.Notification;
+					UpdateNotifyTime();
 					break;
 				default:
 					Tab = TabMode.Setting;
