@@ -33,13 +33,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\Simplist3.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,13 +60,16 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AltTab.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="Anitable.cs" />
     <Compile Include="Container.xaml.cs">
       <DependentUpon>Container.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data.cs" />
-    <Compile Include="Download.cs" />
+    <Compile Include="Torrent.cs" />
+    <Compile Include="Function.cs" />
+    <Compile Include="Indicator.cs" />
     <Compile Include="JsonUtility\JsonArrayCollection.cs" />
     <Compile Include="JsonUtility\JsonBooleanValue.cs" />
     <Compile Include="JsonUtility\JsonCollection.cs" />
@@ -77,8 +86,10 @@
     <Compile Include="ProcessEpisode.cs" />
     <Compile Include="ProcessSeason.cs" />
     <Compile Include="Setting.cs" />
+    <Compile Include="Subtitle.cs" />
     <Compile Include="TabCore.cs" />
     <Compile Include="Titlebar.cs" />
+    <Compile Include="Tray.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -225,6 +236,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\bookmark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\download0.png" />
+    <Resource Include="Resources\download1.png" />
+    <Resource Include="Resources\download2.png" />
+    <Resource Include="Resources\download3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\subtitle0.png" />
+    <Resource Include="Resources\subtitle1.png" />
+    <Resource Include="Resources\subtitle2.png" />
+    <Resource Include="Resources\subtitle3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Simplist3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\tray.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

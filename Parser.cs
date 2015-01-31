@@ -1,39 +1,365 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Simplist3 {
 	class Parser {
-		public static List<ListData> Week(string weekCode) {
-			List<ListData> list = new List<ListData>();
+		public static List<Listdata> Week(string weekCode, string type) {
+			List<Listdata> list = new List<Listdata>();
 			int week = 0;
 			try {
 				week = Convert.ToInt32(weekCode);
 			} catch { return list; }
 
 			try {
-				string result = Network.GetHtml(@"http://www.anissia.net/anitime/list?w=" + weekCode, "UTF-8");
+				string result = Network.GetHtml(@"http://www.anissia.net/anitime/list?w=" + weekCode);
 
 				JsonTextParser parser = new JsonTextParser();
 				JsonArrayCollection obj = (JsonArrayCollection)parser.Parse(result);
 
 				foreach (JsonObjectCollection item in obj) {
-					ListData sItem = new ListData() {
+					Listdata listitem = new Listdata() {
 						Title = item["s"].GetValue().ToString(),
-						Url = @"http://www.anissia.net/anitime/cap?i=" + item["i"].GetValue().ToString(),
-						Memo = "anime", Time = item["t"].GetValue().ToString(),
+						Url = string.Format("{0}{1}", "http://www.anissia.net/anitime/cap?i=", item["i"].GetValue()),
+						Type = type, Time = item["t"].GetValue().ToString(),
 						ID = item["i"].GetValue().ToString(),
 					};
-					list.Add(sItem);
+
+					list.Add(listitem);
 				}
 			} catch (Exception ex) {
 				list.Clear();
 			}
 
 			return list;
+		}
+
+		public static List<Listdata> GetTorrentList(string keyword) {
+			List<Listdata> list = new List<Listdata>();
+
+			try {
+				int count = 0;
+				string result = Network.GetHtml(
+					string.Format("{0}{1}", "http://www.nyaa.eu/?page=rss&cats=1_0&term=", keyword));
+
+				XmlDocument xmlDoc = new XmlDocument();
+				xmlDoc.LoadXml(result);
+				XmlNodeList xmlnode = xmlDoc.SelectNodes("rss/channel/item");
+
+				foreach (XmlNode node in xmlnode) {
+					Listdata data = new Listdata() {
+						Title = node["title"].InnerText, Url = node["link"].InnerText,
+						Raw = node["category"].InnerText == "Raw Anime",
+						Type = "Torrent",
+					};
+
+					list.Add(data);
+					if (++count >= 30) { break; }
+				}
+			} catch {
+				list.Clear();
+			}
+
+			return list;
+		}
+
+		public static List<Listdata> GetMakerList(string url) {
+			List<Listdata> listMaker = new List<Listdata>();
+
+			try {
+				string result = Network.GetHtml(url);
+
+				JsonTextParser parser = new JsonTextParser();
+				JsonArrayCollection objCollection = (JsonArrayCollection)parser.Parse(result);
+
+				int maxValue = -1, epValue;
+
+				foreach (JsonObjectCollection item in objCollection) {
+					Listdata data = GetListData(item);
+					listMaker.Add(data);
+
+					epValue = Convert.ToInt32(data.ID.Substring(14, 5));
+					if (maxValue < epValue) { maxValue = epValue; }
+				}
+
+				listMaker.Sort();
+				listMaker.Reverse();
+			} catch (Exception ex) {
+				listMaker.Clear();
+			}
+
+			return listMaker;
+		}
+
+		private static Listdata GetListData(JsonObjectCollection item) {
+			Listdata data = new Listdata();
+			string strEpisode = item["s"].GetValue().ToString();
+
+			if (strEpisode.Length == 5) {
+				int episode = Convert.ToInt32(strEpisode);
+
+				if (episode % 10 != 0) {
+					data.Title = string.Format("{0}.{1}화 {2}", episode / 10, episode % 10, item["n"].GetValue());
+				} else {
+					data.Title = string.Format("{0}화 {1}", episode / 10, item["n"].GetValue());
+				}
+			} else {
+				data.Title = string.Format("{0} {1}", strEpisode, item["n"].GetValue());
+			}
+
+			data.Url = item["a"].GetValue().ToString();
+			data.Type = "Maker";
+			data.ID = string.Format("{0}{1}", item["s"].GetValue().ToString(), item["d"].GetValue().ToString());
+
+			return data;
+		}
+
+		enum SiteType { Naver, Other };
+		public static List<Listdata> GetFileList(string url) {
+			string result = Network.GetHtml(url);
+			bool isHakerano = url.IndexOf("hakerano") >= 0;
+
+			Listdata blog = new Listdata(){
+				Title = "블로그로 이동",
+				Type = "Blog",
+				Url = url,
+			};
+
+			if (result == "") { return new List<Listdata>(); }
+
+			Dictionary<SiteType, int> DictCount = new Dictionary<SiteType, int>();
+			DictCount[SiteType.Naver] = Regex.Matches(result, "naver", RegexOptions.IgnoreCase).Cast<Match>().Count();
+			DictCount[SiteType.Other] = Regex.Matches(result, "tistory", RegexOptions.IgnoreCase).Cast<Match>().Count();
+			DictCount[SiteType.Other] += Regex.Matches(result, "egloos", RegexOptions.IgnoreCase).Cast<Match>().Count();
+
+			SiteType sitetype = SiteType.Other;
+			if (DictCount[SiteType.Naver] > DictCount[SiteType.Other]) { sitetype = SiteType.Naver; }
+
+			if (sitetype == SiteType.Naver) {
+				result = Network.GetHtml(url, "EUC-KR");
+				string nURL = "";
+
+				if (result.IndexOf("mainFrame") < 0 && result.IndexOf("aPostFiles") < 0) {
+					int nIndex = result.IndexOf("screenFrame");
+
+					if (nIndex >= 0) {
+						for (int i = result.IndexOf("http://blog.naver.com/", nIndex); ; i++) {
+							if (result[i] == '\"') { break; }
+							nURL += result[i];
+						}
+						if (nURL != "") {
+							url = nURL;
+							result = Network.GetHtml(url, "EUC-KR");
+						}
+					}
+				}
+
+				if (result.IndexOf("mainFrame") >= 0 && result.IndexOf("aPostFiles") < 0) {
+					int nIndex = result.IndexOf("mainFrame");
+					nIndex = result.IndexOf("src", nIndex);
+					bool flag = false;
+					nURL = "";
+					for (int i = nIndex; ; i++) {
+						if (result[i] == '\"') {
+							if (flag) {
+								break;
+							} else {
+								flag = true;
+								continue;
+							}
+						}
+						if (flag) { nURL += result[i]; }
+					}
+					if (nURL[0] == '/') { nURL = "http://blog.naver.com" + nURL; }
+					if (nURL != "") { url = nURL; }
+				}
+
+				result = Network.GetHtml(url);
+			}
+
+			List<Listdata> list = null;
+
+			if (isHakerano) {
+				list = Fc2Parse(result);
+			} else if (sitetype == SiteType.Naver) {
+				list = NaverParse(Network.GetHtml(url, "EUC-KR"));
+			} else {
+				list = TistoryParse(result);
+			}
+
+			list.Add(blog);
+
+			return list;
+		}
+
+		private static List<Listdata> NaverParse(string html) {
+			List<Listdata> listData = new List<Listdata>();
+			int sIndex = 0, eIndex = 0;
+			string attachString;
+
+			string msg = "";
+			for (; ; ) {
+				sIndex = html.IndexOf("aPostFiles[", sIndex);
+				if (sIndex < 0) { break; }
+				sIndex = html.IndexOf("[{", sIndex);
+				if (sIndex < 0) { break; }
+				eIndex = html.IndexOf("}];", sIndex);
+				if (eIndex < 0) { break; }
+
+				attachString = html.Substring(sIndex + 2, eIndex - sIndex).Replace("\"", "\'");
+
+				int flag = 0;
+				string sKey = "", sValue = "";
+				string fileName = "", fileURL = "";
+
+				for (int i = 0; i < attachString.Length; i++) {
+					if (attachString[i] == '\\' && i + 1 != attachString.Length) {
+						if (attachString[i + 1] == '\'') {
+							if (flag == 1) {
+								sKey += '\'';
+							} else if (flag == 3) {
+								sValue += '\'';
+							}
+							i++; continue;
+						}
+					}
+					if (attachString[i] == '\'') {
+						flag++; continue;
+					}
+
+					switch (flag) {
+						case 1: sKey += attachString[i]; break;
+						case 3: sValue += attachString[i]; break;
+						case 4:
+							sKey = sKey.Trim(); sValue = sValue.Trim();
+							if (sKey == "encodedAttachFileName") { fileName = sValue; }
+							if (sKey == "encodedAttachFileUrl") { fileURL = sValue; }
+
+							msg += sKey + " = " + sValue + "\n";
+							sKey = sValue = "";
+							flag = 0;
+
+							break;
+					}
+					if (attachString[i] == '}') {
+						if (fileName != "" && fileURL != "") {
+							listData.Add(new Listdata() { 
+								Title = fileName, 
+								Url = fileURL, Type = "File" 
+							});
+							fileName = fileURL = "";
+						}
+					}
+				}
+
+				msg += "\n";
+			}
+			return listData;
+		}
+		private static List<Listdata> TistoryParse(string html) {
+			List<Listdata> listData = new List<Listdata>();
+			int nIndex = 0, lastIndex = 0;
+			string[] ext = new string[] { "zip", "rar", "7z", "egg", "smi" };
+			List<int> lst = new List<int>();
+			string fileName, fileURL;
+
+			try {
+				for (; ; ) {
+					lst.Clear();
+					foreach (string str in ext) {
+						nIndex = html.IndexOf(string.Format(".{0}\"", str), lastIndex, StringComparison.OrdinalIgnoreCase);
+						if (nIndex < 0) { nIndex = 999999999; }
+						lst.Add(nIndex);
+					}
+					lst.Sort();
+					if (lst[0] == 999999999) { break; }
+					lastIndex = html.IndexOf("\"", lst[0]);
+					fileURL = "";
+
+					for (int i = lastIndex - 1; i >= 0; i--) {
+						if (html[i] == '\"') { break; }
+						fileURL = html[i] + fileURL;
+					}
+
+					fileName = Network.GetFilenameFromURL(fileURL);
+
+					if (fileName != "" && fileURL != "") {
+						listData.Add(new Listdata() { 
+							Title = fileName, 
+							Url = fileURL, 
+							Type = "File" 
+						});
+					}
+				}
+			} catch (Exception ex) {
+			}
+			return listData;
+		}
+		private static List<Listdata> Fc2Parse(string html) {
+			List<Listdata> listData = new List<Listdata>();
+
+			int sIndex = 0;
+			string str;
+
+			for (; ; ) {
+				try {
+					sIndex = html.IndexOf("<img", sIndex + 1);
+					if (sIndex < 0) { break; }
+					int eIndex = html.IndexOf(">", sIndex + 1);
+					str = html.Substring(sIndex, eIndex - sIndex + 1);
+				} catch (Exception ex) {
+					continue;
+				}
+
+				if (str.IndexOf("/>") < 0) {
+					str = string.Format("{0}</img>", str);
+				}
+
+				try {
+					XmlDocument xmlDoc = new XmlDocument();
+					xmlDoc.LoadXml(str);
+					XmlElement root = xmlDoc.DocumentElement;
+
+					string alt = root.Attributes["alt"].Value;
+					string src = root.Attributes["src"].Value;
+
+					if (alt.IndexOf("자막") < 0) { continue; }
+
+					listData.Add(new Listdata() {
+						Title = alt,
+						Url = src,
+						Type = "File"
+					});
+				} catch (Exception ex) {
+					//MessageBox.Show(ex.Message + " : " + "\n" + str);
+					continue;
+				}
+			}
+
+			return listData;
+		}
+
+		public static List<Listdata> ParseZip(string path) {
+			List<Listdata> listFiles = new List<Listdata>();
+
+			try {
+				using (ZipArchive archive = ZipFile.OpenRead(path)) {
+					foreach (ZipArchiveEntry entry in archive.Entries) {
+						listFiles.Add(new Listdata() {
+							Title = entry.FullName, Url = path, Type = "Zip",
+						});
+					}
+				}
+			} catch { listFiles.Clear(); }
+
+			return listFiles;
 		}
 	}
 }

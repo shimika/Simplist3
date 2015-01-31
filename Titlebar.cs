@@ -32,7 +32,11 @@ namespace Simplist3 {
 					break;
 			}
 
-			ChangeTitle(mode.ToString());
+			if (mode == TabMode.Download) {
+				ChangeTitle("Torrent");
+			} else {
+				ChangeTitle(mode.ToString());
+			}
 		}
 
 		private void SetImageMode(ImageButton button, TabMode targetMode, bool hidden, params TabMode[] modes) {
@@ -69,12 +73,12 @@ namespace Simplist3 {
 			DoubleAnimation daOld = Animation.GetDoubleAnimation(0, textTitleOld, 350);
 			daOld.From = 1;
 			DoubleAnimation daNewStart = Animation.GetDoubleAnimation(0, textTitle, 0);
-			DoubleAnimation daNew = Animation.GetDoubleAnimation(1, textTitle, 350, 100);
+			DoubleAnimation daNew = Animation.GetDoubleAnimation(1, textTitle, 350);
 			daNew.From = 0;
 
 			ThicknessAnimation taOld = Animation.GetThicknessAnimation(350, -30, 0, textTitleOld);
 			taOld.From = new Thickness(0);
-			ThicknessAnimation taNew = Animation.GetThicknessAnimation(350, 0, 0, textTitle, 0, 0, 100);
+			ThicknessAnimation taNew = Animation.GetThicknessAnimation(350, 0, 0, textTitle, 0, 0);
 			taNew.From = new Thickness(60, 0, 0, 0);
 
 			sb.Children.Add(daOld);

@@ -8,11 +8,6 @@ using System.Windows;
 
 namespace Simplist3 {
 	public partial class MainWindow : Window {
-		private void InitBackgroundWorker() {
-			bw.WorkerSupportsCancellation = true;
-			bw.DoWork += bw_DoWork;
-			bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-		}
 
 		int NowWeekDay = 0;
 		private void Weekday_Click(object sender, CustomButtonEventArgs e) {
@@ -28,54 +23,65 @@ namespace Simplist3 {
 			(stackTableWeekday.Children[day] as TabButton).ViewMode
 					= TabButton.Mode.Focused;
 
-			RefreshAniTable(day);
+			RefreshAnitable(day);
 		}
 
-		BackgroundWorker bw = new BackgroundWorker();
-		private void RefreshAniTable(int day) {
+		BackgroundWorker BwAnitable;
+		private void RefreshAnitable(int day) {
+			StopBackgroundWorker(BwAnitable);
+
+			BwAnitable = new BackgroundWorker() {
+				WorkerSupportsCancellation = true,
+			};
+			BwAnitable.DoWork += BwAnitable_DoWork;
+			BwAnitable.RunWorkerCompleted += BwAnitable_RunWorkerCompleted;
+
 			NowWeekDay = day;
-			try {
-				bw.CancelAsync();
-			} catch { }
-
-			bw.RunWorkerAsync(day);
+			BwAnitable.RunWorkerAsync(day);
 		}
 
-		private void bw_DoWork(object sender, DoWorkEventArgs e) {
-			e.Result = Parser.Week(e.Argument.ToString());
+		private void BwAnitable_DoWork(object sender, DoWorkEventArgs e) {
+			e.Result = Parser.Week(e.Argument.ToString(), "Anitable");
+			e.Cancel = CheckWorkerCancel(sender);
 		}
 
-		private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
+		private void BwAnitable_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
 			if (e.Cancelled) { return; }
 
-			List<ListData> list = e.Result as List<ListData>;
+			List<Listdata> list = e.Result as List<Listdata>;
 			stackAnitable.Children.Clear();
 
-			foreach (ListData data in list) {
-				ListItem item = new ListItem(data, true);
-				item.Response += item_Response;
+			foreach (Listdata data in list) {
+				ListItem item = new ListItem(data);
+				item.Response += AnitableItem_Response;
 				stackAnitable.Children.Add(item);
 			}
 
 			scrollAnitable.ScrollToTop();
 		}
 
-		private void item_Response(object sender, CustomButtonEventArgs e) {
-			if (e.ActionType == "Click") {
+		private void AnitableItem_Response(object sender, CustomButtonEventArgs e) {
+			if (e.ActionType == "Anitable") {
 				this.textboxTitle.Text = e.Main;
 
 				this.comboboxWeekday.SelectedIndex = NowWeekDay;
 				this.textboxHour.Text = e.Detail.Substring(0, 2);
 				this.textboxMinute.Text = e.Detail.Substring(2, 2);
 
-				textboxSearch.Focus();
+				textboxKeyword.Focus();
 			}
 		}
 	}
 
-	public struct ListData {
-		public string Title, Url, Memo, Time, ID, Week;
-		public bool IsRaw, IsTorrent;
+	public class Listdata : IComparable<Listdata> {
+		public Listdata() { this.Raw = false; }
+
+		public string Title, Url, Type, Time, ID, Week;
+		public bool Raw;
 		public DateTime UpdateTime;
+
+		public int CompareTo(Listdata other) {
+			return this.ID.CompareTo(other.ID);
+		}
 	}
 }

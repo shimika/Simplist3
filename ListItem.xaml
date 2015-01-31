@@ -20,8 +20,8 @@
         <TextBlock x:Name="textTime" Text="00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="Gray"/>
         <TextBlock x:Name="textTitle" Text="Very Long Title" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,0"/>
 
-        <Button x:Name="buttonModify" Background="Transparent" Grid.Column="0" Click="Button_Click2"/>
-        <Button x:Name="buttonMain" Background="Transparent" Grid.Column="1" Click="Button_Click"/>
+        <Button x:Name="buttonModify" Background="Transparent" Grid.Column="0" Click="TimeButton_Click"/>
+        <Button x:Name="buttonMain" Background="Transparent" Grid.Column="1" Click="MainButton_Click"/>
         
         <Grid x:Name="gridEpisodeBox" Grid.Column="2" Margin="0,0,0,0">
             <Grid.ColumnDefinitions>
@@ -30,9 +30,9 @@
                 <ColumnDefinition Width="20"/>
             </Grid.ColumnDefinitions>
 
-            <local:ImageButton Size="20" Grid.Column="0" Source="Resources/minus_black.png" InnerMargin="1" VerticalAlignment="Center" Type="-1" Response="ImageButton_Response"/>
+            <local:ImageButton Size="20" Grid.Column="0" Source="Resources/minus_black.png" InnerMargin="1" VerticalAlignment="Center" Type="-1" Response="EpisodeButton_Response"/>
             <TextBlock x:Name="textEpisode" Grid.Column="1" Text="00" FontSize="18" VerticalAlignment="Center" FontFamily="Century Gothic" TextAlignment="Center"/>
-            <local:ImageButton Size="20" Grid.Column="2" Source="Resources/plus_black.png" InnerMargin="1" VerticalAlignment="Center" Type="1" Response="ImageButton_Response"/>
+            <local:ImageButton Size="20" Grid.Column="2" Source="Resources/plus_black.png" InnerMargin="1" VerticalAlignment="Center" Type="1" Response="EpisodeButton_Response"/>
         </Grid>
         
         <Rectangle x:Name="rect" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,0,0" Height="1" VerticalAlignment="Bottom" Fill="{DynamicResource PrimaryBrush}" Opacity="0.3"/>

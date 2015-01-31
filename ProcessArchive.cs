@@ -52,6 +52,8 @@ namespace Simplist3 {
 
 			RefreshArchiveEpisode(title, data.Episode);
 			RefreshDisableButton(title);
+
+			Setting.SaveSetting();
 		}
 	}
 }

@@ -9,7 +9,9 @@ using System.Windows.Media.Animation;
 namespace Simplist3 {
 	public partial class MainWindow : Window {
 		enum TabMode { Season, Archive, Notification, Setting, Add, Modify, Download };
+		enum ShowMode { None, Add, Modify, Download };
 		TabMode Tab = TabMode.Season;
+		ShowMode Mode = ShowMode.None;
 
 		private void TabButton_Response(object sender, CustomButtonEventArgs e) {
 			SetProperty(Tab, TabButton.Mode.Clickable);
@@ -64,7 +66,7 @@ namespace Simplist3 {
 				mode == TabButton.Mode.Clickable ? false : true;
 
 			Storyboard sb = new Storyboard();
-			sb.Children.Add(Animation.GetDoubleAnimation(mode == TabButton.Mode.Clickable ? 0 : 1, element));
+			sb.Children.Add(Animation.GetDoubleAnimation(mode == TabButton.Mode.Clickable ? 0 : 1, element, 0));
 			sb.Begin(this);
 		}
 	}

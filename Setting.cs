@@ -16,11 +16,13 @@ namespace Simplist3 {
 				Status.IsRoot = true;
 			}
 
+			ClearFolder();
+
 			if (Migration.CheckMigration()) {
-				SaveSetting();
+				Setting.SaveSetting();
 			} else {
 				if (!File.Exists(Setting.FileSetting)) {
-					SaveSetting();
+					Setting.SaveSetting();
 				}
 
 				using (StreamReader sr = new StreamReader(Setting.FileSetting)) {
@@ -71,7 +73,7 @@ namespace Simplist3 {
 						data.Title = value["Title"].GetValue().ToString();
 						data.Week = Convert.ToInt32(value["Week"].GetValue());
 						data.TimeString = value["TimeString"].GetValue().ToString();
-						data.SearchTag = value["SearchTag"].GetValue().ToString();
+						data.Keyword = value["Keyword"].GetValue().ToString();
 						data.ArchiveTitle = value["ArchiveTitle"].GetValue().ToString();
 
 						Data.DictSeason.Add(data.Title, data);
@@ -80,14 +82,51 @@ namespace Simplist3 {
 			}
 
 			ApplySettingToControl();
+			InitTray();
+
 			checkTray.Checked += SettingCheck_Changed;
 			checkTray.Unchecked += SettingCheck_Changed;
 			checkNoti.Checked += SettingCheck_Changed;
 			checkNoti.Unchecked += SettingCheck_Changed;
 		}
 
-		private object locker = new object();
-		private void SaveSetting() {
+		private void ClearFolder() {
+			if (!Directory.Exists(Setting.PathFolder)) {
+				Directory.CreateDirectory(Setting.PathFolder);
+			}
+
+			string[] fileNames = Directory.GetFiles(Setting.PathFolder);
+			foreach (string fileName in fileNames) {
+				try {
+					File.Delete(fileName);
+				} catch { }
+			}
+		}
+
+		private void SettingCheck_Changed(object sender, RoutedEventArgs e) {
+			Setting.Tray = (bool)checkTray.IsChecked;
+			Setting.Notification = (bool)checkNoti.IsChecked;
+
+			Setting.SaveSetting();
+		}
+
+		private void ApplySettingToControl() {
+			checkTray.IsChecked = Setting.Tray;
+			checkNoti.IsChecked = Setting.Notification;
+		}
+	}
+
+	class Setting {
+		public static string PathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SimpList\";
+		public static string FileSetting = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SimpList3.txt";
+
+		public static string SaveDirectory = "";
+		public static bool Tray = false, Notification = false;
+
+		public static string version = "3.0.0";
+
+		private static object locker = new object();
+		public static void SaveSetting() {
 			JsonObjectCollection root = new JsonObjectCollection();
 
 			JsonArrayCollection archive = new JsonArrayCollection("Archive");
@@ -111,7 +150,7 @@ namespace Simplist3 {
 				obj.Add(new JsonStringValue("Title", data.Title));
 				obj.Add(new JsonStringValue("Week", data.Week.ToString()));
 				obj.Add(new JsonStringValue("TimeString", data.TimeString));
-				obj.Add(new JsonStringValue("SearchTag", data.SearchTag));
+				obj.Add(new JsonStringValue("Keyword", data.Keyword));
 
 				if (data.ArchiveTitle != null) {
 					obj.Add(new JsonStringValue("ArchiveTitle", data.ArchiveTitle));
@@ -121,41 +160,19 @@ namespace Simplist3 {
 			}
 
 			JsonObjectCollection setting = new JsonObjectCollection("Setting");
-			setting.Add(new JsonStringValue("SaveDirectory", Setting.SaveDirectory));
-			setting.Add(new JsonStringValue("Tray", Setting.Tray.ToString()));
-			setting.Add(new JsonStringValue("Notification", Setting.Notification.ToString()));
+			setting.Add(new JsonStringValue("SaveDirectory", SaveDirectory));
+			setting.Add(new JsonStringValue("Tray", Tray.ToString()));
+			setting.Add(new JsonStringValue("Notification", Notification.ToString()));
 
 			root.Add(archive);
 			root.Add(season);
 			root.Add(setting);
 
 			lock (locker) {
-				using (StreamWriter sw = new StreamWriter(Setting.FileSetting)) {
+				using (StreamWriter sw = new StreamWriter(FileSetting)) {
 					sw.Write(root);
 				}
 			}
 		}
-
-		private void SettingCheck_Changed(object sender, RoutedEventArgs e) {
-			Setting.Tray = (bool)checkTray.IsChecked;
-			Setting.Notification = (bool)checkNoti.IsChecked;
-
-			SaveSetting();
-		}
-
-		private void ApplySettingToControl() {
-			checkTray.IsChecked = Setting.Tray;
-			checkNoti.IsChecked = Setting.Notification;
-		}
-	}
-
-	class Setting {
-		public static string PathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SimpList\";
-		public static string FileSetting = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SimpList3.txt";
-
-		public static string SaveDirectory = "";
-		public static bool Tray = false, Notification = false;
-
-		public static string version = "3.0.0";
 	}
 }

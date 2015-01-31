@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 
@@ -15,14 +16,34 @@ namespace Simplist3 {
 			grideffectShadow.BeginAnimation(
 				DropShadowEffect.OpacityProperty, 
 				new DoubleAnimation(0.4, TimeSpan.FromMilliseconds(100)));
-
-			RefreshWeekHead();
 		}
 
 		private void Window_Deactivated(object sender, EventArgs e) {
 			grideffectShadow.BeginAnimation(
 				DropShadowEffect.OpacityProperty, 
 				new DoubleAnimation(0.1, TimeSpan.FromMilliseconds(100)));
+		}
+
+		private void Statusbar_MouseDown(object sender, MouseButtonEventArgs e) {
+			try {
+				DragMove();
+			} catch { }
+		}
+
+		public bool ProcessCommandLineArgs(IList<string> args) {
+			ActivateMe();
+			return true;
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+			if (!Setting.Tray) {
+				tray.Dispose();
+			} else {
+				Notice("", false, 0);
+				e.Cancel = true;
+				this.Opacity = 0;
+				new AltTab().HideAltTab(this);
+			}
 		}
 
 		private void ImageButton_Response(object sender, CustomButtonEventArgs e) {
@@ -39,6 +60,9 @@ namespace Simplist3 {
 							break;
 
 						case ShowMode.Download:
+							StopBackgroundWorker(BwTorrent);
+							StopBackgroundWorker(BwSubtitle);
+
 							AnimateDownloadWindow(0, -40);
 							SetTitlebar(Tab);
 							Mode = ShowMode.None;
@@ -82,7 +106,10 @@ namespace Simplist3 {
 							RefreshArchiveEpisode(arcTitle, 0);
 							containArchive.RefreshContainer();
 						} else {
-							ShowDownloadWindow(e.Main, Data.DictArchive[arcTitle].Episode);
+							ShowDownloadWindow(
+								e.Main,
+								Data.DictArchive[arcTitle].Episode,
+								Data.DictSeason[e.Main].Keyword);
 						}
 					} else {
 						if (Data.DictArchive[e.Main].Episode < 0) {
@@ -118,7 +145,7 @@ namespace Simplist3 {
 					break;
 
 				case "CopyClipboard":
-					string title = CleanFileName(e.Main);
+					string title = Function.CleanFileName(e.Main);
 					string arctitle = e.Main;
 					if (e.Detail == "Season") {
 						arctitle = Data.DictSeason[e.Main].ArchiveTitle;
@@ -145,10 +172,12 @@ namespace Simplist3 {
 			}
 		}
 
-		private static string CleanFileName(string fileName) {
-			return Path.GetInvalidFileNameChars().Aggregate(
-				fileName, 
-				(current, c) => current.Replace(c.ToString(), string.Empty));
+		private void ActivateMe() {
+			new AltTab().ShowAltTab(this);
+			this.Opacity = 1;
+			this.Activate();
+
+			//RefreshNoticeControl(ListNotice, false, false);
 		}
 	}
 }

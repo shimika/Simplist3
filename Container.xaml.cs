@@ -141,7 +141,7 @@ namespace Simplist3 {
 			RefreshContainer();
 		}
 
-		public void RefreshEpisode(string title, int episode) {
+		public void RefreshListEpisode(string title, int episode) {
 			if (ContainerType == ListType.Season) {
 				string arcTitle = Data.DictSeason[title].ArchiveTitle;
 				Data.DictArchive[arcTitle].Episode = episode;
@@ -180,6 +180,13 @@ namespace Simplist3 {
 					stack.Children.Add(ItemDicionary[data.Title]);
 				}
 			}
+		}
+
+		public int GetContainerHeight() {
+			if (ItemDicionary.Count == 0) {
+				return 0;
+			}
+			return (ItemDicionary.Count + 1) * 40;
 		}
 	}
 }

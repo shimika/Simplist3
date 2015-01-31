@@ -19,8 +19,8 @@ namespace Simplist3 {
 	/// ListItem.xaml에 대한 상호 작용 논리
 	/// </summary>
 	public partial class ListItem : UserControl {
-		enum ItemType { Season, Archive, Anitable, Download };
-		ItemType IType = ItemType.Season;
+		enum ItemType { Season, Archive, Listitem };
+		ItemType ObjectType = ItemType.Season;
 
 		public ListItem() { }
 
@@ -41,11 +41,13 @@ namespace Simplist3 {
 			this.Time = data.TimeString;
 
 			this.Episode = Data.DictArchive[data.ArchiveTitle].Episode;
-			this.ArchiveTitle = data.ArchiveTitle;
+			this.Reference = data.ArchiveTitle;
 		}
 
 		public ListItem(ArchiveData data, bool animate)
 			: this(animate) {
+
+			ObjectType = ItemType.Archive;
 
 			this.textTime.Visibility = Visibility.Collapsed;
 			this.buttonModify.Visibility = Visibility.Collapsed;
@@ -62,43 +64,51 @@ namespace Simplist3 {
 			Grid.SetColumnSpan(this.buttonMain, 2);
 
 			this.Episode = data.Episode;
-			this.ArchiveTitle = data.Title;
-
-			IType = ItemType.Archive;
+			this.Reference = data.Title;
 		}
 
-		public ListItem(ListData data, bool isTable)
+		public ListItem(Listdata data)
 			: this(false) {
 
 			this.buttonModify.Visibility = Visibility.Collapsed;
 			this.gridEpisodeBox.Visibility = Visibility.Collapsed;
 
 			this.Title = data.Title;
+			this.textTitle.FontSize = 14;
+			this.Type = data.Type;
+			ObjectType = ItemType.Listitem;
 
-			if (isTable) {
-				IType = ItemType.Anitable;
-
-				this.Time = data.Time;
-				this.ID = data.ID;
-				this.Tag = data.Memo;
-
-				Grid.SetColumnSpan(this.textTitle, 2);
-				Grid.SetColumn(this.buttonMain, 0);
-				Grid.SetColumnSpan(this.buttonMain, 3);
-			} else {
-				IType = ItemType.Download;
-
-				this.Tag = data.Memo;
-				this.ID = data.Url;
-				this.textTime.Visibility = Visibility.Collapsed;
-
-				this.textTitle.Margin = new Thickness(15, 0, 0, 0);
-				this.rect.Margin = new Thickness(15, 0, 0, 0);
-
-				Grid.SetColumn(this.rect, 0);
-				Grid.SetColumn(this.textTitle, 0);
-				Grid.SetColumnSpan(this.textTitle, 3);
+			if (this.Type == "Torrent" || this.Type == "Zip") {
+				this.ToolTip = this.title;
 			}
+
+			switch (data.Type) {
+				case "Anitable":
+					this.Time = data.Time;
+					this.Reference = data.Time;
+
+					Grid.SetColumnSpan(this.textTitle, 2);
+
+					break;
+				default:
+					this.Reference = data.Url;
+
+					this.textTime.Visibility = Visibility.Collapsed;
+					this.textTitle.Margin = new Thickness(15, 0, 0, 0);
+					this.rect.Margin = new Thickness(15, 0, 0, 0);
+
+					Grid.SetColumn(this.rect, 0);
+					Grid.SetColumn(this.textTitle, 0);
+					Grid.SetColumnSpan(this.textTitle, 3);
+
+					if (data.Raw) {
+						this.textTitle.Foreground 
+							= FindResource("PrimaryBrush") as SolidColorBrush;
+					}
+
+					break;
+			}
+
 			Grid.SetColumn(this.buttonMain, 0);
 			Grid.SetColumnSpan(this.buttonMain, 3);
 		}
@@ -109,56 +119,108 @@ namespace Simplist3 {
 
 			if (e.MiddleButton == MouseButtonState.Pressed) {
 				AnimateButton();
-				if (IType == ItemType.Season || IType == ItemType.Archive) {
-					Response(this, new CustomButtonEventArgs("CopyClipboard", this.Title, IType.ToString()));
+				if (ObjectType == ItemType.Season || ObjectType == ItemType.Archive) {
+					Response(this, new CustomButtonEventArgs("CopyClipboard", this.Title, ObjectType.ToString()));
 				}
 			}
 
 			if (e.RightButton == MouseButtonState.Pressed) {
 				AnimateButton();
 				if (Response != null) {
-					if (Status.IsRoot && IType == ItemType.Season) {
-						Response(this, new CustomButtonEventArgs("OpenFolder", this.Title, this.ArchiveTitle));
-					} else {
-						Response(this, new CustomButtonEventArgs("Modify", this.Title, IType.ToString()));
+					if (Status.IsRoot && ObjectType == ItemType.Season) {
+						Response(this, new CustomButtonEventArgs("OpenFolder", this.Title, this.Reference));
+					} else if (ObjectType == ItemType.Season || ObjectType == ItemType.Archive) {
+						Response(this, new CustomButtonEventArgs("Modify", this.Title, ObjectType.ToString()));
 					}
 				}
 			}
 		}
 
 		public event EventHandler<CustomButtonEventArgs> Response;
-		public event EventHandler<CustomButtonEventArgs> DownloadResponse;
-		private void Button_Click(object sender, RoutedEventArgs e) {
+		private void MainButton_Click(object sender, RoutedEventArgs e) {
 			AnimateButton();
-			if (IType == ItemType.Download) {
-				if (DownloadResponse != null) {
-					DownloadResponse(this, new CustomButtonEventArgs(this.Tag, this.title, this.ID));
-				}
-			}
 
 			if (Response != null) {
-				if (IType == ItemType.Anitable) {
-					Response(this, new CustomButtonEventArgs("Click", this.Title, this.Time));
+				if (ObjectType == ItemType.Listitem) {
+					Response(this, new CustomButtonEventArgs(this.Type, this.Title, this.Reference));
 				} else {
-					Response(this, new CustomButtonEventArgs("Click", this.Title, IType.ToString()));
+					Response(this, new CustomButtonEventArgs("Click", this.Title, ObjectType.ToString()));
 				}
 			}
 		}
-		private void Button_Click2(object sender, RoutedEventArgs e) {
+		private void TimeButton_Click(object sender, RoutedEventArgs e) {
+			if (ObjectType == ItemType.Listitem) { return; }
+
 			AnimateButton();
 			if (Response != null) {
-				Response(this, new CustomButtonEventArgs("Modify", this.Title, IType.ToString()));
+				Response(this, new CustomButtonEventArgs("Modify", this.Title, ObjectType.ToString()));
 			}
 		}
 
-		private void ImageButton_Response(object sender, CustomButtonEventArgs e) {
+		private void EpisodeButton_Response(object sender, CustomButtonEventArgs e) {
 			try {
 				int delta = Convert.ToInt32(e.Main);
 				if (Response != null) {
-					Response(this, new CustomButtonEventArgs("Episode", this.ArchiveTitle, delta.ToString()));
+					Response(this, new CustomButtonEventArgs("Episode", this.Reference, delta.ToString()));
 				}
 			} catch { return; }
 		}
+
+		string time = "";
+		public string Time {
+			get {
+				return time;
+			}
+			set {
+				time = value;
+				textTime.Text = string.Format("{0:D2}:{1:D2}"
+					, time.Substring(0, 2), time.Substring(2, 2));
+			}
+		}
+
+		string title = "";
+		public string Title {
+			get {
+				return title;
+			}
+			set {
+				title = value;
+				this.textTitle.Text = title;
+			}
+		}
+
+		int episode = 0;
+		public int Episode {
+			get {
+				return episode;
+			}
+			set {
+				episode = value;
+
+				if (episode < 0) {
+					textTitle.Opacity = 0.3;
+					gridEpisodeBox.Visibility = Visibility.Collapsed;
+
+					if (this.ObjectType == ItemType.Season) {
+						Grid.SetColumnSpan(this.buttonMain, 2);
+						Grid.SetColumnSpan(this.textTitle, 2);
+					}
+				} else {
+					textTitle.Opacity = 1;
+					gridEpisodeBox.Visibility = Visibility.Visible;
+
+					if (this.ObjectType == ItemType.Season) {
+						Grid.SetColumnSpan(this.buttonMain, 1);
+						Grid.SetColumnSpan(this.textTitle, 1);
+					}
+				}
+
+				textEpisode.Text = episode.ToString();
+			}
+		}
+
+		public string Reference { get; set; }
+		public string Type { get; set; }
 
 		private void AnimateItem() {
 			Storyboard sb = new Storyboard();
@@ -211,54 +273,5 @@ namespace Simplist3 {
 			sb.Begin(this);
 		}
 
-		string time = "";
-		public string Time {
-			get {
-				return time;
-			}
-			set {
-				time = value;
-				textTime.Text = string.Format("{0:D2}:{1:D2}"
-					, time.Substring(0, 2), time.Substring(2, 2));
-			}
-		}
-
-		string title = "";
-		public string Title {
-			get {
-				return title;
-			}
-			set {
-				title = value;
-				this.textTitle.Text = title;
-			}
-		}
-		private string ArchiveTitle { get; set; }
-
-		public string ID { get; set; }
-		public string Tag { get; set; }
-
-		int episode = 0;
-		public int Episode {
-			get {
-				return episode;
-			}
-			set {
-				episode = value;
-				RefreshEpisode(episode);
-			}
-		}
-
-		public void RefreshEpisode(int value) {
-			if (value < 0) {
-				textTitle.Opacity = 0.3;
-				gridEpisodeBox.Visibility = Visibility.Collapsed;
-			} else {
-				textTitle.Opacity = 1;
-				gridEpisodeBox.Visibility = Visibility.Visible;
-			}
-
-			textEpisode.Text = value.ToString();
-		}
 	}
 }

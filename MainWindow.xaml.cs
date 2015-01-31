@@ -30,21 +30,6 @@ namespace Simplist3 {
 			ApplySettingToControl();
 		}
 
-		enum ShowMode { None, Add, Modify,  Download };
-		ShowMode Mode = ShowMode.None;
-
-
-
-		private void Statusbar_MouseDown(object sender, MouseButtonEventArgs e) {
-			try {
-				DragMove();
-			} catch { }
-		}
-
-		public bool ProcessCommandLineArgs(IList<string> args) {
-			return true;
-		}
-
 		private void Window_Loaded(object sender, RoutedEventArgs e) {
 			List<ArchiveData> listA = Data.DictArchive.Values.ToList();
 			containArchive.Add(false, listA.ToArray());
@@ -54,10 +39,12 @@ namespace Simplist3 {
 				(FindName(string.Format("containWeek{0}", i)) as Container).Add(false, listS.ToArray());
 			}
 
-			RefreshWeekHead();
+			RefreshAnitable(0);
 
-			InitBackgroundWorker();
-			RefreshAniTable(0);
+			int height = RefreshWeekHead();
+			scrollSeason.ScrollToVerticalOffset(height);
+
+			this.Activated += Window_Activated;
 		}
 	}
 }

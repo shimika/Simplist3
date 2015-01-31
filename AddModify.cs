@@ -35,6 +35,7 @@ namespace Simplist3 {
 					break;
 			}
 
+			Setting.SaveSetting();
 			HideAddModifyWindow();
 		}
 
@@ -54,6 +55,7 @@ namespace Simplist3 {
 					return;
 			}
 
+			Setting.SaveSetting();
 			HideAddModifyWindow();
 		}
 
@@ -84,7 +86,7 @@ namespace Simplist3 {
 			textboxTitle.Text = "";
 			textboxHour.Text = "";
 			textboxMinute.Text = "";
-			textboxSearch.Text = "";
+			textboxKeyword.Text = "";
 			comboboxWeekday.SelectedIndex = 0;
 
 			textboxTitle.Focus();
@@ -117,7 +119,7 @@ namespace Simplist3 {
 				textboxHour.Text = data.TimeString.Substring(0, 2);
 				textboxMinute.Text = data.TimeString.Substring(2, 2);
 				textSync.Text = data.ArchiveTitle;
-				textboxSearch.Text = data.SearchTag;
+				textboxKeyword.Text = data.Keyword;
 
 				RefreshDisableButton(data.ArchiveTitle);
 

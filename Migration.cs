@@ -100,7 +100,7 @@ namespace Simplist3 {
 
 				sdata.Title = strSplit[1];
 				sdata.ArchiveTitle = strSplit[2];
-				sdata.SearchTag = strSplit[3].Substring(1);
+				sdata.Keyword = strSplit[3].Substring(1);
 				sdata.Week = Convert.ToInt32(strSplit[0][0].ToString());
 				sdata.TimeString = strSplit[0].Substring(2).Replace(":", "");
 

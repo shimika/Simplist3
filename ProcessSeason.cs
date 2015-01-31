@@ -10,15 +10,28 @@ using System.Windows.Media;
 namespace Simplist3 {
 	public partial class MainWindow : Window {
 		int WeekDay = -1;
-		private void RefreshWeekHead() {
-			if (WeekDay == (int)DateTime.Now.DayOfWeek) { return; }
+		private int RefreshWeekHead() {
+			if (WeekDay == (int)DateTime.Now.DayOfWeek) { return 0; }
 
 			WeekDay = (int)DateTime.Now.DayOfWeek;
+			int height = 0;
 
 			for (int i = 0; i < 7; i++) {
 				(FindName(string.Format("containWeek{0}", i)) as Container)
 					.SetWeekDay(i== WeekDay);
+
+				if (i <= WeekDay) {
+					int value = (FindName(string.Format("containWeek{0}", i)) as Container)
+						.GetContainerHeight();
+					height += value;
+
+					if (i == WeekDay && value == 0) {
+						height = 0;
+					}
+				}
 			}
+
+			return height;
 		}
 
 		private void AddSeason(string title, int weekday) {
@@ -30,7 +43,7 @@ namespace Simplist3 {
 
 			SeasonData data = new SeasonData();
 			data.SetValue(title, weekday, textboxHour.Text, textboxMinute.Text,
-				archiveTitle, textboxSearch.Text.Trim());
+				archiveTitle, textboxKeyword.Text.Trim());
 
 			Data.DictArchive[archiveTitle].SeasonTitle = title;
 
@@ -65,7 +78,7 @@ namespace Simplist3 {
 
 			data.SetValue(newTitle, comboboxWeekday.SelectedIndex,
 				textboxHour.Text, textboxMinute.Text,
-				arcTitle, textboxSearch.Text.Trim());
+				arcTitle, textboxKeyword.Text.Trim());
 
 			Data.DictArchive[arcTitle].SeasonTitle = newTitle;
 			Data.DictSeason.Add(data.Title, data);
@@ -166,7 +179,7 @@ namespace Simplist3 {
 				existString = (comboboxSync.Items[i] as ComboBoxPairs).Key.ToLower();
 				int minLength = Math.Min(title.Length, existString.Length);
 
-				matchCount = StringPrefixMatch(title.Substring(0, minLength), existString.Substring(0, minLength));
+				matchCount = Function.StringPrefixMatch(title.Substring(0, minLength), existString.Substring(0, minLength));
 
 				if (matchCount > maxValue && (matchCount * 2 >= textLength || matchCount == existString.Length)) {
 					maxValue = matchCount;
@@ -175,19 +188,6 @@ namespace Simplist3 {
 			}
 
 			comboboxSync.SelectedIndex = focusIndex;
-		}
-
-		private int StringPrefixMatch(string s1, string s2) {
-			int i, n = Math.Min(s1.Length, s2.Length), m;
-			m = n;
-
-			for (i = 0; i < n; i++) {
-				if (s1[i] != s2[i]) {
-					m = i;
-					break;
-				}
-			}
-			return m;
 		}
 	}
 }

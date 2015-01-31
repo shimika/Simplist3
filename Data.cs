@@ -15,16 +15,16 @@ namespace Simplist3 {
 
 		public int Week { get; set; }
 		public string TimeString { get; set; }
-		public string SearchTag { get; set; }
+		public string Keyword { get; set; }
 
-		public void SetValue(string title, int week, string hour, string minute, string arctitle, string search) {
+		public void SetValue(string title, int week, string hour, string minute, string arctitle, string keyword) {
 			this.Title = title;
 			this.Week = week;
 			this.TimeString = string.Format("{0}{1}",
 				hour.PadLeft(2, '0'),
 				minute.PadLeft(2, '0'));
 			this.ArchiveTitle = arctitle;
-			this.SearchTag = search;
+			this.Keyword = keyword;
 		}
 
 		public int CompareTo(SeasonData other) {
@@ -65,5 +65,16 @@ namespace Simplist3 {
 		public static SelectMode NowSelect = SelectMode.Unfinished;
 
 		public static bool IsRoot = false;
+	}
+
+	public class Pair {
+		public Pair() { }
+		public Pair(string first, object second) {
+			this.First = first;
+			this.Second = second;
+		}
+
+		public string First { get; set; }
+		public object Second { get; set; }
 	}
 }

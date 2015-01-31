@@ -5,7 +5,7 @@
         Title="Simplist3" Height="660" Width="380"
         WindowStartupLocation="Manual" Topmost="True" AllowsTransparency="True"
         ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="True" Background="Transparent"
-        Loaded="Window_Loaded" Activated="Window_Activated" Deactivated="Window_Deactivated">
+        Loaded="Window_Loaded" Deactivated="Window_Deactivated" Closing="Window_Closing">
     <Grid x:Name="gridRoot" Margin="10" Background="White">
         <Grid.Effect>
             <DropShadowEffect x:Name="grideffectShadow" BlurRadius="10" ShadowDepth="1" Direction="270" Color="Black" Opacity="0.6"/>
@@ -57,18 +57,18 @@
         
         <Grid x:Name="gridSetting" Grid.Row="2" Background="Transparent" Opacity="0" IsHitTestVisible="False">
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="60"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             
             <Grid>
                 <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
-                    <TextBlock Text="Simplist" FontSize="18"/>
-                    <TextBlock Text="3" Margin="5,0,0,0" FontSize="18" Foreground="{DynamicResource PrimaryBrush}"/>
+                    <TextBlock Text="Simplist" FontSize="24"/>
+                    <TextBlock Text="3" Margin="5,0,0,0" FontSize="24" Foreground="{DynamicResource PrimaryBrush}"/>
                 </StackPanel>
                 
-                <TextBlock x:Name="textVersion" HorizontalAlignment="Right" FontSize="16" Margin="0,0,15,0"/>
+                <TextBlock x:Name="textVersion" HorizontalAlignment="Right" FontSize="18" Margin="0,0,15,0"/>
             </Grid>
 
             <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10"/>
@@ -155,7 +155,7 @@
                             </Grid>
                             <ComboBox x:Name="comboboxSync" Grid.Row="1" Grid.Column="2" Margin="10" SelectedIndex="0"/>
                             <TextBlock x:Name="textSync" Grid.Row="1" Grid.Column="2" Text="" FontSize="16" Margin="10" Visibility="Collapsed"/>
-                            <TextBox x:Name="textboxSearch" Grid.Row="2" Grid.Column="2" Margin="10" ContextMenu="{x:Null}"/>
+                            <TextBox x:Name="textboxKeyword" Grid.Row="2" Grid.Column="2" Margin="10" ContextMenu="{x:Null}"/>
                         </Grid>
 
                         <Grid x:Name="gridEpisode" Height="50">
@@ -198,22 +198,28 @@
         
         <!-- Download -->
         
-        <Grid x:Name="gridDown" Grid.Row="1" Margin="0,40,0,0" Grid.RowSpan="2" Background="WhiteSmoke" Opacity="0" IsHitTestVisible="False">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Grid x:Name="gridDown" Grid.Row="1" Margin="0,40,0,0" Grid.RowSpan="2" Background="White" Opacity="0" IsHitTestVisible="False">
+            <local:AniScrollViewer x:Name="scrollTorrent">
+                <StackPanel x:Name="stackTorrent"/>
+            </local:AniScrollViewer>
+            
+            <Grid x:Name="gridSubtitle" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
+                
+            </Grid>
         </Grid>
 
         <Grid x:Name="gridDownTab" Margin="0,-40,0,0" Height="40" VerticalAlignment="Top" Grid.Row="1" Background="{DynamicResource DarkPrimaryBrush}">
             <local:ImageButton x:Name="buttonBack" Size="40" InnerMargin="5" Source="Resources/left.png"
-                               Type="back" Response="ImageButton_Response" Margin="1,0,0,0"/>
+                               Type="back" Response="BackButton_Response" Margin="1,0,0,0"/>
+            
+            <TextBlock x:Name="textCaption" Text="" Grid.Column="1" FontSize="16" Foreground="White"
+                       HorizontalAlignment="Center" Margin="40,0"/>
+            
+            <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+                       HorizontalAlignment="Center" Opacity="0" Margin="40,0"/>
 
-            <TextBlock x:Name="textNewTitle" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
-                       TextOptions.TextFormattingMode="Display" HorizontalAlignment="Center" Margin="40,0"/>
-
-            <TextBlock x:Name="textOldNewTitle" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
-                       TextOptions.TextFormattingMode="Display" HorizontalAlignment="Center" Opacity="0" Margin="40,0"/>
+            <TextBlock x:Name="textOldCaption" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+                       HorizontalAlignment="Center" Opacity="0" Margin="40,0"/>
         </Grid>
 
         <!-- Titlebar -->
@@ -252,8 +258,8 @@
             <local:ImageButton Grid.Column="4" HorizontalAlignment="Right" Size="50" Source="Resources/close.png" 
                                Type="close" Response="ImageButton_Response"/>
 
-            <local:TabButton x:Name="tabTorrent" Grid.Column="2" Size="50" Height="40" Source="Resources/download.png" ViewMode="Hidden"/>
-            <local:TabButton x:Name="tabSubtitle" Grid.Column="3" Size="50" Height="40" Source="Resources/subtitle.png" ViewMode="Hidden"/>
+            <local:TabButton x:Name="tabTorrent" Type="Torrent" Grid.Column="2" Size="50" Height="40" Source="Resources/download.png" ViewMode="Hidden" Response="DownloadTab_Response"/>
+            <local:TabButton x:Name="tabSubtitle" Type="Subtitle" Grid.Column="3" Size="50" Height="40" Source="Resources/subtitle.png" ViewMode="Hidden" Response="DownloadTab_Response"/>
         </Grid>
     </Grid>
 </Window>
