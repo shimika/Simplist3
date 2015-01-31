@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:Simplist3"
         Title="Simplist3" Height="660" Width="380"
         WindowStartupLocation="Manual" Topmost="True" AllowsTransparency="True"
-        ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="True" Background="Transparent"
+        ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="False" Background="Transparent"
         Loaded="Window_Loaded" Deactivated="Window_Deactivated" Closing="Window_Closing">
     <Grid x:Name="gridRoot" Margin="10" Background="White">
         <Grid.Effect>
@@ -51,8 +51,8 @@
             <local:Container x:Name="containArchive" ContainerType="Archive" Response="Container_Response"/>
         </local:AniScrollViewer>
 
-        <local:AniScrollViewer x:Name="scrollNotice" Grid.Row="2" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False">
-            <StackPanel Height="500" Background="WhiteSmoke"/>
+        <local:AniScrollViewer x:Name="scrollNotify" Grid.Row="2" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False">
+            <StackPanel x:Name="stackNotify"/>
         </local:AniScrollViewer>
         
         <Grid x:Name="gridSetting" Grid.Row="2" Background="Transparent" Opacity="0" IsHitTestVisible="False">
@@ -214,12 +214,14 @@
             
             <TextBlock x:Name="textCaption" Text="" Grid.Column="1" FontSize="16" Foreground="White"
                        HorizontalAlignment="Center" Margin="40,0"/>
-            
-            <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
-                       HorizontalAlignment="Center" Opacity="0" Margin="40,0"/>
 
-            <TextBlock x:Name="textOldCaption" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
-                       HorizontalAlignment="Center" Opacity="0" Margin="40,0"/>
+            <Grid Margin="40,0" ClipToBounds="True">
+                <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+                       HorizontalAlignment="Center" Opacity="0" Margin="40,0" TextTrimming="None"/>
+
+                <TextBlock x:Name="textOldCaption" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+                       HorizontalAlignment="Center" Opacity="0" Margin="40,0" TextTrimming="None"/>
+            </Grid>
         </Grid>
 
         <!-- Titlebar -->
@@ -252,7 +254,7 @@
                                Type="shot" InnerMargin="14" Response="ImageButton_Response" />
             <local:ImageButton x:Name="buttonSort" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/season.png" Size="50"
                                Type="sort" InnerMargin="14" Response="ImageButton_Response" ViewMode="Hidden"/>
-            <local:ImageButton x:Name="buttonRefresh" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/refresh.png" Size="50"
+            <local:ImageButton x:Name="buttonRefresh" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/sync.png" Size="50"
                                Type="refresh" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
             
             <local:ImageButton Grid.Column="4" HorizontalAlignment="Right" Size="50" Source="Resources/close.png" 

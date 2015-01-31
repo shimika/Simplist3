@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace Simplist3 {
@@ -59,6 +60,16 @@ namespace Simplist3 {
 		private void timerSubtitleIndicator_Tick(object sender, EventArgs e) {
 			tabSubtitle.Source = string.Format("Resources/subtitle{0}.png", turnSubtitle);
 			turnSubtitle = (turnSubtitle + 1) % 4;
+		}
+
+		// Notification
+
+		Storyboard SbNoti;
+		private void StartNotificationIndicator() {
+			if (SbNoti == null) {
+				SbNoti = new Storyboard();
+				DoubleAnimation rotate = new DoubleAnimation();
+			}
 		}
 	}
 }

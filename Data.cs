@@ -55,6 +55,17 @@ namespace Simplist3 {
 		}
 	}
 
+	public class Listdata : IComparable<Listdata> {
+		public Listdata() { this.Raw = false; }
+
+		public string Title, Url, Type, Time, Tag, Week;
+		public bool Raw;
+
+		public int CompareTo(Listdata other) {
+			return this.Time.CompareTo(other.Time) * -1;
+		}
+	}
+
 	public class Data {
 		public static Dictionary<string, SeasonData> DictSeason = new Dictionary<string, SeasonData>();
 		public static Dictionary<string, ArchiveData> DictArchive = new Dictionary<string, ArchiveData>();

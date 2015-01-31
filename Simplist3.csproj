@@ -67,6 +67,10 @@
       <DependentUpon>Container.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data.cs" />
+    <Compile Include="Notification.cs" />
+    <Compile Include="NotiItem.xaml.cs">
+      <DependentUpon>NotiItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Torrent.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="Indicator.cs" />
@@ -102,7 +106,6 @@
     <Compile Include="ListItem.xaml.cs">
       <DependentUpon>ListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Notice.cs" />
     <Compile Include="SingleInstance.cs" />
     <Compile Include="SystemEvent.cs" />
     <Compile Include="TabButton.xaml.cs">
@@ -132,6 +135,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NotiItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TabButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

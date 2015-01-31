@@ -129,6 +129,7 @@ namespace Simplist3 {
 			foreach (byte md5b in md5bs) { md5s.Append(md5b.ToString("x2").ToLower()); }
 			return md5s.ToString();
 		}
+
 		private static int FindNumberFromString(string str) {
 			str = str.Replace("1280x720", "")
 				.Replace("x264", "").Replace("1920x1080", "")

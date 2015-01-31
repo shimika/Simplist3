@@ -67,10 +67,19 @@ namespace Simplist3 {
 
 					if (pair != null) {
 						title = pair.First;
-						list = Parser.GetMakerList(pair.Second as string);
+						list = Parser.GetMakerList(pair.Second as string, false);
 					}
 
 					e.Result = new Pair(title, list);
+					break;
+				case "Anime":
+					Pair pairAnime = args.Second as Pair;
+
+					title = pairAnime.First;
+					list = Parser.GetMakerList(pairAnime.Second as string, false);
+
+					e.Result = new Pair(title, list);
+
 					break;
 				case "Maker":
 					Pair pairMaker = args.Second as Pair;

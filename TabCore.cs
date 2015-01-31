@@ -53,7 +53,7 @@ namespace Simplist3 {
 					break;
 				case TabMode.Notification:
 					button = tabNoti;
-					element = scrollNotice;
+					element = scrollNotify;
 					break;
 				case TabMode.Setting:
 					button = tabSetting;

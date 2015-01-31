@@ -123,6 +123,19 @@ namespace Simplist3 {
 			}
 		}
 
+		public event EventHandler<CustomButtonEventArgs> EnterLeave;
+		private void gridMain_MouseEnter(object sender, MouseEventArgs e) {
+			if (EnterLeave != null) {
+				EnterLeave(this, new CustomButtonEventArgs("Enter", Type, ""));
+			}
+		}
+
+		private void gridMain_MouseLeave(object sender, MouseEventArgs e) {
+			if (EnterLeave != null) {
+				EnterLeave(this, new CustomButtonEventArgs("Leave", "", ""));
+			}
+		}
+
 		private void AnimateCircle() {
 			Storyboard sb = new Storyboard();
 
@@ -188,16 +201,41 @@ namespace Simplist3 {
 			sb.Begin(this);
 		}
 
-		public event EventHandler<CustomButtonEventArgs> EnterLeave;
-		private void gridMain_MouseEnter(object sender, MouseEventArgs e) {
-			if (EnterLeave != null) {
-				EnterLeave(this, new CustomButtonEventArgs("Enter", Type, ""));
+		Storyboard sb;
+		public void StartAnimateImage() {
+			this.IsHitTestVisible = false;
+
+			if (sb == null) {
+				sb = new Storyboard() {
+					RepeatBehavior = RepeatBehavior.Forever,
+				};
+
+				image.RenderTransformOrigin = new Point(0.5, 0.5);
+				image.RenderTransform = new RotateTransform(0);
+
+				DoubleAnimation rotate = new DoubleAnimation(0, -360, TimeSpan.FromMilliseconds(1000));
+				Storyboard.SetTarget(rotate, image);
+				Storyboard.SetTargetProperty(rotate, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)"));
+
+				sb.Children.Add(rotate);
+
+				/*
+				DoubleAnimation da = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(500));
+				Storyboard.SetTarget(da, image);
+				Storyboard.SetTargetProperty(da, new PropertyPath(Image.OpacityProperty));
+				sb.Children.Add(da);
+				 */
+
 			}
+
+			sb.Begin(this, true);
 		}
 
-		private void gridMain_MouseLeave(object sender, MouseEventArgs e) {
-			if (EnterLeave != null) {
-				EnterLeave(this, new CustomButtonEventArgs("Leave", "", ""));
+		public void StopAnimateImage() {
+			this.IsHitTestVisible = true;
+
+			if (sb != null) {
+				sb.Stop(this);
 			}
 		}
 	}

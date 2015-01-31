@@ -9,7 +9,7 @@ using System.Windows;
 namespace Simplist3 {
 	public partial class MainWindow : Window {
 
-		int NowWeekDay = 0;
+		int AnitableWeekday = 0;
 		private void Weekday_Click(object sender, CustomButtonEventArgs e) {
 			int day = -1;
 			try {
@@ -36,7 +36,7 @@ namespace Simplist3 {
 			BwAnitable.DoWork += BwAnitable_DoWork;
 			BwAnitable.RunWorkerCompleted += BwAnitable_RunWorkerCompleted;
 
-			NowWeekDay = day;
+			AnitableWeekday = day;
 			BwAnitable.RunWorkerAsync(day);
 		}
 
@@ -64,24 +64,12 @@ namespace Simplist3 {
 			if (e.ActionType == "Anitable") {
 				this.textboxTitle.Text = e.Main;
 
-				this.comboboxWeekday.SelectedIndex = NowWeekDay;
+				this.comboboxWeekday.SelectedIndex = AnitableWeekday;
 				this.textboxHour.Text = e.Detail.Substring(0, 2);
 				this.textboxMinute.Text = e.Detail.Substring(2, 2);
 
 				textboxKeyword.Focus();
 			}
-		}
-	}
-
-	public class Listdata : IComparable<Listdata> {
-		public Listdata() { this.Raw = false; }
-
-		public string Title, Url, Type, Time, ID, Week;
-		public bool Raw;
-		public DateTime UpdateTime;
-
-		public int CompareTo(Listdata other) {
-			return this.ID.CompareTo(other.ID);
 		}
 	}
 }

@@ -7,6 +7,7 @@ using System.Net.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml;
 
 namespace Simplist3 {
@@ -29,7 +30,7 @@ namespace Simplist3 {
 						Title = item["s"].GetValue().ToString(),
 						Url = string.Format("{0}{1}", "http://www.anissia.net/anitime/cap?i=", item["i"].GetValue()),
 						Type = type, Time = item["t"].GetValue().ToString(),
-						ID = item["i"].GetValue().ToString(),
+						Tag = item["i"].GetValue().ToString(),
 					};
 
 					list.Add(listitem);
@@ -70,7 +71,7 @@ namespace Simplist3 {
 			return list;
 		}
 
-		public static List<Listdata> GetMakerList(string url) {
+		public static List<Listdata> GetMakerList(string url, bool noti) {
 			List<Listdata> listMaker = new List<Listdata>();
 
 			try {
@@ -79,18 +80,13 @@ namespace Simplist3 {
 				JsonTextParser parser = new JsonTextParser();
 				JsonArrayCollection objCollection = (JsonArrayCollection)parser.Parse(result);
 
-				int maxValue = -1, epValue;
-
 				foreach (JsonObjectCollection item in objCollection) {
-					Listdata data = GetListData(item);
+					Listdata data = GetListData(item, noti);
+					if (noti) { data.Url = url; }
 					listMaker.Add(data);
-
-					epValue = Convert.ToInt32(data.ID.Substring(14, 5));
-					if (maxValue < epValue) { maxValue = epValue; }
 				}
 
 				listMaker.Sort();
-				listMaker.Reverse();
 			} catch (Exception ex) {
 				listMaker.Clear();
 			}
@@ -98,25 +94,36 @@ namespace Simplist3 {
 			return listMaker;
 		}
 
-		private static Listdata GetListData(JsonObjectCollection item) {
+		private static Listdata GetListData(JsonObjectCollection item, bool noti) {
 			Listdata data = new Listdata();
-			string strEpisode = item["s"].GetValue().ToString();
+			string episode = item["s"].GetValue().ToString();
+			bool isnum = false;
 
-			if (strEpisode.Length == 5) {
-				int episode = Convert.ToInt32(strEpisode);
+			if (episode.Length == 5) {
+				isnum = true;
+				int epinum = Convert.ToInt32(episode);
 
-				if (episode % 10 != 0) {
-					data.Title = string.Format("{0}.{1}화 {2}", episode / 10, episode % 10, item["n"].GetValue());
+				if (epinum % 10 != 0) {
+					episode = string.Format("{0:D2}.{1}", epinum / 10, epinum % 10);
 				} else {
-					data.Title = string.Format("{0}화 {1}", episode / 10, item["n"].GetValue());
+					episode = string.Format("{0:D2}", epinum / 10);
 				}
-			} else {
-				data.Title = string.Format("{0} {1}", strEpisode, item["n"].GetValue());
 			}
 
+			data.Tag = episode;
 			data.Url = item["a"].GetValue().ToString();
 			data.Type = "Maker";
-			data.ID = string.Format("{0}{1}", item["s"].GetValue().ToString(), item["d"].GetValue().ToString());
+
+			if (noti) {
+				data.Time = item["d"].GetValue().ToString();
+				data.Title = item["n"].GetValue().ToString();
+			} else {
+				data.Title = string.Format("{0}{1} {2}",
+					episode,
+					isnum ? "화" : "",
+					item["n"].GetValue());
+				data.Time = string.Format("{0}{1}", item["s"].GetValue().ToString(), item["d"].GetValue().ToString());
+			}
 
 			return data;
 		}
