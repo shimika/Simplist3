@@ -127,7 +127,7 @@ namespace Simplist3 {
 			if (e.RightButton == MouseButtonState.Pressed) {
 				AnimateButton();
 				if (Response != null) {
-					if (Status.IsRoot && ObjectType == ItemType.Season) {
+					if (Status.Root && ObjectType == ItemType.Season) {
 						Response(this, new CustomButtonEventArgs("OpenFolder", this.Title, this.Reference));
 					} else if (ObjectType == ItemType.Season || ObjectType == ItemType.Archive) {
 						Response(this, new CustomButtonEventArgs("Modify", this.Title, ObjectType.ToString()));

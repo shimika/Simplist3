@@ -11,7 +11,7 @@ namespace Simplist3 {
 	public partial class MainWindow : Window {
 		int WeekDay = -1;
 		private int RefreshWeekHead() {
-			if (WeekDay == (int)DateTime.Now.DayOfWeek) { return 0; }
+			if (WeekDay == (int)DateTime.Now.DayOfWeek) { return -1; }
 
 			WeekDay = (int)DateTime.Now.DayOfWeek;
 			int height = 0;
@@ -20,13 +20,16 @@ namespace Simplist3 {
 				(FindName(string.Format("containWeek{0}", i)) as Container)
 					.SetWeekDay(i== WeekDay);
 
-				if (i <= WeekDay) {
-					int value = (FindName(string.Format("containWeek{0}", i)) as Container)
-						.GetContainerHeight();
-					height += value;
+				int value = (FindName(string.Format("containWeek{0}", i)) as Container)
+					.GetContainerHeight();
 
-					if (i == WeekDay && value == 0) {
-						height = 0;
+				if (i <= WeekDay) {
+					if (i == WeekDay) {
+						if (value == 0) {
+							height = 0;
+						}
+					} else {
+						height += value;
 					}
 				}
 			}

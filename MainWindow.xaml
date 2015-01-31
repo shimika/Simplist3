@@ -36,7 +36,7 @@
 
             <local:TabButton x:Name="tabSeason" Grid.Column="0" Width="90" Height="40" Type="season" Source="Resources/season.png" Response="TabButton_Response" ViewMode="Focused"/>
             <local:TabButton x:Name="tabArchive" Grid.Column="1" Width="90" Height="40" Type="archive" Source="Resources/archive.png" Response="TabButton_Response"/>
-            <local:TabButton x:Name="tabNoti" Grid.Column="2" Width="90" Height="40" Type="noti" Source="Resources/notion.png" Response="TabButton_Response"/>
+            <local:TabButton x:Name="tabNotify" Grid.Column="2" Width="90" Height="40" Type="noti" Source="Resources/notion.png" Response="TabButton_Response"/>
             <local:TabButton x:Name="tabSetting" Grid.Column="3" Width="90" Height="40" Type="setting" Source="Resources/setting.png" Response="TabButton_Response"/>
         </Grid>
         
@@ -79,7 +79,7 @@
             </Grid>
 
             <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10"/>
-            <CheckBox x:Name="checkNoti" Content="자막 업로드 알림" Grid.Row="2" Margin="10"/>
+            <CheckBox x:Name="checkNotify" Content="자막 업로드 알림" Grid.Row="2" Margin="10"/>
         </Grid>
 
         <!-- Add + Modify -->
@@ -132,11 +132,11 @@
 
                             <Image Grid.Row="0" Source="Resources/time.png" Width="20" Margin="5,0,0,0"/>
                             <Image Grid.Row="1" Source="Resources/synctitle.png" Width="20" Margin="5,0,0,0"/>
-                            <Image Grid.Row="2" Source="Resources/search.png" Width="20" Margin="5,0,0,0"/>
+                            <Image x:Name="imageKeyword" Grid.Row="2" Source="Resources/search.png" Width="20" Margin="5,0,0,0"/>
 
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="시간" FontSize="16" Margin="5,0,0,0"/>
                             <TextBlock Grid.Row="1" Grid.Column="1" Text="원제" FontSize="16" Margin="5,0,0,0"/>
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="검색어" FontSize="16" Margin="5,0,0,0"/>
+                            <TextBlock x:Name="textKeyword" Grid.Row="2" Grid.Column="1" Text="검색어" FontSize="16" Margin="5,0,0,0"/>
 
                             <Grid Grid.Row="0" Grid.Column="2">
                                 <Grid.ColumnDefinitions>

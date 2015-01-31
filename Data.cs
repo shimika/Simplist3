@@ -75,7 +75,8 @@ namespace Simplist3 {
 		public enum SelectMode { All, Unfinished };
 		public static SelectMode NowSelect = SelectMode.Unfinished;
 
-		public static bool IsRoot = false;
+		public static bool Root = false;
+		public static bool Lite = false;
 	}
 
 	public class Pair {

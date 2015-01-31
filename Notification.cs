@@ -15,6 +15,8 @@ namespace Simplist3 {
 		DispatcherTimer TimerNotify;
 
 		private void InitNotification() {
+			if (Status.Lite) { return; }
+
 			UpdateNotification();
 
 			if (TimerNotify == null) {

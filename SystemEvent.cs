@@ -17,6 +17,8 @@ namespace Simplist3 {
 			grideffectShadow.BeginAnimation(
 				DropShadowEffect.OpacityProperty, 
 				new DoubleAnimation(0.4, TimeSpan.FromMilliseconds(100)));
+
+			RefreshWeekHead();
 		}
 
 		private void Window_Deactivated(object sender, EventArgs e) {
@@ -116,10 +118,15 @@ namespace Simplist3 {
 							RefreshArchiveEpisode(arcTitle, 0);
 							containArchive.RefreshContainer();
 						} else {
-							ShowDownloadWindow(
-								e.Main,
-								Data.DictArchive[arcTitle].Episode,
-								Data.DictSeason[e.Main].Keyword);
+							if (Status.Lite) {
+								ShowNotificationDownloadWindow();
+								InitSubtitle(e.Main);
+							} else {
+								ShowDownloadWindow(
+									e.Main,
+									Data.DictArchive[arcTitle].Episode,
+									Data.DictSeason[e.Main].Keyword);
+							}
 						}
 					} else {
 						if (Data.DictArchive[e.Main].Episode < 0) {
@@ -186,8 +193,6 @@ namespace Simplist3 {
 			new AltTab().ShowAltTab(this);
 			this.Opacity = 1;
 			this.Activate();
-
-			//RefreshNoticeControl(ListNotice, false, false);
 		}
 
 

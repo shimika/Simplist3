@@ -83,6 +83,12 @@ namespace Simplist3 {
 				AddOpenMode = OpenMode.ArchiveAdd;
 			}
 
+			if (Status.Lite) {
+				imageKeyword.Visibility = Visibility.Collapsed;
+				textboxKeyword.Visibility = Visibility.Collapsed;
+				textKeyword.Visibility = Visibility.Collapsed;
+			}
+
 			textboxTitle.Text = "";
 			textboxHour.Text = "";
 			textboxMinute.Text = "";

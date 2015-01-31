@@ -27,6 +27,7 @@ namespace Simplist3 {
 			this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height / 2 - 300;
 
 			LoadSetting();
+			CheckLite();
 			ApplySettingToControl();
 		}
 

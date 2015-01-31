@@ -6,6 +6,7 @@ using System.Net.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Simplist3 {
 	public partial class MainWindow : Window {
@@ -13,7 +14,7 @@ namespace Simplist3 {
 			textVersion.Text = Setting.version;
 
 			if (Directory.Exists(@"X:\Anime")) {
-				Status.IsRoot = true;
+				Status.Root = true;
 			}
 
 			ClearFolder();
@@ -86,8 +87,8 @@ namespace Simplist3 {
 
 			checkTray.Checked += SettingCheck_Changed;
 			checkTray.Unchecked += SettingCheck_Changed;
-			checkNoti.Checked += SettingCheck_Changed;
-			checkNoti.Unchecked += SettingCheck_Changed;
+			checkNotify.Checked += SettingCheck_Changed;
+			checkNotify.Unchecked += SettingCheck_Changed;
 		}
 
 		private void ClearFolder() {
@@ -105,14 +106,32 @@ namespace Simplist3 {
 
 		private void SettingCheck_Changed(object sender, RoutedEventArgs e) {
 			Setting.Tray = (bool)checkTray.IsChecked;
-			Setting.Notification = (bool)checkNoti.IsChecked;
+			Setting.Notification = (bool)checkNotify.IsChecked;
 
 			Setting.SaveSetting();
 		}
 
 		private void ApplySettingToControl() {
 			checkTray.IsChecked = Setting.Tray;
-			checkNoti.IsChecked = Setting.Notification;
+			checkNotify.IsChecked = Setting.Notification;
+		}
+
+		private void CheckLite() {
+			if (!Status.Lite) { return; }
+
+			gridNormalTab.ColumnDefinitions.Clear();
+
+			for (int i = 0; i < 3; i++) {
+				gridNormalTab.ColumnDefinitions.Add(
+					new ColumnDefinition() {
+						Width = new GridLength(1, GridUnitType.Star)
+					});
+			}
+
+			tabNotify.ViewMode = TabButton.Mode.Hidden;
+			Grid.SetColumn(tabSetting, 2);
+
+			checkNotify.Visibility = Visibility.Collapsed;
 		}
 	}
 

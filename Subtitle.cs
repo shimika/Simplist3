@@ -201,9 +201,11 @@ namespace Simplist3 {
 		private void SubtitleItem_Response(object sender, CustomButtonEventArgs e) {
 			switch (e.ActionType) {
 				case "Maker":
-					// Main : Title
-					// Detail : Blog URL
-					RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
+					if (Status.Lite) {
+						Function.ExecuteFile(new UriBuilder(e.Detail).Uri.ToString());
+					} else {
+						RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
+					}
 					break;
 				case "Blog":
 					if (e.Detail == "") {
