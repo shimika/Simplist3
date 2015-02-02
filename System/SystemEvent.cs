@@ -102,6 +102,10 @@ namespace Simplist3 {
 					Notice("바탕화면에 캡쳐를 저장했습니다");
 					break;
 
+				case "update":
+					UpdateDownload();
+					break;
+
 				default:
 					Notice(e.Main);
 					break;

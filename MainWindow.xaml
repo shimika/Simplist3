@@ -263,6 +263,8 @@
                                Type="sort" InnerMargin="14" Response="ImageButton_Response" ViewMode="Hidden"/>
             <local:ImageButton x:Name="buttonRefresh" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/sync.png" Size="50"
                                Type="refresh" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
+            <local:ImageButton x:Name="buttonUpdate" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/download.png" Size="50"
+                               Type="update" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
             
             <local:ImageButton Grid.Column="4" HorizontalAlignment="Right" Size="50" Source="Resources/close.png" 
                                Type="close" Response="ImageButton_Response"/>

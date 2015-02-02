@@ -94,6 +94,7 @@
     <Compile Include="TabCore.cs" />
     <Compile Include="Titlebar.cs" />
     <Compile Include="Tray.cs" />
+    <Compile Include="Update.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

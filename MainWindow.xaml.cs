@@ -42,6 +42,7 @@ namespace Simplist3 {
 
 			RefreshAnitable(0);
 			InitNotification();
+			InitUpdateTimer();
 
 			int height = RefreshWeekHead();
 			scrollSeason.ScrollToVerticalOffset(height);

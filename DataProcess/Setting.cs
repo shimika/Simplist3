@@ -11,7 +11,7 @@ using System.Windows.Controls;
 namespace Simplist3 {
 	public partial class MainWindow : Window {
 		private void LoadSetting() {
-			textVersion.Text = Setting.version;
+			textVersion.Text = Setting.Version;
 
 			if (Directory.Exists(@"X:\Anime")) {
 				Status.Root = true;
@@ -142,7 +142,7 @@ namespace Simplist3 {
 		public static string SaveDirectory = "";
 		public static bool Tray = false, Notification = false;
 
-		public static string version = "3.0.0";
+		public static string Version = "3.0.1";
 
 		private static object locker = new object();
 		public static void SaveSetting() {

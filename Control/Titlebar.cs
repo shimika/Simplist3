@@ -13,6 +13,7 @@ namespace Simplist3 {
 			SetImageMode(buttonShot, mode, true, TabMode.Season);
 			SetImageMode(buttonSort, mode, true, TabMode.Archive);
 			SetImageMode(buttonRefresh, mode, true, TabMode.Notification);
+			SetImageMode(buttonUpdate, mode, true, TabMode.Setting);
 
 			SetTabMode(tabTorrent, mode, TabMode.Download);
 			SetTabMode(tabSubtitle, mode, TabMode.Download);
@@ -42,6 +43,9 @@ namespace Simplist3 {
 		private void SetImageMode(ImageButton button, TabMode targetMode, bool hidden, params TabMode[] modes) {
 			foreach(TabMode mode in modes){
 				if (targetMode == mode) {
+					if (button.Type == "update" && Setting.Version == ver) {
+						break;
+					}
 					button.ViewMode = ImageButton.Mode.Visible;
 					return;
 				}

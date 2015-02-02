@@ -189,5 +189,22 @@ namespace Simplist3 {
 
 			sb.Begin(this);
 		}
+
+		public void StartAnimateImage() {
+			Storyboard sb = new Storyboard() {
+				RepeatBehavior = RepeatBehavior.Forever,
+			};
+
+			image.RenderTransformOrigin = new Point(0.5, 0.5);
+			image.RenderTransform = new RotateTransform(0);
+
+			DoubleAnimation rotate = new DoubleAnimation(0, -360, TimeSpan.FromMilliseconds(3000));
+			Storyboard.SetTarget(rotate, image);
+			Storyboard.SetTargetProperty(rotate, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)"));
+
+			sb.Children.Add(rotate);
+
+			sb.Begin(this, true);
+		}
 	}
 }
