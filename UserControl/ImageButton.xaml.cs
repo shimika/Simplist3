@@ -41,7 +41,9 @@ namespace Simplist3 {
 
 		private static void SourcePropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e) {
 			ImageButton button = obj as ImageButton;
-			button.image.Source = new BitmapImage(new Uri(e.NewValue.ToString(), UriKind.Relative));
+
+			string uri = string.Format("pack://application:,,,/Simplist3;component/{0}", e.NewValue);
+			button.image.Source = new BitmapImage(new Uri(uri));
 		}
 		#endregion
 

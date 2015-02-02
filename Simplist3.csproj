@@ -60,20 +60,20 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AltTab.cs" />
-    <Compile Include="Animation.cs" />
-    <Compile Include="Anitable.cs" />
-    <Compile Include="Container.xaml.cs">
+    <Compile Include="System\AltTab.cs" />
+    <Compile Include="Control\Animation.cs" />
+    <Compile Include="DataProcess\Anitable.cs" />
+    <Compile Include="UserControl\Container.xaml.cs">
       <DependentUpon>Container.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Data.cs" />
-    <Compile Include="Notification.cs" />
-    <Compile Include="NotiItem.xaml.cs">
+    <Compile Include="DataProcess\Data.cs" />
+    <Compile Include="DataProcess\Notification.cs" />
+    <Compile Include="UserControl\NotiItem.xaml.cs">
       <DependentUpon>NotiItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Torrent.cs" />
-    <Compile Include="Function.cs" />
-    <Compile Include="Indicator.cs" />
+    <Compile Include="DataProcess\Torrent.cs" />
+    <Compile Include="DataProcess\Function.cs" />
+    <Compile Include="Control\Indicator.cs" />
     <Compile Include="JsonUtility\JsonArrayCollection.cs" />
     <Compile Include="JsonUtility\JsonBooleanValue.cs" />
     <Compile Include="JsonUtility\JsonCollection.cs" />
@@ -83,44 +83,44 @@
     <Compile Include="JsonUtility\JsonStringValue.cs" />
     <Compile Include="JsonUtility\JsonTextParser.cs" />
     <Compile Include="JsonUtility\JsonUtility.cs" />
-    <Compile Include="Migration.cs" />
-    <Compile Include="Network.cs" />
-    <Compile Include="Parser.cs" />
-    <Compile Include="ProcessArchive.cs" />
-    <Compile Include="ProcessEpisode.cs" />
-    <Compile Include="ProcessSeason.cs" />
-    <Compile Include="Setting.cs" />
-    <Compile Include="Subtitle.cs" />
-    <Compile Include="TabCore.cs" />
-    <Compile Include="Titlebar.cs" />
-    <Compile Include="Tray.cs" />
-    <Compile Include="Update.cs" />
+    <Compile Include="DataProcess\Migration.cs" />
+    <Compile Include="DataProcess\Network.cs" />
+    <Compile Include="DataProcess\Parser.cs" />
+    <Compile Include="DataProcess\ProcessArchive.cs" />
+    <Compile Include="DataProcess\ProcessEpisode.cs" />
+    <Compile Include="DataProcess\ProcessSeason.cs" />
+    <Compile Include="DataProcess\Setting.cs" />
+    <Compile Include="DataProcess\Subtitle.cs" />
+    <Compile Include="DataProcess\TabCore.cs" />
+    <Compile Include="Control\Titlebar.cs" />
+    <Compile Include="System\Tray.cs" />
+    <Compile Include="System\Update.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AddModify.cs" />
-    <Compile Include="AniScrollViewer.cs" />
-    <Compile Include="ImageButton.xaml.cs">
+    <Compile Include="Control\AddModify.cs" />
+    <Compile Include="Control\AniScrollViewer.cs" />
+    <Compile Include="UserControl\ImageButton.xaml.cs">
       <DependentUpon>ImageButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ListItem.xaml.cs">
+    <Compile Include="UserControl\ListItem.xaml.cs">
       <DependentUpon>ListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SingleInstance.cs" />
-    <Compile Include="SystemEvent.cs" />
-    <Compile Include="TabButton.xaml.cs">
+    <Compile Include="System\SingleInstance.cs" />
+    <Compile Include="System\SystemEvent.cs" />
+    <Compile Include="UserControl\TabButton.xaml.cs">
       <DependentUpon>TabButton.xaml</DependentUpon>
     </Compile>
-    <Page Include="Container.xaml">
+    <Page Include="UserControl\Container.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ImageButton.xaml">
+    <Page Include="UserControl\ImageButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ListItem.xaml">
+    <Page Include="UserControl\ListItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -136,11 +136,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NotiItem.xaml">
+    <Page Include="UserControl\NotiItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TabButton.xaml">
+    <Page Include="UserControl\TabButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -263,6 +263,7 @@
   <ItemGroup>
     <Resource Include="Resources\tray.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

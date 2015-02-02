@@ -50,9 +50,11 @@ namespace Simplist3 {
 				url = res[1];
 
 				textVersion.Text = string.Format("{0} (Newest {1})", Setting.Version, ver);
-
 				SetImageMode(buttonUpdate, Tab, true, TabMode.Setting);
-				tabSetting.StartAnimateImage();
+
+				if (Setting.Version != ver) {
+					tabSetting.StartAnimateImage();
+				}
 			} catch {
 			}
 		}
