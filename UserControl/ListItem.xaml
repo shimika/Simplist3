@@ -6,16 +6,19 @@
              xmlns:local="clr-namespace:Simplist3" Margin="0,0,15,0"
              mc:Ignorable="d" Height="40" d:DesignWidth="360" Opacity="0">
     
-    <Grid Background="White" PreviewMouseDown="GridMouseDown">
+    <Grid Background="White" PreviewMouseDown="GridMouseDown" ClipToBounds="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="85"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.ColumnSpan="3" ClipToBounds="True" Width="560">
-            <Ellipse x:Name="circle" Margin="2" Fill="WhiteSmoke" Opacity="0" Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        <Grid Grid.ColumnSpan="3" ClipToBounds="True" Width="560" Height="240" Margin="-200">
+            <Ellipse x:Name="circle" Fill="LightGray" Opacity="0" Width="200" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left"
+                     Margin="0,0,0,0"/>
         </Grid>
+
+        <Rectangle x:Name="fill" Fill="WhiteSmoke" Opacity="0" Grid.ColumnSpan="3"/>
 
         <TextBlock x:Name="textTime" Text="00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="Gray"/>
         <TextBlock x:Name="textTitle" Text="Very Long Title" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,0"/>

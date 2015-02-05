@@ -167,11 +167,12 @@ namespace Simplist3 {
 					buttonBack.ViewMode = ImageButton.Mode.Visible;
 					StackHistory.Push(new Pair(NowCaption, NowContainer));
 					AnimateContainer(NowContainer, 0, -150);
+					ChangeCaption(title);
 				} else {
 					buttonBack.ViewMode = ImageButton.Mode.Hidden;
+					ChangeCaption(title, 0);
 				}
 
-				ChangeCaption(title);
 				AniScrollViewer scroll = new AniScrollViewer() {
 					Opacity = 0,
 					Margin = new Thickness(150, 0, 0, 0)

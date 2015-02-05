@@ -5,7 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              Height="55" d:DesignWidth="360">
-    <Grid Background="White" PreviewMouseDown="GridMouseDown">
+    <Grid Background="White" PreviewMouseDown="GridMouseDown" ClipToBounds="True">
+        <Grid Grid.ColumnSpan="3" ClipToBounds="True" Width="560" Height="255" Margin="-200">
+            <Ellipse x:Name="circle" Fill="LightGray" Opacity="0" Width="200" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left" ClipToBounds="True"/>
+        </Grid>
+        <Rectangle x:Name="fill" Fill="WhiteSmoke" Opacity="0"/>
+        
         <TextBlock x:Name="textTitle" TextTrimming="CharacterEllipsis" FontSize="16" Text="Title Title Title Title Title Title Title Title Title "
                    Margin="15,5" VerticalAlignment="Top" HorizontalAlignment="Left"/>
         
@@ -18,9 +23,6 @@
                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,5"/>
         <Rectangle Height="1" VerticalAlignment="Bottom" Margin="15,0" Fill="{DynamicResource PrimaryBrush}" Opacity="0.3"/>
 
-        <Grid Grid.ColumnSpan="3" ClipToBounds="True" Width="560">
-            <Ellipse x:Name="circle" Margin="2" Fill="WhiteSmoke" Opacity="0" Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        </Grid>
         
         <Button Background="Transparent" Click="Button_Click"/>
     </Grid>

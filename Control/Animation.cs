@@ -8,12 +8,16 @@ using System.Windows.Media.Animation;
 
 namespace Simplist3 {
 	class Animation {
-		public static ThicknessAnimation GetThicknessAnimation(double duration, double left, double top, FrameworkElement fe = null, double right = 0, double bottom = 0, double delay = 0) {
+		public static ThicknessAnimation GetThicknessAnimation(
+			double duration, double left, double top, 
+			FrameworkElement fe = null, 
+			double right = 0, double bottom = 0, double delay = 0, double exponent = 5) {
+
 			ThicknessAnimation ta = new ThicknessAnimation(
 					new Thickness(left, top, right, bottom),
 					TimeSpan.FromMilliseconds(duration)) {
 						EasingFunction = new ExponentialEase() {
-							Exponent = 5, EasingMode = EasingMode.EaseOut,
+							Exponent = exponent, EasingMode = EasingMode.EaseOut,
 						},
 						BeginTime = TimeSpan.FromMilliseconds(delay)
 					};

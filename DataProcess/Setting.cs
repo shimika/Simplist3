@@ -11,10 +11,11 @@ using System.Windows.Controls;
 namespace Simplist3 {
 	public partial class MainWindow : Window {
 		private void LoadSetting() {
-			textVersion.Text = Setting.Version;
+			textVersion.Text = Version.NowVersion;
 
 			if (Directory.Exists(@"X:\Anime")) {
 				Status.Root = true;
+				SetImageByMode(buttonArrange, Tab, true, TabMode.Season);
 			}
 
 			ClearFolder();
@@ -141,8 +142,6 @@ namespace Simplist3 {
 
 		public static string SaveDirectory = "";
 		public static bool Tray = false, Notification = false;
-
-		public static string Version = "3.0.1";
 
 		private static object locker = new object();
 		public static void SaveSetting() {

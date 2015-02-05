@@ -255,20 +255,28 @@ namespace Simplist3 {
 
 			Storyboard sb = new Storyboard();
 
-			circle.Margin = new Thickness(MouseDownPoint.X - 150, 0, 0, 0);
+			circle.Margin = new Thickness(MouseDownPoint.X, MouseDownPoint.Y, 0, 0);
 			circle.RenderTransformOrigin = new Point(0.5, 0.5);
-			circle.RenderTransform = new ScaleTransform(0.5, 1);
+			circle.RenderTransform = new ScaleTransform(0.2, 0.2);
 
-			DoubleAnimation opacity = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(250));
-			Storyboard.SetTarget(opacity, circle);
-			Storyboard.SetTargetProperty(opacity, new PropertyPath(Ellipse.OpacityProperty));
+			DoubleAnimation opon = Animation.GetDoubleAnimation(1, this.circle, 150);
+			DoubleAnimation rton = Animation.GetDoubleAnimation(1, this.fill, 150);
 
-			DoubleAnimation scalex = new DoubleAnimation(0.5, 1, TimeSpan.FromMilliseconds(250));
+			DoubleAnimation opoff = Animation.GetDoubleAnimation(0, this.circle, 300, 100);
+			DoubleAnimation rtoff = Animation.GetDoubleAnimation(0, this.fill, 300, 100);
+
+			DoubleAnimation scalex = new DoubleAnimation(0.2, 0.7, TimeSpan.FromMilliseconds(450));
+			DoubleAnimation scaley = new DoubleAnimation(0.2, 0.7, TimeSpan.FromMilliseconds(450));
 			Storyboard.SetTarget(scalex, circle);
+			Storyboard.SetTarget(scaley, circle);
+			scalex.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
+			scaley.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
 			Storyboard.SetTargetProperty(scalex, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleX)"));
+			Storyboard.SetTargetProperty(scaley, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
 
-			sb.Children.Add(opacity);
-			sb.Children.Add(scalex);
+			sb.Children.Add(opon); sb.Children.Add(opoff);
+			sb.Children.Add(rton); sb.Children.Add(rtoff);
+			sb.Children.Add(scalex); sb.Children.Add(scaley);
 
 			sb.Begin(this);
 		}

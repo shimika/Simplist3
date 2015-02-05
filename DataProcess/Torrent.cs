@@ -11,13 +11,17 @@ using System.Windows.Threading;
 
 namespace Simplist3 {
 	public partial class MainWindow : Window {
+		string TorrentCaption = "";
 		private void ShowDownloadWindow(string title, int episode, string keyword) {
 			SetTitlebar(TabMode.Download);
 			Mode = ShowMode.Download;
 
 			textNewCaption.Text = "";
-			textCaption.Text = string.Format("({0}화) {1}", episode, title);
 			buttonBack.ViewMode = ImageButton.Mode.Hidden;
+
+			TorrentCaption = title;
+			textCaption.Text = title;
+			textEpisode.Text = episode.ToString();
 
 			stackTorrent.Children.Clear();
 
@@ -94,7 +98,7 @@ namespace Simplist3 {
 			scrollTorrent.IsHitTestVisible = hit;
 			gridSubtitle.IsHitTestVisible = !hit;
 
-			textCaption.Visibility = hit ? Visibility.Visible : Visibility.Collapsed;
+			gridTorrentCaption.Visibility = hit ? Visibility.Visible : Visibility.Collapsed;
 			textOldCaption.Visibility = !hit ? Visibility.Visible : Visibility.Collapsed;
 			textNewCaption.Visibility = !hit ? Visibility.Visible : Visibility.Collapsed;
 
@@ -112,25 +116,19 @@ namespace Simplist3 {
 
 			gridDown.IsHitTestVisible = opacity == 1 ? true : false;
 
-			DoubleAnimation da = new DoubleAnimation(opacity, TimeSpan.FromMilliseconds(250));
-			ThicknessAnimation ta = new ThicknessAnimation(new Thickness(0, topMargin, 0, 0), TimeSpan.FromMilliseconds(350)) {
-				EasingFunction = new ExponentialEase() {
-					Exponent = 5,
-					EasingMode = EasingMode.EaseOut,
-				}
-			};
+			DoubleAnimation opDown = Animation.GetDoubleAnimation(opacity, gridDown, 250, 250 * opacity);
+			DoubleAnimation opCont = Animation.GetDoubleAnimation(1 - opacity, gridContent, 250, 250 * (1 - opacity));
+			ThicknessAnimation taDownTab = Animation.GetThicknessAnimation(350, 0, topMargin, gridDownTab);
+			ThicknessAnimation taCont = Animation.GetThicknessAnimation(500, 0, -150 * opacity, gridContent, 0, 0, 250 * (1 - opacity));
 
-			Storyboard.SetTarget(da, gridDown);
-			Storyboard.SetTarget(ta, gridDownTab);
-			Storyboard.SetTargetProperty(da, new PropertyPath(Grid.OpacityProperty));
-			Storyboard.SetTargetProperty(ta, new PropertyPath(Grid.MarginProperty));
+			sb.Children.Add(opDown);
+			sb.Children.Add(opCont);
+			sb.Children.Add(taDownTab);
+			//sb.Children.Add(taCont);
 
-			sb.Children.Add(da);
-			sb.Children.Add(ta);
-
-			sb.BeginTime = TimeSpan.FromMilliseconds(opacity == 0 ? 0 : 100);
 			sb.Begin(this);
 		}
+
 		private void StopBackgroundWorker(BackgroundWorker bw) {
 			if (bw == null) { return; }
 
@@ -142,6 +140,21 @@ namespace Simplist3 {
 		private bool CheckWorkerCancel(object sender) {
 			BackgroundWorker bw = sender as BackgroundWorker;
 			return bw.CancellationPending;
+		}
+
+		private void TorrentEpisode_Response(object sender, CustomButtonEventArgs e) {
+			int type = 0;
+			try {
+				type = Convert.ToInt32(e.Main);
+			} catch { return; }
+
+			if (!Data.DictSeason.ContainsKey(TorrentCaption)) { return; }
+
+			string source = Data.DictSeason[TorrentCaption].ArchiveTitle;
+			int episode = Math.Max(0, Data.DictArchive[source].Episode + type);
+
+			textEpisode.Text = episode.ToString();
+			RefreshArchiveEpisode(source, episode);
 		}
 	}
 }

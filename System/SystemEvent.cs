@@ -102,8 +102,16 @@ namespace Simplist3 {
 					Notice("바탕화면에 캡쳐를 저장했습니다");
 					break;
 
+				case "arrange":
+					ArrangeEpisode();
+					break;
+
 				case "update":
 					UpdateDownload();
+					break;
+
+				case "vercheck":
+					CheckUpdate(true);
 					break;
 
 				default:

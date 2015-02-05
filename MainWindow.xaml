@@ -5,15 +5,15 @@
         Title="Simplist3" Height="660" Width="380"
         WindowStartupLocation="Manual" Topmost="True" AllowsTransparency="True"
         ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="False" Background="Transparent"
-        Loaded="Window_Loaded" Deactivated="Window_Deactivated" Closing="Window_Closing" FocusVisualStyle="{x:Null}">
+        Loaded="Window_Loaded" Deactivated="Window_Deactivated" Closing="Window_Closing" PreviewKeyDown="GlobalPreviewKeyDown" FocusVisualStyle="{x:Null}">
     
     <Window.Resources>
         <Style TargetType="local:AniScrollViewer">
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         </Style>
     </Window.Resources>
-    
-    <Grid x:Name="gridRoot" Margin="10" Background="White">
+
+    <Grid x:Name="gridRoot" Margin="10" Background="White" >
         <Grid.Effect>
             <DropShadowEffect x:Name="grideffectShadow" BlurRadius="10" ShadowDepth="1" Direction="270" Color="Black" Opacity="0.6"/>
         </Grid.Effect>
@@ -23,9 +23,53 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
+        <!-- Content Area -->
+
+        <Grid x:Name="gridContent" Grid.Row="2" Height="550" ClipToBounds="True">
+            <local:AniScrollViewer x:Name="scrollSeason" VerticalScrollBarVisibility="Auto" ClipToBounds="True">
+                <StackPanel x:Name="stackSeason" Background="White">
+                    <local:Container x:Name="containWeek0" Title="일요일" Response="Container_Response"/>
+                    <local:Container x:Name="containWeek1" Title="월요일" Response="Container_Response"/>
+                    <local:Container x:Name="containWeek2" Title="화요일" Response="Container_Response"/>
+                    <local:Container x:Name="containWeek3" Title="수요일" Response="Container_Response"/>
+                    <local:Container x:Name="containWeek4" Title="목요일" Response="Container_Response"/>
+                    <local:Container x:Name="containWeek5" Title="금요일" Response="Container_Response"/>
+                    <local:Container x:Name="containWeek6" Title="토요일" Response="Container_Response"/>
+                </StackPanel>
+            </local:AniScrollViewer>
+
+            <local:AniScrollViewer x:Name="scrollArchive" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
+                <local:Container x:Name="containArchive" ContainerType="Archive" Response="Container_Response"/>
+            </local:AniScrollViewer>
+
+            <local:AniScrollViewer x:Name="scrollNotify" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
+                <StackPanel x:Name="stackNotify"/>
+            </local:AniScrollViewer>
+
+            <Grid x:Name="gridSetting" Background="Transparent" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
+                        <TextBlock Text="Simplist" FontSize="24"/>
+                        <TextBlock Text="3" Margin="5,0,0,0" FontSize="24" Foreground="{DynamicResource PrimaryBrush}"/>
+                    </StackPanel>
+
+                    <TextBlock x:Name="textVersion" HorizontalAlignment="Right" FontSize="18" Margin="0,0,15,0"/>
+                </Grid>
+
+                <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10"/>
+                <CheckBox x:Name="checkNotify" Content="자막 업로드 알림" Grid.Row="2" Margin="10"/>
+            </Grid>
+        </Grid>
 
         <!-- Tab -->
-        
+
         <Grid x:Name="gridNormalTab" Grid.Row="1" Background="{DynamicResource PrimaryBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -38,48 +82,6 @@
             <local:TabButton x:Name="tabArchive" Grid.Column="1" Width="90" Height="40" Type="archive" Source="Resources/archive.png" Response="TabButton_Response"/>
             <local:TabButton x:Name="tabNotify" Grid.Column="2" Width="90" Height="40" Type="noti" Source="Resources/notion.png" Response="TabButton_Response"/>
             <local:TabButton x:Name="tabSetting" Grid.Column="3" Width="90" Height="40" Type="setting" Source="Resources/setting.png" Response="TabButton_Response"/>
-        </Grid>
-        
-        <!-- Content Area -->
-
-        <local:AniScrollViewer x:Name="scrollSeason" Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <StackPanel x:Name="stackSeason" Background="White">
-                <local:Container x:Name="containWeek0" Title="일요일" Response="Container_Response"/>
-                <local:Container x:Name="containWeek1" Title="월요일" Response="Container_Response"/>
-                <local:Container x:Name="containWeek2" Title="화요일" Response="Container_Response"/>
-                <local:Container x:Name="containWeek3" Title="수요일" Response="Container_Response"/>
-                <local:Container x:Name="containWeek4" Title="목요일" Response="Container_Response"/>
-                <local:Container x:Name="containWeek5" Title="금요일" Response="Container_Response"/>
-                <local:Container x:Name="containWeek6" Title="토요일" Response="Container_Response"/>
-            </StackPanel>
-        </local:AniScrollViewer>
-        
-        <local:AniScrollViewer x:Name="scrollArchive" Grid.Row="2" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False">
-            <local:Container x:Name="containArchive" ContainerType="Archive" Response="Container_Response"/>
-        </local:AniScrollViewer>
-
-        <local:AniScrollViewer x:Name="scrollNotify" Grid.Row="2" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False">
-            <StackPanel x:Name="stackNotify"/>
-        </local:AniScrollViewer>
-        
-        <Grid x:Name="gridSetting" Grid.Row="2" Background="Transparent" Opacity="0" IsHitTestVisible="False">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
-            </Grid.RowDefinitions>
-            
-            <Grid>
-                <StackPanel Orientation="Horizontal" Margin="15,0,0,0">
-                    <TextBlock Text="Simplist" FontSize="24"/>
-                    <TextBlock Text="3" Margin="5,0,0,0" FontSize="24" Foreground="{DynamicResource PrimaryBrush}"/>
-                </StackPanel>
-                
-                <TextBlock x:Name="textVersion" HorizontalAlignment="Right" FontSize="18" Margin="0,0,15,0"/>
-            </Grid>
-
-            <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10"/>
-            <CheckBox x:Name="checkNotify" Content="자막 업로드 알림" Grid.Row="2" Margin="10"/>
         </Grid>
 
         <!-- Add + Modify -->
@@ -217,10 +219,23 @@
 
         <Grid x:Name="gridDownTab" Margin="0,-40,0,0" Height="40" VerticalAlignment="Top" Grid.Row="1" Background="{DynamicResource DarkPrimaryBrush}">
             <local:ImageButton x:Name="buttonBack" Size="40" InnerMargin="5" Source="Resources/left.png"
-                               Type="back" Response="BackButton_Response" Margin="1,0,0,0"/>
-            
-            <TextBlock x:Name="textCaption" Text="" Grid.Column="1" FontSize="16" Foreground="White"
-                       HorizontalAlignment="Center" Margin="40,0"/>
+                               Type="back" Response="BackButton_Response" Margin="1,0,0,0" ViewMode="Hidden"/>
+
+            <Grid x:Name="gridTorrentCaption">
+                <TextBlock x:Name="textCaption" Text="" Grid.Column="1" FontSize="16" Foreground="White"
+                           HorizontalAlignment="Left" Margin="15,0,110,0"/>
+                <Grid x:Name="gridEpisodeBox" Width="85" Margin="0,0,15,0" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                    </Grid.ColumnDefinitions>
+
+                    <local:ImageButton Size="20" Grid.Column="0" Source="Resources/minus.png" InnerMargin="1" VerticalAlignment="Center" Type="-1" Response="TorrentEpisode_Response"/>
+                    <TextBlock x:Name="textEpisode" Grid.Column="1" Text="00" FontSize="18" VerticalAlignment="Center" FontFamily="Century Gothic" Foreground="White" TextAlignment="Center"/>
+                    <local:ImageButton Size="20" Grid.Column="2" Source="Resources/plus.png" InnerMargin="1" VerticalAlignment="Center" Type="1" Response="TorrentEpisode_Response"/>
+                </Grid>
+            </Grid>
 
             <Grid Margin="40,0" ClipToBounds="True">
                 <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
@@ -256,15 +271,22 @@
 
             <local:ImageButton x:Name="buttonAdd" Size="50" Source="Resources/plus.png"
                                Type="add" Response="ImageButton_Response"/>
-            
+
+            <local:ImageButton x:Name="buttonArrange" Grid.Column="2" HorizontalAlignment="Right" Source="Resources/refresh.png" Size="50"
+                               Type="arrange" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
             <local:ImageButton x:Name="buttonShot" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/screenshot.png" Size="50"
                                Type="shot" InnerMargin="14" Response="ImageButton_Response" />
+            
             <local:ImageButton x:Name="buttonSort" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/season.png" Size="50"
                                Type="sort" InnerMargin="14" Response="ImageButton_Response" ViewMode="Hidden"/>
+            
             <local:ImageButton x:Name="buttonRefresh" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/sync.png" Size="50"
                                Type="refresh" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
+            
             <local:ImageButton x:Name="buttonUpdate" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/download.png" Size="50"
                                Type="update" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
+            <local:ImageButton x:Name="buttonUpdateCheck" Grid.Column="3" HorizontalAlignment="Right" Source="Resources/refresh.png" Size="50"
+                               Type="vercheck" InnerMargin="12" Response="ImageButton_Response" ViewMode="Hidden"/>
             
             <local:ImageButton Grid.Column="4" HorizontalAlignment="Right" Size="50" Source="Resources/close.png" 
                                Type="close" Response="ImageButton_Response"/>

@@ -40,12 +40,12 @@ namespace Simplist3 {
 				(FindName(string.Format("containWeek{0}", i)) as Container).Add(false, listS.ToArray());
 			}
 
-			RefreshAnitable(0);
-			InitNotification();
-			InitUpdateTimer();
-
 			int height = RefreshWeekHead();
 			scrollSeason.ScrollToVerticalOffset(height);
+
+			RefreshAnitable(WeekDay);
+			InitNotification();
+			InitUpdateTimer();
 
 			this.Activated += Window_Activated;
 		}
