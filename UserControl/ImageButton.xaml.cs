@@ -204,7 +204,7 @@ namespace Simplist3 {
 		}
 
 		Storyboard sb;
-		public void StartAnimateImage() {
+		public void StartAnimateImage(int direction = -1) {
 			this.IsHitTestVisible = false;
 
 			if (sb == null) {
@@ -215,7 +215,7 @@ namespace Simplist3 {
 				image.RenderTransformOrigin = new Point(0.5, 0.5);
 				image.RenderTransform = new RotateTransform(0);
 
-				DoubleAnimation rotate = new DoubleAnimation(0, -360, TimeSpan.FromMilliseconds(1000));
+				DoubleAnimation rotate = new DoubleAnimation(0, 360 * direction, TimeSpan.FromMilliseconds(1000));
 				Storyboard.SetTarget(rotate, image);
 				Storyboard.SetTargetProperty(rotate, new PropertyPath("(UIElement.RenderTransform).(RotateTransform.Angle)"));
 

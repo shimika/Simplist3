@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ namespace Simplist3 {
 				this.textTitle.Foreground = Brushes.Crimson;
 				this.textTitle.Text = string.Format("{0} ★", this.Title);
 			} else {
-				this.textTitle.Opacity = 0.5;
+				this.textTitle.Opacity = 1;
 				this.textTitle.Foreground = FindResource("PrimaryBrush") as SolidColorBrush;
 				this.textTitle.Text = this.Title;
 			}

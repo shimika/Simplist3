@@ -39,14 +39,8 @@ namespace Simplist3 {
 		}
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			if (!Setting.Tray) {
-				tray.Dispose();
-			} else {
-				Notice("", false, 0);
-				e.Cancel = true;
-				this.Opacity = 0;
-				new AltTab().HideAltTab(this);
-			}
+			tray.Dispose();
+			Setting.SaveSetting();
 		}
 
 		private void ImageButton_Response(object sender, CustomButtonEventArgs e) {
@@ -73,7 +67,13 @@ namespace Simplist3 {
 					}
 					break;
 				case "close":
-					this.Close();
+					if (Setting.Tray) {
+						this.Opacity = 0;
+						Notice("", false, 0);
+						new AltTab().HideAltTab(this);
+					} else {
+						this.Close();
+					}
 					break;
 
 				case "disable":
@@ -111,6 +111,7 @@ namespace Simplist3 {
 					break;
 
 				case "vercheck":
+					//MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().Location);
 					CheckUpdate(true);
 					break;
 

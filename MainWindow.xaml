@@ -218,9 +218,6 @@
         </Grid>
 
         <Grid x:Name="gridDownTab" Margin="0,-40,0,0" Height="40" VerticalAlignment="Top" Grid.Row="1" Background="{DynamicResource DarkPrimaryBrush}">
-            <local:ImageButton x:Name="buttonBack" Size="40" InnerMargin="5" Source="Resources/left.png"
-                               Type="back" Response="BackButton_Response" Margin="1,0,0,0" ViewMode="Hidden"/>
-
             <Grid x:Name="gridTorrentCaption">
                 <TextBlock x:Name="textCaption" Text="" Grid.Column="1" FontSize="16" Foreground="White"
                            HorizontalAlignment="Left" Margin="15,0,110,0"/>
@@ -237,12 +234,17 @@
                 </Grid>
             </Grid>
 
-            <Grid Margin="40,0" ClipToBounds="True">
-                <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+            <Grid x:Name="gridSubtitleCaption">
+                <local:ImageButton x:Name="buttonBack" Size="40" InnerMargin="5" Source="Resources/left.png"
+                               Type="back" Response="BackButton_Response" Margin="1,0,0,0" ViewMode="Hidden"/>
+
+                <Grid Margin="40,0" ClipToBounds="True">
+                    <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
                        HorizontalAlignment="Center" Opacity="0" Margin="40,0" TextTrimming="None"/>
 
-                <TextBlock x:Name="textOldCaption" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+                    <TextBlock x:Name="textOldCaption" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
                        HorizontalAlignment="Center" Opacity="0" Margin="40,0" TextTrimming="None"/>
+                </Grid>
             </Grid>
         </Grid>
 

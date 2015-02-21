@@ -46,10 +46,10 @@ namespace Simplist3 {
 		private void SetImageByMode(ImageButton button, TabMode targetMode, bool hidden, params TabMode[] modes) {
 			foreach(TabMode mode in modes){
 				if (targetMode == mode) {
-					if (button.Type == "update" && Version.NowVersion == ver) {
+					if (button.Type == "update" && Version.NowVersion == NewVersion) {
 						break;
 					}
-					if (button.Type == "vercheck" && Version.NowVersion != ver) {
+					if (button.Type == "vercheck" && Version.NowVersion != NewVersion) {
 						break;
 					}
 					if (button.Type == "arrange" && !Status.Root) {

@@ -99,8 +99,7 @@ namespace Simplist3 {
 			gridSubtitle.IsHitTestVisible = !hit;
 
 			gridTorrentCaption.Visibility = hit ? Visibility.Visible : Visibility.Collapsed;
-			textOldCaption.Visibility = !hit ? Visibility.Visible : Visibility.Collapsed;
-			textNewCaption.Visibility = !hit ? Visibility.Visible : Visibility.Collapsed;
+			gridSubtitleCaption.Visibility = !hit ? Visibility.Visible : Visibility.Collapsed;
 
 			tabTorrent.ViewMode = hit ? TabButton.Mode.Focused : TabButton.Mode.Clickable;
 			tabSubtitle.ViewMode = hit ? TabButton.Mode.Clickable : TabButton.Mode.Focused;

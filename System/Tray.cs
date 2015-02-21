@@ -20,7 +20,7 @@ namespace Simplist3 {
 
 			tray.MouseDoubleClick += delegate(object sender, System.Windows.Forms.MouseEventArgs e) { ActivateMe(); };
 			copen.Click += delegate(object sender, EventArgs e) { ActivateMe(); };
-			cshutdown.Click += delegate(object sender, EventArgs e) { Setting.Tray = false; this.Close(); };
+			cshutdown.Click += delegate(object sender, EventArgs e) { this.Close(); };
 
 			ctxt.Items.Add(copen);
 			ctxt.Items.Add(cshutdown);
