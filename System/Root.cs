@@ -36,8 +36,9 @@ namespace Simplist3 {
 				for (int i = 1; i <= 2500; i++) {
 					string file = Function.CleanFileName(string.Format("{0} - {1:D2}", data.Title, i));
 					string mp4 = string.Format("{0}.mp4", file);
+					string mkv = string.Format("{0}.mkv", file);
 
-					if (!File.Exists(Path.Combine(path, mp4))) {
+					if (!File.Exists(Path.Combine(path, mp4)) && !File.Exists(Path.Combine(path, mkv))) {
 						episode = i;
 						break;
 					} else {

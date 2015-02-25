@@ -111,6 +111,30 @@ namespace Simplist3 {
 
 			Grid.SetColumn(this.buttonMain, 0);
 			Grid.SetColumnSpan(this.buttonMain, 3);
+
+			string sitetype = "DefaultTag";
+			switch (data.SiteType) {
+				case 0: break;
+				case 1:
+					sitetype = "NaverTag";
+					break;
+				case 2:
+					sitetype = "TistoryTag";
+					break;
+				case 3:
+					sitetype = "EgloosTag";
+					break;
+				case 4:
+					sitetype = "Fc2Tag";
+					break;
+				default:
+					return;
+			}
+
+			try {
+				sitetag.Fill = FindResource(sitetype) as SolidColorBrush;
+				sitetag.Visibility = Visibility.Visible;
+			} catch { }
 		}
 
 		Point MouseDownPoint;

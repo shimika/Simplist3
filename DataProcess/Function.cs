@@ -52,6 +52,59 @@ namespace Simplist3 {
 			return a[s1.Length, s2.Length];
 		}
 
+		public static string GetSubstring(string original, string start, string end) {
+			int s = original.IndexOf(start);
+			int e = original.IndexOf(end, Math.Max(s, 0));
+
+			if (s < 0 || e < 0) { return null; }
+
+			return original.Substring(s, e - s + end.Length);
+		}
+
+		public static string GetHttpParams(Dictionary<string, string> list) {
+			StringBuilder builder = new StringBuilder();
+			foreach (KeyValuePair<string, string> kvp in list) {
+				builder.Append(string.Format("{0}={1}&", kvp.Key, kvp.Value));
+			}
+			return builder.ToString();
+		}
+
+		public static Pair TitleMatching(List<Listdata> list, string subtitle) {
+			int max = -1, min = 9999;
+			string url1 = null, title1 = null;
+			string url2 = null, title2 = null;
+
+			foreach (Listdata data in list) {
+				int prefix = Function.StringPrefixMatch(subtitle, data.Title);
+				if (prefix == subtitle.Length || prefix == data.Title.Length) {
+					return new Pair(data.Title, data.Url);
+				}
+
+				int match = Function.StringMatching(subtitle, data.Title);
+
+				if (max < prefix) {
+					max = prefix;
+					title1 = data.Title;
+					url1 = data.Url;
+				}
+
+				if (min < match) {
+					min = match;
+					title2 = data.Title;
+					url2 = data.Url;
+				}
+			}
+
+			if (max >= subtitle.Length / 2) {
+				return new Pair(title1, url1);
+			}
+			if (min < subtitle.Length / 3) {
+				return new Pair(title2, url2);
+			}
+
+			return null;
+		}
+
 		public static string GetWeekday(string w) {
 			string str = "일월화수목금토";
 			try {

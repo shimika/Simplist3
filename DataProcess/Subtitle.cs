@@ -63,7 +63,7 @@ namespace Simplist3 {
 
 					list = Parser.Week(value, "Weekdata");
 					title = Function.GetWeekday(value);
-					Pair pair = CheckMatching(list);
+					Pair pair = Function.TitleMatching(list, NowSubtitle);
 
 					if (pair != null) {
 						title = pair.First;
@@ -87,6 +87,14 @@ namespace Simplist3 {
 					list = Parser.GetFileList(url);
 
 					e.Result = new Pair(pairMaker.First, list);
+
+					break;
+				case "Maker2":
+					Pair pairMaker2 = args.Second as Pair;
+					string url2 = pairMaker2.Second as string;
+					list = Parser.GetFileList(url2, false);
+
+					e.Result = new Pair(pairMaker2.First, list);
 
 					break;
 				case "File":
@@ -114,45 +122,15 @@ namespace Simplist3 {
 					}
 
 					break;
+				case "Expand":
+					Pair pairExpand = args.Second as Pair;
+
+					list = Parser.ExpandNaverBlog(pairExpand.Second as string);
+					e.Result = new Pair(pairExpand.First, list);
+					break;
 			}
 
 			e.Cancel = CheckWorkerCancel(sender);
-		}
-
-		private Pair CheckMatching(List<Listdata> list) {
-			int max = -1, min = 9999;
-			string url1 = null, title1 = null;
-			string url2 = null, title2 = null;
-
-			foreach (Listdata data in list) {
-				int prefix = Function.StringPrefixMatch(NowSubtitle, data.Title);
-				if (prefix == NowSubtitle.Length || prefix == data.Title.Length) {
-					return new Pair(data.Title, data.Url);
-				}
-
-				int match = Function.StringMatching(NowSubtitle, data.Title);
-
-				if (max < prefix) {
-					max = prefix;
-					title1 = data.Title;
-					url1 = data.Url;
-				}
-
-				if (min < match) {
-					min = match;
-					title2 = data.Title;
-					url2 = data.Url;
-				}
-			}
-
-			if (max >= NowSubtitle.Length / 2) {
-				return new Pair(title1, url1);
-			}
-			if (min < NowSubtitle.Length / 3) {
-				return new Pair(title2, url2);
-			}
-
-			return null;
 		}
 
 		private void BwSubtitle_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
@@ -175,7 +153,8 @@ namespace Simplist3 {
 
 				AniScrollViewer scroll = new AniScrollViewer() {
 					Opacity = 0,
-					Margin = new Thickness(150, 0, 0, 0)
+					Margin = new Thickness(150, 0, 0, 0),
+					VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
 				};
 				StackPanel stack = new StackPanel();
 
@@ -208,12 +187,19 @@ namespace Simplist3 {
 						RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
 					}
 					break;
+				case "Maker2":
+					RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
+					break;
 				case "Blog":
 					if (e.Detail == "") {
 						Notice("URL 분석 실패");
 					} else {
 						Function.ExecuteFile(new UriBuilder(e.Detail).Uri.ToString());
 					}
+					break;
+				case "Expand":
+					//Parser.ExpandNaverBlod(e.Detail);
+					RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
 					break;
 				case "File":
 					RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));

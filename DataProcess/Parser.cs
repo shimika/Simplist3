@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Net.Json;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Xml;
 
@@ -20,7 +22,7 @@ namespace Simplist3 {
 			} catch { return list; }
 
 			try {
-				string result = Network.GetHtml(@"http://www.anissia.net/anitime/list?w=" + weekCode);
+				string result = Network.GET(@"http://www.anissia.net/anitime/list?w=" + weekCode);
 
 				JsonTextParser parser = new JsonTextParser();
 				JsonArrayCollection obj = (JsonArrayCollection)parser.Parse(result);
@@ -47,7 +49,7 @@ namespace Simplist3 {
 
 			try {
 				int count = 0;
-				string result = Network.GetHtml(
+				string result = Network.GET(
 					string.Format("{0}{1}", "http://www.nyaa.eu/?page=rss&cats=1_0&term=", keyword));
 
 				XmlDocument xmlDoc = new XmlDocument();
@@ -75,7 +77,7 @@ namespace Simplist3 {
 			List<Listdata> listMaker = new List<Listdata>();
 
 			try {
-				string result = Network.GetHtml(url);
+				string result = Network.GET(url);
 
 				JsonTextParser parser = new JsonTextParser();
 				JsonArrayCollection objCollection = (JsonArrayCollection)parser.Parse(result);
@@ -83,6 +85,8 @@ namespace Simplist3 {
 				foreach (JsonObjectCollection item in objCollection) {
 					Listdata data = GetListData(item, noti);
 					if (noti) { data.Url = url; }
+
+
 					listMaker.Add(data);
 				}
 
@@ -125,19 +129,30 @@ namespace Simplist3 {
 				data.Time = string.Format("{0}{1}", item["s"].GetValue().ToString(), item["d"].GetValue().ToString());
 			}
 
+			try {
+				Uri uri = new UriBuilder(data.Url).Uri;
+				string host = uri.Host;
+
+				if (host.IndexOf("naver.com") >= 0 || host.IndexOf("naver.com") >= 0) {
+					data.SiteType = 1;
+				} else if (host.IndexOf("tistory") >= 0) {
+					data.SiteType = 2;
+				} else if (host.IndexOf("egloos") >= 0) {
+					data.SiteType = 3;
+				} else if (host.IndexOf("fc2") >= 0) {
+					data.SiteType = 4;
+				} else {
+					data.SiteType = 0;
+				}
+			} catch { }
+
 			return data;
 		}
 
 		enum SiteType { Naver, Other };
-		public static List<Listdata> GetFileList(string url) {
-			string result = Network.GetHtml(url);
+		public static List<Listdata> GetFileList(string url, bool expand = true) {
+			string result = Network.GET(url);
 			bool isHakerano = url.IndexOf("hakerano") >= 0;
-
-			Listdata blog = new Listdata(){
-				Title = "블로그로 이동",
-				Type = "Blog",
-				Url = url,
-			};
 
 			if (result == "") { return new List<Listdata>(); }
 
@@ -150,7 +165,7 @@ namespace Simplist3 {
 			if (DictCount[SiteType.Naver] > DictCount[SiteType.Other]) { sitetype = SiteType.Naver; }
 
 			if (sitetype == SiteType.Naver) {
-				result = Network.GetHtml(url, "EUC-KR");
+				result = Network.GET(url, "EUC-KR");
 				string nURL = "";
 
 				if (result.IndexOf("mainFrame") < 0 && result.IndexOf("aPostFiles") < 0) {
@@ -163,7 +178,7 @@ namespace Simplist3 {
 						}
 						if (nURL != "") {
 							url = nURL;
-							result = Network.GetHtml(url, "EUC-KR");
+							result = Network.GET(url, "EUC-KR");
 						}
 					}
 				}
@@ -188,7 +203,7 @@ namespace Simplist3 {
 					if (nURL != "") { url = nURL; }
 				}
 
-				result = Network.GetHtml(url);
+				result = Network.GET(url);
 			}
 
 			List<Listdata> list = null;
@@ -196,12 +211,15 @@ namespace Simplist3 {
 			if (isHakerano) {
 				list = Fc2Parse(result);
 			} else if (sitetype == SiteType.Naver) {
-				list = NaverParse(Network.GetHtml(url, "EUC-KR"));
+				list = NaverParse(Network.GET(url, "EUC-KR"));
 			} else {
 				list = TistoryParse(result);
 			}
 
-			list.Add(blog);
+			if (sitetype == SiteType.Naver && expand) {
+				list.Add(new Listdata("이전 자막 보기", "Expand", url));
+			}
+			list.Add(new Listdata("블로그로 이동", "Blog", url));
 
 			return list;
 		}
@@ -367,6 +385,106 @@ namespace Simplist3 {
 			} catch { listFiles.Clear(); }
 
 			return listFiles;
+		}
+
+		public static List<Listdata> ExpandNaverBlog(string url) {
+			string result = Network.GET(url, "EUC-KR");
+
+			Uri uri = new UriBuilder(url).Uri;
+			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
+			string blogId = query.Get("blogId");
+			string logNo = query.Get("logNo");
+
+			string extract = Function.GetSubstring(result, "postViewBottomTitleListController.start", "</script>");
+			string[] split = extract.Split(',');
+			string sortDateInMilli = "";
+
+			if (split.Length > 7) {
+				sortDateInMilli = split[7].Replace("\'", "").Trim();
+			} else {
+				return null;
+			}
+
+			string categoryNo = "";
+			string parentCategoryNo = "";
+
+			try {
+				extract = Function.GetSubstring(result, "var categoryNo", ";");
+				categoryNo = extract.Split(new char[] { '=', ';' })[1].Replace("\'", "").Trim();
+
+				extract = Function.GetSubstring(result, "var parentCategoryNo", ";");
+				parentCategoryNo = extract.Split(new char[] { '=', ';' })[1].Replace("\'", "").Trim();
+			} catch { return null; }
+
+			//MessageBox.Show(blogId + "\n" + logNo + "\n" + categoryNo + "\n" + parentCategoryNo + "\n" + sortDateInMilli);
+
+			Dictionary<string, string> dict = new Dictionary<string, string>();
+			dict.Add("blogId", blogId);
+			dict.Add("logNo", logNo);
+			dict.Add("viewDate", "");
+			dict.Add("categoryNo", categoryNo);
+			dict.Add("parentCategoryNo", parentCategoryNo);
+			dict.Add("showNextPage", "false");
+			dict.Add("showPreviousPage", "false");
+			dict.Add("sortDateInMilli", sortDateInMilli);
+
+			string data = Function.GetHttpParams(dict);
+			JsonTextParser parser = new JsonTextParser();
+
+			List<Listdata> list = new List<Listdata>();
+			List<string> hash = new List<string>();
+
+			for (int i = 0; i < 6; i++) {
+				result = Network.POST("http://blog.naver.com/PostViewBottomTitleListAsync.nhn", data);
+				result = HttpUtility.UrlDecode(result);
+
+				JsonObjectCollection collect = (JsonObjectCollection)parser.Parse(result);
+				JsonArrayCollection array = (JsonArrayCollection)collect["postList"];
+
+				bool lastPage = false;
+				foreach (JsonObjectCollection obj in array) {
+					string l = obj["logNo"].GetValue().ToString();
+					if (hash.Contains(l)) {
+						lastPage = true;
+						break;
+					}
+					hash.Add(l);
+				}
+
+				if (lastPage) {
+					dict["showPreviousPage"] = "false";
+					data = Function.GetHttpParams(dict);
+					continue;
+				}
+
+				foreach (JsonObjectCollection obj in array) {
+					Listdata item = new Listdata(
+						obj["title"].GetValue().ToString(),
+						"Maker2",
+						string.Format("http://blog.naver.com/{0}/{1}", blogId, obj["logNo"].GetValue()));
+
+					list.Add(item);
+				}
+
+				bool hasNextPage = Convert.ToBoolean(collect["hasNextPage"].GetValue());
+
+				if (hasNextPage) {
+					bool hasPreviousPage = Convert.ToBoolean(collect["hasPreviousPage"].GetValue());
+					string nextIndexLogNo = collect["nextIndexLogNo"].GetValue().ToString();
+					string nextIndexSortDate = collect["nextIndexSortDate"].GetValue().ToString();
+
+					dict["logNo"] = nextIndexLogNo;
+					dict["sortDateInMilli"] = nextIndexSortDate;
+					dict["showNextPage"] = hasNextPage.ToString().ToLower();
+					dict["showPreviousPage"] = hasPreviousPage.ToString().ToLower();
+
+					data = Function.GetHttpParams(dict);
+				} else {
+					break;
+				}
+			}
+
+			return list;
 		}
 	}
 }

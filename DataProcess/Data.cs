@@ -56,9 +56,19 @@ namespace Simplist3 {
 	}
 
 	public class Listdata : IComparable<Listdata> {
-		public Listdata() { this.Raw = false; }
+		public Listdata() {
+			this.Raw = false;
+			this.SiteType = -1;
+		}
+		public Listdata(string title, string type, string url) {
+			this.Title = title;
+			this.Type = type;
+			this.Url = url;
+			this.SiteType = -1;
+		}
 
 		public string Title, Url, Type, Time, Tag, Week;
+		public int SiteType;
 		public bool Raw;
 
 		public int CompareTo(Listdata other) {

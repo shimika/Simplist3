@@ -11,7 +11,13 @@ namespace Simplist3 {
 		private void GlobalPreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
 			switch (e.Key) {
 				case Key.Escape:
-					this.Close();
+					if (Setting.Tray) {
+						this.Opacity = 0;
+						Notice("", false, 0);
+						new AltTab().HideAltTab(this);
+					} else {
+						this.Close();
+					}
 					break;
 
 				case Key.Enter:
