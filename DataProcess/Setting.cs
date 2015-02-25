@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Json;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -90,6 +91,9 @@ namespace Simplist3 {
 			checkTray.Unchecked += SettingCheck_Changed;
 			checkNotify.Checked += SettingCheck_Changed;
 			checkNotify.Unchecked += SettingCheck_Changed;
+
+			ResourceManager rm = Simplist3.Properties.Resources.ResourceManager;
+			textChangeLog.Text = (string)rm.GetObject("ChangeLog");
 		}
 
 		private void ClearFolder() {

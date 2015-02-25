@@ -50,8 +50,10 @@
             <Grid x:Name="gridSetting" Background="Transparent" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"/>
                     <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <Grid>
@@ -63,8 +65,11 @@
                     <TextBlock x:Name="textVersion" HorizontalAlignment="Right" FontSize="18" Margin="0,0,15,0"/>
                 </Grid>
 
-                <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10"/>
-                <CheckBox x:Name="checkNotify" Content="자막 업로드 알림" Grid.Row="2" Margin="10"/>
+                <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10,0,0,0"/>
+                <CheckBox x:Name="checkNotify" Content="자막 업로드 알림" Grid.Row="2" Margin="10,0,0,0"/>
+                
+                <TextBlock Text="Change Log" Grid.Row="3" Margin="15,0" FontSize="18" Foreground="{DynamicResource DarkPrimaryBrush}"/>
+                <TextBlock x:Name="textChangeLog" Grid.Row="4" VerticalAlignment="Top" Margin="15" FontSize="14"/>
             </Grid>
         </Grid>
 
