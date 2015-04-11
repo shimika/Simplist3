@@ -388,101 +388,110 @@ namespace Simplist3 {
 		}
 
 		public static List<Listdata> ExpandNaverBlog(string url) {
-			string result = Network.GET(url, "EUC-KR");
-
-			Uri uri = new UriBuilder(url).Uri;
-			NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
-			string blogId = query.Get("blogId");
-			string logNo = query.Get("logNo");
-
-			string extract = Function.GetSubstring(result, "postViewBottomTitleListController.start", "</script>");
-			string[] split = extract.Split(',');
-			string sortDateInMilli = "";
-
-			if (split.Length > 7) {
-				sortDateInMilli = split[7].Replace("\'", "").Trim();
-			} else {
-				return null;
-			}
-
-			string categoryNo = "";
-			string parentCategoryNo = "";
-
+			List<Listdata> list = new List<Listdata>();
 			try {
+				string result = Network.GET(url, "EUC-KR");
+
+				Uri uri = new UriBuilder(url).Uri;
+				NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
+				string blogId = query.Get("blogId");
+				string logNo = query.Get("logNo");
+
+				string extract = Function.GetSubstring(result, "postViewBottomTitleListController.start", "</script>");
+				if (extract == null) {
+					throw new Exception();
+				}
+
+				string[] split = extract.Split(',');
+				string sortDateInMilli = "";
+
+				if (split.Length > 7) {
+					sortDateInMilli = split[7].Replace("\'", "").Trim();
+				}
+				else {
+					throw new Exception();
+				}
+
+				string categoryNo = "";
+				string parentCategoryNo = "";
+
 				extract = Function.GetSubstring(result, "var categoryNo", ";");
 				categoryNo = extract.Split(new char[] { '=', ';' })[1].Replace("\'", "").Trim();
 
 				extract = Function.GetSubstring(result, "var parentCategoryNo", ";");
 				parentCategoryNo = extract.Split(new char[] { '=', ';' })[1].Replace("\'", "").Trim();
-			} catch { return null; }
 
-			//MessageBox.Show(blogId + "\n" + logNo + "\n" + categoryNo + "\n" + parentCategoryNo + "\n" + sortDateInMilli);
 
-			Dictionary<string, string> dict = new Dictionary<string, string>();
-			dict.Add("blogId", blogId);
-			dict.Add("logNo", logNo);
-			dict.Add("viewDate", "");
-			dict.Add("categoryNo", categoryNo);
-			dict.Add("parentCategoryNo", parentCategoryNo);
-			dict.Add("showNextPage", "false");
-			dict.Add("showPreviousPage", "false");
-			dict.Add("sortDateInMilli", sortDateInMilli);
+				Dictionary<string, string> dict = new Dictionary<string, string>();
+				dict.Add("blogId", blogId);
+				dict.Add("logNo", logNo);
+				dict.Add("viewDate", "");
+				dict.Add("categoryNo", categoryNo == "0" ? "" : categoryNo);
+				dict.Add("parentCategoryNo", parentCategoryNo);
+				dict.Add("showNextPage", "false");
+				dict.Add("showPreviousPage", "false");
+				dict.Add("sortDateInMilli", sortDateInMilli);
 
-			string data = Function.GetHttpParams(dict);
-			JsonTextParser parser = new JsonTextParser();
+				string data = Function.GetHttpParams(dict);
+				JsonTextParser parser = new JsonTextParser();
 
-			List<Listdata> list = new List<Listdata>();
-			List<string> hash = new List<string>();
+				List<string> hash = new List<string>();
 
-			for (int i = 0; i < 6; i++) {
-				result = Network.POST("http://blog.naver.com/PostViewBottomTitleListAsync.nhn", data);
-				result = HttpUtility.UrlDecode(result);
+				for (int i = 0; i < 6; i++) {
+					result = Network.POST("http://blog.naver.com/PostViewBottomTitleListAsync.nhn", data);
+					result = HttpUtility.UrlDecode(result);
 
-				JsonObjectCollection collect = (JsonObjectCollection)parser.Parse(result);
-				JsonArrayCollection array = (JsonArrayCollection)collect["postList"];
+					//MessageBox.Show(String.Format("blogId: {0}\nlogNo: {1}\ncatogoryNo: {2}\nparentCategoryNo: {3}\nsortDateInMilli: {4}\n\n{5}",
+						//blogId, logNo, categoryNo, parentCategoryNo, sortDateInMilli, result));
 
-				bool lastPage = false;
-				foreach (JsonObjectCollection obj in array) {
-					string l = obj["logNo"].GetValue().ToString();
-					if (hash.Contains(l)) {
-						lastPage = true;
+					JsonObjectCollection collect = (JsonObjectCollection)parser.Parse(result);
+					JsonArrayCollection array = (JsonArrayCollection)collect["postList"];
+
+					bool lastPage = false;
+					foreach (JsonObjectCollection obj in array) {
+						string l = obj["logNo"].GetValue().ToString();
+						if (hash.Contains(l)) {
+							lastPage = true;
+							break;
+						}
+						hash.Add(l);
+					}
+
+					if (lastPage) {
+						dict["showPreviousPage"] = "false";
+						data = Function.GetHttpParams(dict);
+						continue;
+					}
+
+					foreach (JsonObjectCollection obj in array) {
+						Listdata item = new Listdata(
+							obj["title"].GetValue().ToString(),
+							"Maker2",
+							string.Format("http://blog.naver.com/{0}/{1}", blogId, obj["logNo"].GetValue()));
+
+						list.Add(item);
+					}
+
+					bool hasNextPage = Convert.ToBoolean(collect["hasNextPage"].GetValue());
+
+					if (hasNextPage) {
+						bool hasPreviousPage = Convert.ToBoolean(collect["hasPreviousPage"].GetValue());
+						string nextIndexLogNo = collect["nextIndexLogNo"].GetValue().ToString();
+						string nextIndexSortDate = collect["nextIndexSortDate"].GetValue().ToString();
+
+						dict["logNo"] = nextIndexLogNo;
+						dict["sortDateInMilli"] = nextIndexSortDate;
+						dict["showNextPage"] = hasNextPage.ToString().ToLower();
+						dict["showPreviousPage"] = hasPreviousPage.ToString().ToLower();
+
+						data = Function.GetHttpParams(dict);
+					}
+					else {
 						break;
 					}
-					hash.Add(l);
-				}
-
-				if (lastPage) {
-					dict["showPreviousPage"] = "false";
-					data = Function.GetHttpParams(dict);
-					continue;
-				}
-
-				foreach (JsonObjectCollection obj in array) {
-					Listdata item = new Listdata(
-						obj["title"].GetValue().ToString(),
-						"Maker2",
-						string.Format("http://blog.naver.com/{0}/{1}", blogId, obj["logNo"].GetValue()));
-
-					list.Add(item);
-				}
-
-				bool hasNextPage = Convert.ToBoolean(collect["hasNextPage"].GetValue());
-
-				if (hasNextPage) {
-					bool hasPreviousPage = Convert.ToBoolean(collect["hasPreviousPage"].GetValue());
-					string nextIndexLogNo = collect["nextIndexLogNo"].GetValue().ToString();
-					string nextIndexSortDate = collect["nextIndexSortDate"].GetValue().ToString();
-
-					dict["logNo"] = nextIndexLogNo;
-					dict["sortDateInMilli"] = nextIndexSortDate;
-					dict["showNextPage"] = hasNextPage.ToString().ToLower();
-					dict["showPreviousPage"] = hasPreviousPage.ToString().ToLower();
-
-					data = Function.GetHttpParams(dict);
-				} else {
-					break;
 				}
 			}
+			catch { }
 
 			return list;
 		}

@@ -124,12 +124,14 @@ namespace Simplist3 {
 		}
 
 		public static void ExecuteFile(string path) {
-			Process pro = new Process() {
-				StartInfo = new ProcessStartInfo() {
-					FileName = path
-				}
-			};
-			pro.Start();
+			try {
+				Process pro = new Process() {
+					StartInfo = new ProcessStartInfo() {
+						FileName = path
+					}
+				};
+				pro.Start();
+			} catch { }
 		}
 
 		public static void SaveFile(string path, string filename, string title) {
@@ -227,7 +229,7 @@ namespace Simplist3 {
 			return true;
 		}
 
-		public static void SaveScreenShot(Panel uie, int margin) {
+		public static string SaveScreenShot(Panel uie, int margin) {
 			RenderTargetBitmap renderTarget = new RenderTargetBitmap(
 				(int)uie.ActualWidth + margin, (int)uie.ActualHeight, 96, 96, PixelFormats.Pbgra32);
 
@@ -253,11 +255,13 @@ namespace Simplist3 {
 				}
 			}
 
-			if (path == "") { return; }
+			if (path == "") { return ""; }
 
 			using (var file = File.OpenWrite(path)) {
 				encoder.Save(file);
 			}
+
+			return path;
 		}
 	}
 }

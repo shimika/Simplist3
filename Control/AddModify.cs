@@ -62,6 +62,7 @@ namespace Simplist3 {
 		private void ShowAddWindow() {
 			Mode = ShowMode.Add;
 
+			buttonOpenFolder.ViewMode = ImageButton.Mode.Hidden;
 			buttonDisable.ViewMode = ImageButton.Mode.Hidden;
 			buttonDelete.ViewMode = ImageButton.Mode.Hidden;
 			textCaution.Visibility = Visibility.Collapsed;
@@ -109,6 +110,7 @@ namespace Simplist3 {
 			gridAniTable.Visibility = Visibility.Collapsed;
 
 			if (AddOpenMode == OpenMode.SeasonModify) {
+				buttonOpenFolder.ViewMode = ImageButton.Mode.Hidden;
 				buttonDisable.ViewMode = ImageButton.Mode.Visible;
 				buttonDelete.ViewMode = ImageButton.Mode.Visible;
 
@@ -130,6 +132,12 @@ namespace Simplist3 {
 				RefreshDisableButton(data.ArchiveTitle);
 
 			} else if (AddOpenMode == OpenMode.ArchiveModify) {
+				if (Status.Root) {
+					buttonOpenFolder.ViewMode = ImageButton.Mode.Visible;
+				} else {
+					buttonOpenFolder.ViewMode = ImageButton.Mode.Hidden;
+				}
+
 				buttonDisable.ViewMode = ImageButton.Mode.Visible;
 				buttonDelete.ViewMode = ImageButton.Mode.Visible;
 				gridEpisode.Visibility = Visibility.Collapsed;

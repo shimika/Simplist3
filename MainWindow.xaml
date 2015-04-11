@@ -27,7 +27,7 @@
         <!-- Content Area -->
 
         <Grid x:Name="gridContent" Grid.Row="2" Height="550" ClipToBounds="True">
-            <local:AniScrollViewer x:Name="scrollSeason" VerticalScrollBarVisibility="Auto" ClipToBounds="True">
+            <local:AniScrollViewer x:Name="scrollSeason" VerticalScrollBarVisibility="Visible" ClipToBounds="True">
                 <StackPanel x:Name="stackSeason" Background="White">
                     <local:Container x:Name="containWeek0" Title="일요일" Response="Container_Response"/>
                     <local:Container x:Name="containWeek1" Title="월요일" Response="Container_Response"/>
@@ -68,8 +68,8 @@
                 <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10,0,0,0"/>
                 <CheckBox x:Name="checkNotify" Content="자막 업로드 알림" Grid.Row="2" Margin="10,0,0,0"/>
                 
-                <TextBlock Text="Change Log" Grid.Row="3" Margin="15,0" FontSize="18" Foreground="{DynamicResource DarkPrimaryBrush}"/>
-                <TextBlock x:Name="textChangeLog" Grid.Row="4" VerticalAlignment="Top" Margin="15" FontSize="14"/>
+                <TextBlock Visibility="Collapsed" Text="Change Log" Grid.Row="3" Margin="15,0" FontSize="18" Foreground="{DynamicResource DarkPrimaryBrush}"/>
+                <TextBlock Visibility="Collapsed" x:Name="textChangeLog" Grid.Row="4" VerticalAlignment="Top" Margin="15" FontSize="14"/>
             </Grid>
         </Grid>
 
@@ -99,6 +99,8 @@
                                Foreground="White" FontSize="16"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <local:ImageButton x:Name="buttonOpenFolder" HorizontalAlignment="Right" Size="50" Source="Resources/folder.png"
+                               Type="openfolder" Response="ImageButton_Response" EnterLeave="button_EnterLeave"/>
                         <local:ImageButton x:Name="buttonDisable" HorizontalAlignment="Right" Size="50" Source="Resources/disable.png"
                                Type="disable" Response="ImageButton_Response" EnterLeave="button_EnterLeave"/>
                         <local:ImageButton x:Name="buttonDelete" HorizontalAlignment="Right" Source="Resources/delete.png" Size="50"
@@ -120,7 +122,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <Image Grid.Row="0" Source="Resources/title.png" Width="20" Margin="5,0,0,0"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="제목" FontSize="16" Margin="5,0,0,0"/>
+                    <TextBlock x:Name="textModTitle" Grid.Row="0" Grid.Column="1" Text="제목" FontSize="16" Margin="5,0,0,0"/>
                     <TextBox x:Name="textboxTitle" Grid.Row="0" Grid.Column="2" Margin="10" ContextMenu="{x:Null}" TextChanged="textboxTitle_TextChanged"/>
                     <TextBlock x:Name="textCaution" Grid.Row="1" Grid.ColumnSpan="3" Text="" FontSize="16" Margin="10" TextWrapping="Wrap"/>
 
@@ -301,5 +303,26 @@
             <local:TabButton x:Name="tabTorrent" Type="Torrent" Grid.Column="2" Size="50" Height="40" Source="Resources/download.png" ViewMode="Hidden" Response="DownloadTab_Response"/>
             <local:TabButton x:Name="tabSubtitle" Type="Subtitle" Grid.Column="3" Size="50" Height="40" Source="Resources/subtitle.png" ViewMode="Hidden" Response="DownloadTab_Response"/>
         </Grid>
+		
+		<!-- Changelog -->
+
+		<Grid x:Name="gridChangelog" Visibility="Collapsed" Grid.RowSpan="3" Background="#77000000">
+			<Grid Background="White" Margin="30,100">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="50"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<Grid Background="{DynamicResource PrimaryBrush}">
+					<TextBlock Text="Changelog" Grid.Column="1" FontSize="18" Foreground="White"
+                       TextOptions.TextFormattingMode="Display" Margin="20,0,0,0"/>
+					<local:ImageButton x:Name="buttonChangeLog" Size="50" Source="Resources/ok.png"
+                               Type="changelog" HorizontalAlignment="Right" Response="ImageButton_Response"/>
+				</Grid>
+				<ScrollViewer Grid.Row="1">
+					<TextBlock x:Name="textChangeLog2" Grid.Row="4" VerticalAlignment="Top" Margin="15" FontSize="14"/>
+				</ScrollViewer>
+			</Grid>
+		</Grid>
     </Grid>
 </Window>

@@ -48,6 +48,11 @@ namespace Simplist3 {
 			InitUpdateTimer();
 
 			this.Activated += Window_Activated;
+
+			if (String.Compare(Version.OldVersion, Version.NowVersion) != 0) {
+				Setting.SaveSetting();
+				ShowChangeLog();
+			}
 		}
 	}
 }

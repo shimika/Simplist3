@@ -257,8 +257,8 @@ namespace Simplist3 {
 			Storyboard.SetTargetProperty(opacity, new PropertyPath(FrameworkElement.OpacityProperty));
 
 			ThicknessAnimation margin = new ThicknessAnimation(
-				new Thickness(150, 0, 15, 0),
-				new Thickness(0, 0, 15, 0),
+				new Thickness(150, 0, 0, 0),
+				new Thickness(0, 0, 0, 0),
 				TimeSpan.FromMilliseconds(350)) {
 					BeginTime = TimeSpan.FromMilliseconds(500),
 					EasingFunction = new ExponentialEase() {

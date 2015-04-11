@@ -60,6 +60,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="System\ChangeLog.cs" />
     <Compile Include="System\Root.cs" />
     <Compile Include="System\AltTab.cs" />
     <Compile Include="Control\Animation.cs" />
@@ -268,6 +269,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ChangeLog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\folder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

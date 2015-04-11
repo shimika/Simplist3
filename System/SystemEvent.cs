@@ -98,8 +98,13 @@ namespace Simplist3 {
 					break;
 
 				case "shot":
-					Function.SaveScreenShot(stackSeason, 0);
-					Notice("바탕화면에 캡쳐를 저장했습니다");
+					Notice("캡쳐를 저장했습니다");
+					string path = Function.SaveScreenShot(stackSeason, 0);
+
+					if (File.Exists(path)) {
+						string argument = string.Format("/select, \"{0}\"", path);
+						Task.Factory.StartNew(() => Process.Start("explorer.exe", argument));
+					}
 					break;
 
 				case "arrange":
@@ -113,6 +118,16 @@ namespace Simplist3 {
 				case "vercheck":
 					//MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().Location);
 					CheckUpdate(true);
+					break;
+
+				case "openfolder":
+					if (Status.Root) {
+						Function.ExecuteFile(string.Format(@"X:Anime\{0}", ModifyTag));
+					}
+					break;
+
+				case "changelog":
+					gridChangelog.Visibility = Visibility.Collapsed;
 					break;
 
 				default:
@@ -145,6 +160,14 @@ namespace Simplist3 {
 						if (Data.DictArchive[e.Main].Episode < 0) {
 							RefreshArchiveEpisode(e.Main, 0);
 							containArchive.RefreshContainer();
+						} else {
+							if (!Status.Root) { return; }
+							try {
+								string d = string.Format(@"X:Anime\{0}", e.Main);
+								if (Directory.Exists(d)) {
+									Function.ExecuteFile(d);
+								}
+							} catch { }
 						}
 					}
 

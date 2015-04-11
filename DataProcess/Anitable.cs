@@ -16,18 +16,18 @@ namespace Simplist3 {
 				day = Convert.ToInt32(e.Main);
 			} catch { return; }
 
-			for (int i = 0; i < 7; i++) {
-				(stackTableWeekday.Children[i] as TabButton).ViewMode 
-					= TabButton.Mode.Clickable;
-			}
-			(stackTableWeekday.Children[day] as TabButton).ViewMode
-					= TabButton.Mode.Focused;
-
 			RefreshAnitable(day);
 		}
 
 		BackgroundWorker BwAnitable;
 		private void RefreshAnitable(int day) {
+			for (int i = 0; i < 7; i++) {
+				(stackTableWeekday.Children[i] as TabButton).ViewMode
+					= TabButton.Mode.Clickable;
+			}
+			(stackTableWeekday.Children[day] as TabButton).ViewMode
+					= TabButton.Mode.Focused;
+
 			StopBackgroundWorker(BwAnitable);
 
 			BwAnitable = new BackgroundWorker() {

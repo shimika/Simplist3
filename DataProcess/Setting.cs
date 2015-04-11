@@ -35,7 +35,6 @@ namespace Simplist3 {
 					JsonObjectCollection jsoncollection = (JsonObjectCollection)(parser.Parse(text));
 
 					// Setting
-
 					JsonObjectCollection jsonSetting = (JsonObjectCollection)jsoncollection["Setting"];
 					foreach (JsonStringValue value in jsonSetting) {
 						switch (value.Name) {
@@ -47,6 +46,9 @@ namespace Simplist3 {
 								break;
 							case "Notification":
 								Setting.Notification = Convert.ToBoolean(value.Value);
+								break;
+							case "OldVersion":
+								Version.OldVersion = value.Value;
 								break;
 						}
 					}
@@ -93,7 +95,7 @@ namespace Simplist3 {
 			checkNotify.Unchecked += SettingCheck_Changed;
 
 			ResourceManager rm = Simplist3.Properties.Resources.ResourceManager;
-			textChangeLog.Text = (string)rm.GetObject("ChangeLog");
+			Setting.ChangeLog = (string)rm.GetObject("ChangeLog");
 		}
 
 		private void ClearFolder() {
@@ -147,7 +149,10 @@ namespace Simplist3 {
 		public static string SaveDirectory = "";
 		public static bool Tray = false, Notification = false;
 
+		public static string ChangeLog = "";
+
 		private static object locker = new object();
+
 		public static void SaveSetting() {
 			JsonObjectCollection root = new JsonObjectCollection();
 
@@ -185,6 +190,7 @@ namespace Simplist3 {
 			setting.Add(new JsonStringValue("SaveDirectory", SaveDirectory));
 			setting.Add(new JsonStringValue("Tray", Tray.ToString()));
 			setting.Add(new JsonStringValue("Notification", Notification.ToString()));
+			setting.Add(new JsonStringValue("OldVersion", Version.NowVersion));
 
 			root.Add(archive);
 			root.Add(season);
