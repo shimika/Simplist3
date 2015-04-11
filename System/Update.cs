@@ -95,7 +95,7 @@ namespace Simplist3 {
 			// Path, project, 
 
 			list.Add(string.Format("{0}updater.exe", UpdateFolder));
-			list.Add(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location));
+			list.Add(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location).TrimEnd(Path.DirectorySeparatorChar));
 			list.Add(Path.GetFileNameWithoutExtension(System.AppDomain.CurrentDomain.FriendlyName));
 			list.Add(NewUrl);
 
@@ -145,7 +145,7 @@ namespace Simplist3 {
 				Process pro = new Process();
 				pro.StartInfo = new ProcessStartInfo();
 				pro.StartInfo.FileName = updater;
-				pro.StartInfo.Arguments = string.Format("\"{0}\" \"{1}\" {2}", project, path, id);
+				pro.StartInfo.Arguments = string.Format(@"{0} ""{1}"" {2}", project, path, id);
 				pro.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 				pro.Start();
 

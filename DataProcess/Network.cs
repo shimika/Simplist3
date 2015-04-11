@@ -59,7 +59,7 @@ namespace Simplist3 {
 
 				return streamReader.ReadToEnd();
 			} catch (Exception ex) {
-				MessageBox.Show(ex.Message);
+				//MessageBox.Show(ex.Message);
 			}
 
 			return "";
