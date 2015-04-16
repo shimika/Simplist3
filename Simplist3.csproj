@@ -66,6 +66,7 @@
     <Compile Include="Control\Animation.cs" />
     <Compile Include="DataProcess\Anitable.cs" />
     <Compile Include="System\KeyDown.cs" />
+    <Compile Include="System\Updater.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="UserControl\Container.xaml.cs">
       <DependentUpon>Container.xaml</DependentUpon>

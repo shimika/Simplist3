@@ -45,7 +45,7 @@ namespace Simplist3 {
 
 			RefreshAnitable(WeekDay);
 			InitNotification();
-			InitUpdateTimer();
+			InitUpdater();
 
 			this.Activated += Window_Activated;
 

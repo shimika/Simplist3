@@ -71,5 +71,31 @@ namespace Simplist3 {
 				DoubleAnimation rotate = new DoubleAnimation();
 			}
 		}
+
+
+		DispatcherTimer timerUpdateIndicator;
+		int turnUpdate;
+
+		private void StartUpdateIndicator() {
+			if (timerUpdateIndicator == null) {
+				timerUpdateIndicator = new DispatcherTimer();
+				timerUpdateIndicator.Interval = TimeSpan.FromMilliseconds(250);
+				timerUpdateIndicator.Tick += timerUpdateIndicator_Tick;
+			}
+			turnUpdate = 0;
+			timerUpdateIndicator.Start();
+		}
+
+		private void StopUpdateIndicator() {
+			if (timerUpdateIndicator != null) {
+				timerUpdateIndicator.Stop();
+			}
+			buttonUpdate.Source = "Resources/download.png";
+		}
+
+		private void timerUpdateIndicator_Tick(object sender, EventArgs e) {
+			buttonUpdate.Source = string.Format("Resources/download{0}.png", turnUpdate);
+			turnUpdate = (turnUpdate + 1) % 4;
+		}
 	}
 }

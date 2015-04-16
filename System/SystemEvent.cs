@@ -117,7 +117,7 @@ namespace Simplist3 {
 
 				case "vercheck":
 					//MessageBox.Show(System.Reflection.Assembly.GetExecutingAssembly().Location);
-					CheckUpdate(true);
+					UpdateCheck();
 					break;
 
 				case "openfolder":
