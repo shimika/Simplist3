@@ -50,7 +50,6 @@ namespace Simplist3 {
 			ObjectType = ItemType.Archive;
 
 			this.textTime.Visibility = Visibility.Collapsed;
-			this.buttonModify.Visibility = Visibility.Collapsed;
 
 			this.Title = data.Title;
 			this.textTitle.Margin = new Thickness(15, 0, 0, 0);
@@ -60,9 +59,6 @@ namespace Simplist3 {
 			Grid.SetColumn(this.rect, 0);
 			this.rect.Margin = new Thickness(15, 0, 0, 0);
 
-			Grid.SetColumn(this.buttonMain, 0);
-			Grid.SetColumnSpan(this.buttonMain, 2);
-
 			this.Episode = data.Episode;
 			this.Reference = data.Title;
 		}
@@ -70,7 +66,6 @@ namespace Simplist3 {
 		public ListItem(Listdata data)
 			: this(false) {
 
-			this.buttonModify.Visibility = Visibility.Collapsed;
 			this.gridEpisodeBox.Visibility = Visibility.Collapsed;
 
 			this.Title = data.Title;
@@ -109,9 +104,6 @@ namespace Simplist3 {
 					break;
 			}
 
-			Grid.SetColumn(this.buttonMain, 0);
-			Grid.SetColumnSpan(this.buttonMain, 3);
-
 			string sitetype = "DefaultTag";
 			switch (data.SiteType) {
 				case 0: break;
@@ -138,18 +130,37 @@ namespace Simplist3 {
 		}
 
 		Point MouseDownPoint;
+		int mousedown = -1;
+		public event EventHandler<CustomButtonEventArgs> Response;
+
 		private void GridMouseDown(object sender, MouseButtonEventArgs e) {
 			MouseDownPoint = e.GetPosition(this);
 
+			if (e.LeftButton == MouseButtonState.Pressed) {
+				int p = -1;
+				if (gridEpisodeBox.Visibility == System.Windows.Visibility.Visible) {
+					p = (int)e.GetPosition(gridEpisodeBox).X;
+				}
+
+				if (p < 0) {
+					(sender as UIElement).CaptureMouse();
+
+					mousedown = 0;
+					AnimatePressButton();
+				}
+			}
+
 			if (e.MiddleButton == MouseButtonState.Pressed) {
-				AnimateButton();
+				mousedown = 1;
+				AnimateButton(true);
 				if (ObjectType == ItemType.Season || ObjectType == ItemType.Archive) {
 					Response(this, new CustomButtonEventArgs("CopyClipboard", this.Title, ObjectType.ToString()));
 				}
 			}
 
 			if (e.RightButton == MouseButtonState.Pressed) {
-				AnimateButton();
+				mousedown = 1;
+				AnimateButton(true);
 				if (Response != null) {
 					if (Status.Root && ObjectType == ItemType.Season) {
 						Response(this, new CustomButtonEventArgs("OpenFolder", this.Title, this.Reference));
@@ -160,25 +171,28 @@ namespace Simplist3 {
 			}
 		}
 
-		public event EventHandler<CustomButtonEventArgs> Response;
-		private void MainButton_Click(object sender, RoutedEventArgs e) {
-			AnimateButton();
+		private void Grid_PreviewMouseUp(object sender, MouseButtonEventArgs e) {
+			(sender as UIElement).ReleaseMouseCapture();
 
-			if (Response != null) {
-				if (ObjectType == ItemType.Listitem) {
-					Response(this, new CustomButtonEventArgs(this.Type, this.Title, this.Reference));
-				} else {
-					Response(this, new CustomButtonEventArgs("Click", this.Title, ObjectType.ToString()));
+			if (mousedown == 0) {
+				AnimateButton(false);
+
+				Point p = e.GetPosition(this);
+				if (Math.Max(Math.Abs(MouseDownPoint.X - p.X), Math.Abs(MouseDownPoint.Y - p.Y)) <= 3 && Response != null) {
+					if (textTime.Visibility == Visibility.Visible && MouseDownPoint.X <= 70) {
+						Response(this, new CustomButtonEventArgs("Modify", this.Title, ObjectType.ToString()));
+					}
+					else {
+						if (ObjectType == ItemType.Listitem) {
+							Response(this, new CustomButtonEventArgs(this.Type, this.Title, this.Reference));
+						}
+						else {
+							Response(this, new CustomButtonEventArgs("Click", this.Title, ObjectType.ToString()));
+						}
+					}
 				}
 			}
-		}
-		private void TimeButton_Click(object sender, RoutedEventArgs e) {
-			if (ObjectType == ItemType.Listitem) { return; }
-
-			AnimateButton();
-			if (Response != null) {
-				Response(this, new CustomButtonEventArgs("Modify", this.Title, ObjectType.ToString()));
-			}
+			mousedown = -1;
 		}
 
 		private void EpisodeButton_Response(object sender, CustomButtonEventArgs e) {
@@ -226,7 +240,6 @@ namespace Simplist3 {
 					gridEpisodeBox.Visibility = Visibility.Collapsed;
 
 					if (this.ObjectType == ItemType.Season) {
-						Grid.SetColumnSpan(this.buttonMain, 2);
 						Grid.SetColumnSpan(this.textTitle, 2);
 					}
 				} else {
@@ -234,7 +247,6 @@ namespace Simplist3 {
 					gridEpisodeBox.Visibility = Visibility.Visible;
 
 					if (this.ObjectType == ItemType.Season) {
-						Grid.SetColumnSpan(this.buttonMain, 1);
 						Grid.SetColumnSpan(this.textTitle, 1);
 					}
 				}
@@ -256,41 +268,34 @@ namespace Simplist3 {
 			Storyboard.SetTarget(opacity, this);
 			Storyboard.SetTargetProperty(opacity, new PropertyPath(FrameworkElement.OpacityProperty));
 
-			ThicknessAnimation margin = new ThicknessAnimation(
-				new Thickness(150, 0, 0, 0),
-				new Thickness(0, 0, 0, 0),
-				TimeSpan.FromMilliseconds(350)) {
-					BeginTime = TimeSpan.FromMilliseconds(500),
-					EasingFunction = new ExponentialEase() {
-						Exponent = 5,
-						EasingMode = EasingMode.EaseOut
-					}
-				};
-			Storyboard.SetTarget(margin, this);
-			Storyboard.SetTargetProperty(margin, new PropertyPath(FrameworkElement.MarginProperty));
-
 			sb.Children.Add(opacity);
-			sb.Children.Add(margin);
+			//sb.Children.Add(margin);
 
 			sb.Begin(this);
 		}
-		private void AnimateButton() {
-			if (MouseDownPoint == null) { return; }
+
+		private void AnimateButton(bool init) {
+			if (MouseDownPoint == null) {
+				return;
+			}
 
 			Storyboard sb = new Storyboard();
 
 			circle.Margin = new Thickness(MouseDownPoint.X, MouseDownPoint.Y, 0, 0);
 			circle.RenderTransformOrigin = new Point(0.5, 0.5);
-			circle.RenderTransform = new ScaleTransform(0.2, 0.2);
+
+			if (init) {
+				circle.RenderTransform = new ScaleTransform(0.2, 0.2);
+			}
 
 			DoubleAnimation opon = Animation.GetDoubleAnimation(1, this.circle, 150);
-			DoubleAnimation rton = Animation.GetDoubleAnimation(1, this.fill, 150);
+			DoubleAnimation rton = Animation.GetDoubleAnimation(1, this.fill, 250);
 
 			DoubleAnimation opoff = Animation.GetDoubleAnimation(0, this.circle, 300, 100);
-			DoubleAnimation rtoff = Animation.GetDoubleAnimation(0, this.fill, 300, 100);
+			DoubleAnimation rtoff = Animation.GetDoubleAnimation(0, this.fill, 300, 200);
 
-			DoubleAnimation scalex = new DoubleAnimation(0.2, 0.7, TimeSpan.FromMilliseconds(450));
-			DoubleAnimation scaley = new DoubleAnimation(0.2, 0.7, TimeSpan.FromMilliseconds(450));
+			DoubleAnimation scalex = new DoubleAnimation(1, TimeSpan.FromMilliseconds(450));
+			DoubleAnimation scaley = new DoubleAnimation(1, TimeSpan.FromMilliseconds(450));
 			Storyboard.SetTarget(scalex, circle);
 			Storyboard.SetTarget(scaley, circle);
 			scalex.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
@@ -305,5 +310,31 @@ namespace Simplist3 {
 			sb.Begin(this);
 		}
 
+		private void AnimatePressButton() {
+			if (MouseDownPoint == null) { return; }
+
+			Storyboard sb = new Storyboard();
+
+			circle.Margin = new Thickness(MouseDownPoint.X, MouseDownPoint.Y, 0, 0);
+			circle.RenderTransformOrigin = new Point(0.5, 0.5);
+			circle.RenderTransform = new ScaleTransform(0.2, 0.2);
+
+			DoubleAnimation opon = Animation.GetDoubleAnimation(0.4, this.circle, 150);
+
+			DoubleAnimation scalex = new DoubleAnimation(0.5, TimeSpan.FromMilliseconds(450));
+			DoubleAnimation scaley = new DoubleAnimation(0.5, TimeSpan.FromMilliseconds(450));
+			Storyboard.SetTarget(scalex, circle);
+			Storyboard.SetTarget(scaley, circle);
+			scalex.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
+			scaley.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
+			Storyboard.SetTargetProperty(scalex, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleX)"));
+			Storyboard.SetTargetProperty(scaley, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
+
+			sb.Children.Add(opon);
+			sb.Children.Add(scalex);
+			sb.Children.Add(scaley);
+
+			sb.Begin(this);
+		}
 	}
 }

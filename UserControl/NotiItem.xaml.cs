@@ -87,13 +87,27 @@ namespace Simplist3 {
 			}
 		}
 
+		int mouse = -1;
 		private void GridMouseDown(object sender, MouseButtonEventArgs e) {
-			MouseDownPoint = e.GetPosition(this);
+			if (e.LeftButton == MouseButtonState.Pressed) {
+				MouseDownPoint = e.GetPosition(this);
+				mouse = 0;
+				AnimatePressButton();
+			}
+			else {
+				mouse = 1;
+			}
+		}
+
+		private void Grid_PreviewMouseUp(object sender, MouseButtonEventArgs e) {
+			if (mouse == 0) {
+				AnimateButton();
+			}
+			mouse = -1;
 		}
 
 		public event EventHandler<CustomButtonEventArgs> Response;
 		private void Button_Click(object sender, RoutedEventArgs e) {
-			AnimateButton();
 			if (Response != null) {
 				Response(this, new CustomButtonEventArgs("Click", this.Data.Type, this.Data.Url));
 			}
@@ -106,16 +120,15 @@ namespace Simplist3 {
 
 			circle.Margin = new Thickness(MouseDownPoint.X, MouseDownPoint.Y, 0, 0);
 			circle.RenderTransformOrigin = new Point(0.5, 0.5);
-			circle.RenderTransform = new ScaleTransform(0.2, 0.2);
 
 			DoubleAnimation opon = Animation.GetDoubleAnimation(1, this.circle, 150);
-			DoubleAnimation rton = Animation.GetDoubleAnimation(1, this.fill, 150);
+			DoubleAnimation rton = Animation.GetDoubleAnimation(1, this.fill, 250);
 
 			DoubleAnimation opoff = Animation.GetDoubleAnimation(0, this.circle, 300, 100);
-			DoubleAnimation rtoff = Animation.GetDoubleAnimation(0, this.fill, 300, 100);
+			DoubleAnimation rtoff = Animation.GetDoubleAnimation(0, this.fill, 300, 200);
 
-			DoubleAnimation scalex = new DoubleAnimation(0.2, 0.7, TimeSpan.FromMilliseconds(450));
-			DoubleAnimation scaley = new DoubleAnimation(0.2, 0.7, TimeSpan.FromMilliseconds(450));
+			DoubleAnimation scalex = new DoubleAnimation(1, TimeSpan.FromMilliseconds(450));
+			DoubleAnimation scaley = new DoubleAnimation(1, TimeSpan.FromMilliseconds(450));
 			Storyboard.SetTarget(scalex, circle);
 			Storyboard.SetTarget(scaley, circle);
 			scalex.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
@@ -126,6 +139,33 @@ namespace Simplist3 {
 			sb.Children.Add(opon); sb.Children.Add(opoff);
 			sb.Children.Add(rton); sb.Children.Add(rtoff);
 			sb.Children.Add(scalex); sb.Children.Add(scaley);
+
+			sb.Begin(this);
+		}
+
+		private void AnimatePressButton() {
+			if (MouseDownPoint == null) { return; }
+
+			Storyboard sb = new Storyboard();
+
+			circle.Margin = new Thickness(MouseDownPoint.X, MouseDownPoint.Y, 0, 0);
+			circle.RenderTransformOrigin = new Point(0.5, 0.5);
+			circle.RenderTransform = new ScaleTransform(0.2, 0.2);
+
+			DoubleAnimation opon = Animation.GetDoubleAnimation(0.4, this.circle, 150);
+
+			DoubleAnimation scalex = new DoubleAnimation(0.5, TimeSpan.FromMilliseconds(450));
+			DoubleAnimation scaley = new DoubleAnimation(0.5, TimeSpan.FromMilliseconds(450));
+			Storyboard.SetTarget(scalex, circle);
+			Storyboard.SetTarget(scaley, circle);
+			scalex.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
+			scaley.EasingFunction = new ExponentialEase() { Exponent = 5, EasingMode = EasingMode.EaseOut };
+			Storyboard.SetTargetProperty(scalex, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleX)"));
+			Storyboard.SetTargetProperty(scaley, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
+
+			sb.Children.Add(opon);
+			sb.Children.Add(scalex);
+			sb.Children.Add(scaley);
 
 			sb.Begin(this);
 		}

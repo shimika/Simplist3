@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Simplist3" Margin="0,0,0,0"
              mc:Ignorable="d" Height="40" d:DesignWidth="360" Opacity="0">
-    
-    <Grid Background="White" PreviewMouseDown="GridMouseDown" ClipToBounds="True">
+
+	<Grid Background="White" ClipToBounds="True" PreviewMouseDown="GridMouseDown" PreviewMouseUp="Grid_PreviewMouseUp">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="*"/>
@@ -22,12 +22,9 @@
         <Rectangle x:Name="fill" Fill="WhiteSmoke" Opacity="0" Grid.ColumnSpan="4"/>
 
         <TextBlock x:Name="textTime" Text="00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="Gray"/>
-        <TextBlock x:Name="textTitle" Text="Very Long Title" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,0"/>
-
-        <Button x:Name="buttonModify" Background="Transparent" Grid.Column="0" Click="TimeButton_Click"/>
-        <Button x:Name="buttonMain" Background="Transparent" Grid.Column="1" Click="MainButton_Click"/>
+		<TextBlock x:Name="textTitle" Text="Very Long Title" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,0"/>
         
-        <Grid x:Name="gridEpisodeBox" Grid.Column="2">
+        <Grid x:Name="gridEpisodeBox" Background="Transparent" Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="*"/>

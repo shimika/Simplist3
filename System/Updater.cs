@@ -60,10 +60,15 @@ namespace ShimiKore {
 
 					if (UpdateAvailable != null) {
 						UpdateAvailable(this, new UpdateArgs(v, String.Compare(NowVersion, v) != 0));
+						return;
 					}
 				}
 			}
-			catch { return; }
+			catch { }
+
+			if (UpdateAvailable != null) {
+				UpdateAvailable(this, new UpdateArgs(NowVersion, false));
+			}
 		}
 
 		bool isUpdating = false;

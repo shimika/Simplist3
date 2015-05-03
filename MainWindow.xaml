@@ -66,7 +66,7 @@
                 </Grid>
 
                 <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10,0,0,0"/>
-                <CheckBox x:Name="checkNotify" Content="자막 업로드 알림" Grid.Row="2" Margin="10,0,0,0"/>
+                <CheckBox x:Name="checkNoQuestion" Content="묻지 않고 자막 다운로드" Grid.Row="2" Margin="10,0,0,0"/>
                 
                 <TextBlock Visibility="Collapsed" Text="Change Log" Grid.Row="3" Margin="15,0" FontSize="18" Foreground="{DynamicResource DarkPrimaryBrush}"/>
                 <TextBlock Visibility="Collapsed" x:Name="textChangeLog" Grid.Row="4" VerticalAlignment="Top" Margin="15" FontSize="14"/>

@@ -27,6 +27,7 @@ namespace Simplist3 {
 		}
 
 		private void UpdateCheck() {
+			textVersion.Text = "";
 			buttonUpdateCheck.StartAnimateImage(1);
 			updater.UpdateCheck();
 		}
@@ -41,6 +42,7 @@ namespace Simplist3 {
 			}
 			else {
 				//Notice("최신입니다.");
+				buttonUpdateCheck.StopAnimateImage();
 			}
 		}
 

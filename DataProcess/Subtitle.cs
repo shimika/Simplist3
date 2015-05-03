@@ -111,7 +111,9 @@ namespace Simplist3 {
 					string ext = Path.GetExtension(path).ToLower();
 
 					if (ext == ".smi" || ext == ".ass") {
-						Function.SaveFile(path, pairFile.First, NowSubtitle);
+						if (Function.SaveFile(path, pairFile.First, NowSubtitle) != "") {
+							Notice("저장되었습니다.");
+						}
 						e.Result = null;
 					} else if (ext == ".zip" || ext == ".jpg") {
 						list = Parser.ParseZip(path);
@@ -183,7 +185,8 @@ namespace Simplist3 {
 				case "Maker":
 					if (Status.Lite) {
 						Function.ExecuteFile(new UriBuilder(e.Detail).Uri.ToString());
-					} else {
+					}
+					else {
 						RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
 					}
 					break;
@@ -193,7 +196,8 @@ namespace Simplist3 {
 				case "Blog":
 					if (e.Detail == "") {
 						Notice("URL 분석 실패");
-					} else {
+					}
+					else {
 						Function.ExecuteFile(new UriBuilder(e.Detail).Uri.ToString());
 					}
 					break;
@@ -205,7 +209,9 @@ namespace Simplist3 {
 					RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
 					break;
 				case "Zip":
-					Function.Unzip(e.Detail, e.Main, NowSubtitle);
+					if (Function.Unzip(e.Detail, e.Main, NowSubtitle) != "") {
+						Notice("저장되었습니다.");
+					}
 					break;
 			}
 		}

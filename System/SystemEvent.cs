@@ -232,7 +232,7 @@ namespace Simplist3 {
 		}
 
 
-		private void Notice(string message, bool alert = false, double duration = 2000) {
+		public void Notice(string message, bool alert = false, double duration = 2000) {
 			this.Dispatcher.BeginInvoke(new Action(() => {
 				textNotice.Text = message;
 

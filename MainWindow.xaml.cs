@@ -20,11 +20,15 @@ namespace Simplist3 {
 	/// MainWindow.xaml에 대한 상호 작용 논리
 	/// </summary>
 	public partial class MainWindow : Window {
+		public static MainWindow m;
+
 		public MainWindow() {
 			InitializeComponent();
 
 			this.Left = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right - 450;
 			this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height / 2 - 300;
+
+			m = this;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e) {

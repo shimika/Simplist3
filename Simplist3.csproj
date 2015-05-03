@@ -167,6 +167,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -269,7 +270,7 @@
     <Resource Include="Resources\tray.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\ChangeLog.txt" />
+    <Resource Include="ChangeLog.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\folder.png" />

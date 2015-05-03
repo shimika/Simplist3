@@ -8,6 +8,8 @@
     <Grid x:Name="gridMain" Background="Transparent">
         <Ellipse x:Name="circle" Margin="2" Fill="WhiteSmoke" Opacity="0"/>
         <Image x:Name="image" Margin="12"/>
-        <Button Click="Button_Click" Background="Transparent" MouseEnter="gridMain_MouseEnter" MouseLeave="gridMain_MouseLeave"/>
+        <Button Click="Button_Click" Background="Transparent" 
+				MouseEnter="gridMain_MouseEnter" MouseLeave="gridMain_MouseLeave"
+				PreviewMouseDown="Button_PreviewMouseDown" PreviewMouseUp="Button_PreviewMouseUp"/>
     </Grid>
 </UserControl>

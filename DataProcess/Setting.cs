@@ -44,8 +44,8 @@ namespace Simplist3 {
 							case "Tray":
 								Setting.Tray = Convert.ToBoolean(value.Value);
 								break;
-							case "Notification":
-								Setting.Notification = Convert.ToBoolean(value.Value);
+							case "NoQuestion":
+								Setting.NoQuestion = Convert.ToBoolean(value.Value);
 								break;
 							case "OldVersion":
 								Version.OldVersion = value.Value;
@@ -91,8 +91,8 @@ namespace Simplist3 {
 
 			checkTray.Checked += SettingCheck_Changed;
 			checkTray.Unchecked += SettingCheck_Changed;
-			checkNotify.Checked += SettingCheck_Changed;
-			checkNotify.Unchecked += SettingCheck_Changed;
+			checkNoQuestion.Checked += SettingCheck_Changed;
+			checkNoQuestion.Unchecked += SettingCheck_Changed;
 
 			ResourceManager rm = Simplist3.Properties.Resources.ResourceManager;
 			Setting.ChangeLog = (string)rm.GetObject("ChangeLog");
@@ -113,14 +113,14 @@ namespace Simplist3 {
 
 		private void SettingCheck_Changed(object sender, RoutedEventArgs e) {
 			Setting.Tray = (bool)checkTray.IsChecked;
-			Setting.Notification = (bool)checkNotify.IsChecked;
+			Setting.NoQuestion = (bool)checkNoQuestion.IsChecked;
 
 			Setting.SaveSetting();
 		}
 
 		private void ApplySettingToControl() {
 			checkTray.IsChecked = Setting.Tray;
-			checkNotify.IsChecked = Setting.Notification;
+			checkNoQuestion.IsChecked = Setting.NoQuestion;
 		}
 
 		private void CheckLite() {
@@ -138,7 +138,7 @@ namespace Simplist3 {
 			tabNotify.ViewMode = TabButton.Mode.Hidden;
 			Grid.SetColumn(tabSetting, 2);
 
-			checkNotify.Visibility = Visibility.Collapsed;
+			checkNoQuestion.Visibility = Visibility.Collapsed;
 		}
 	}
 
@@ -147,7 +147,7 @@ namespace Simplist3 {
 		public static string FileSetting = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SimpList3.txt";
 
 		public static string SaveDirectory = "";
-		public static bool Tray = false, Notification = false;
+		public static bool Tray = false, NoQuestion = false;
 
 		public static string ChangeLog = "";
 
@@ -189,7 +189,7 @@ namespace Simplist3 {
 			JsonObjectCollection setting = new JsonObjectCollection("Setting");
 			setting.Add(new JsonStringValue("SaveDirectory", SaveDirectory));
 			setting.Add(new JsonStringValue("Tray", Tray.ToString()));
-			setting.Add(new JsonStringValue("Notification", Notification.ToString()));
+			setting.Add(new JsonStringValue("NoQuestion", NoQuestion.ToString()));
 			setting.Add(new JsonStringValue("OldVersion", Version.NowVersion));
 
 			root.Add(archive);

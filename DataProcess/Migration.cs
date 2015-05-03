@@ -28,7 +28,7 @@ namespace Simplist3 {
 			using (StreamReader sr = new StreamReader(fileOldSet)) {
 				Setting.SaveDirectory = sr.ReadLine();
 				Setting.Tray = false;
-				Setting.Notification = false;
+				Setting.NoQuestion = false;
 
 				if (Setting.SaveDirectory == "SaveForm ver.2") {
 					string[] split;
@@ -42,7 +42,7 @@ namespace Simplist3 {
 						switch (split[0]) {
 							case "DIR": Setting.SaveDirectory = split[1]; break;
 							case "TRAY": Setting.Tray = Convert.ToBoolean(split[1]); break;
-							case "NOTI": Setting.Notification = Convert.ToBoolean(split[1]); break;
+							case "NOTI": Setting.NoQuestion = Convert.ToBoolean(split[1]); break;
 						}
 					}
 				}

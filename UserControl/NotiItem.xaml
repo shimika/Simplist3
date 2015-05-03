@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              Height="55" d:DesignWidth="360">
-    <Grid Background="White" PreviewMouseDown="GridMouseDown" ClipToBounds="True">
+    <Grid Background="White" PreviewMouseDown="GridMouseDown" PreviewMouseUp="Grid_PreviewMouseUp" ClipToBounds="True">
         <Grid Grid.ColumnSpan="3" ClipToBounds="True" Width="560" Height="255" Margin="-200">
             <Ellipse x:Name="circle" Fill="LightGray" Opacity="0" Width="200" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left" ClipToBounds="True"/>
         </Grid>

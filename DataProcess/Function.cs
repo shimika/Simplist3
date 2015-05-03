@@ -134,7 +134,7 @@ namespace Simplist3 {
 			} catch { }
 		}
 
-		public static void SaveFile(string path, string filename, string title) {
+		public static string SaveFile(string path, string filename, string title) {
 			title = Function.CleanFileName(title);
 			int num = FindNumberFromString(filename);
 			string savename = string.Format("{0}.smi", title, num);
@@ -143,21 +143,29 @@ namespace Simplist3 {
 				savename = string.Format("{0} - {1:D2}.smi", title, num);
 			}
 
-			SaveFileDialog saveDialog = new SaveFileDialog();
-			saveDialog.InitialDirectory = Setting.SaveDirectory;
-
-			saveDialog.Title = string.Format("원제 : {0}", filename);
-			saveDialog.FileName = savename;
-
-			if (saveDialog.ShowDialog() == true) {
-				Setting.SaveDirectory = Path.GetDirectoryName(saveDialog.FileName);
-				File.Copy(path, saveDialog.FileName, true);
-
-				Setting.SaveSetting();
+			if (Setting.NoQuestion && Setting.SaveDirectory != "") {
+				File.Copy(path, Path.Combine(Setting.SaveDirectory, savename), true);
+				return savename;
 			}
+			else {
+				SaveFileDialog saveDialog = new SaveFileDialog();
+				saveDialog.InitialDirectory = Setting.SaveDirectory;
+
+				saveDialog.Title = string.Format("원제 : {0}", filename);
+				saveDialog.FileName = savename;
+
+				if (saveDialog.ShowDialog() == true) {
+					Setting.SaveDirectory = Path.GetDirectoryName(saveDialog.FileName);
+					File.Copy(path, saveDialog.FileName, true);
+
+					Setting.SaveSetting();
+				}
+			}
+
+			return "";
 		}
 
-		public static void Unzip(string path, string filename, string title) {
+		public static string Unzip(string path, string filename, string title) {
 			try {
 				using (ZipArchive archive = ZipFile.OpenRead(path)) {
 					foreach (ZipArchiveEntry entry in archive.Entries) {
@@ -167,15 +175,17 @@ namespace Simplist3 {
 
 							try {
 								ext = name[name.Length - 1];
-							} catch { return; }
+							} catch { return ""; }
 
 							string extract = string.Format("{0}{1}.{2}", Setting.PathFolder, GetMD5Hash(DateTime.Now + entry.FullName), ext);
 							entry.ExtractToFile(extract);
-							SaveFile(extract, filename, title);
+							return SaveFile(extract, filename, title);
 						}
 					}
 				}
 			} catch { }
+
+			return "";
 		}
 
 		public static string GetMD5Hash(string md5input) {
@@ -189,9 +199,10 @@ namespace Simplist3 {
 		}
 
 		private static int FindNumberFromString(string str) {
-			str = str.Replace("1280x720", "")
+			str = str.ToLower().Replace("1280x720", "")
 				.Replace("x264", "").Replace("1920x1080", "")
-				.Replace("720p", "").Replace("1080p", "").Replace("v2", "");
+				.Replace("720p", "").Replace("1080p", "")
+				.Replace("v2", "").Replace("ver1", "").Replace("ver2", "");
 
 			int sIndex = 0, eIndex = -1, value = -1;
 			int isInner = 0;
