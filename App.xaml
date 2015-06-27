@@ -5,13 +5,18 @@
              StartupUri="MainWindow.xaml">
     
     <Application.Resources>
+		<!-- 
         <SolidColorBrush x:Key="PrimaryBrush" Color="#2196F3" />
         <SolidColorBrush x:Key="LightPrimaryBrush" Color="#BBDEFB" />
         <SolidColorBrush x:Key="DarkPrimaryBrush" Color="#1976D2"/>
-
         <Color x:Key="PrimaryColor">#2196F3</Color>
+		-->
 
-        <SolidColorBrush x:Key="DefaultTag" Color="Black"/>
+		<SolidColorBrush x:Key="PrimaryBrush" Color="#3F51B5" />
+		<SolidColorBrush x:Key="DarkPrimaryBrush" Color="#303F9F"/>
+		<Color x:Key="PrimaryColor">#3F51B5</Color>
+
+		<SolidColorBrush x:Key="DefaultTag" Color="Black"/>
         <SolidColorBrush x:Key="NaverTag" Color="#0dc434"/>
         <SolidColorBrush x:Key="TistoryTag" Color="#eb531f"/>
         <SolidColorBrush x:Key="EgloosTag" Color="#3cb5ee"/>
@@ -581,115 +586,99 @@
             </Style.Triggers>
         </Style>
 
-        <Color x:Key="Color_009">#FFFFFFFF</Color>
-        <Color x:Key="Color_003">#FF858585</Color>
-        <Color x:Key="Color_004">#FFB9B9B9</Color>
-        <Color x:Key="Color_028">#FFD0284C</Color>
-        <Color x:Key="Color_029">#FFF55E7F</Color>
+		<Style TargetType="{x:Type CheckBox}">
+			<Setter Property="Foreground" Value="Black" />
+			<Setter Property="FontSize" Value="16" />
+			<Setter Property="FontFamily" Value="Segoe UI" />
+			<Setter Property="HorizontalContentAlignment" Value="Left" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+			<Setter Property="Padding" Value="6,0,0,0" />
+			<Setter Property="MinHeight" Value="30" />
+			<Setter Property="MinWidth" Value="30" />
+			<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="CheckBox">
+						<Grid Background="Transparent">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Normal" />
+									<VisualState x:Name="MouseOver">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="contentPresenter" />
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="contentPresenter" />
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Disabled">
+										<Storyboard>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="CheckStates">
+									<VisualState x:Name="Checked">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="gridCheck" />
+											<DoubleAnimation Duration="0:0:0.20" From="1.5" To="1" 
+															 Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)" Storyboard.TargetName="gridCheck" />
+											<DoubleAnimation Duration="0:0:0.20" From="1.5" To="1" 
+															 Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)" Storyboard.TargetName="gridCheck" />
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Unchecked">
+										<Storyboard>
+											<DoubleAnimation Duration="0:0:0.20" To="0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="gridCheck" />
+											<DoubleAnimation Duration="0:0:0.20" From="1.5" To="1" 
+															 Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)" Storyboard.TargetName="gridCheck" />
+											<DoubleAnimation Duration="0:0:0.20" From="1.5" To="1" 
+															 Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)" Storyboard.TargetName="gridCheck" />
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="FocusStates">
+									<VisualState x:Name="Focused">
+										<Storyboard>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Unfocused" />
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="ValidationStates">
+									<VisualState x:Name="Valid" />
+									<VisualState x:Name="InvalidUnfocused">
+										<Storyboard>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="InvalidFocused">
+										<Storyboard>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
 
-        <SolidColorBrush x:Key="CheckBoxBackgroundlBrush" Color="{StaticResource Color_009}" />
-        <SolidColorBrush x:Key="CheckBoxHoverBackgroundBrush" Color="{StaticResource Color_009}" />
-        <SolidColorBrush x:Key="CheckBoxPressedBackgroundBrush" Color="{StaticResource Color_009}" />
-        <SolidColorBrush x:Key="CheckBoxFocusedBackgroundBrush" Color="{StaticResource Color_009}" />
-        <SolidColorBrush x:Key="CheckBoxInvalidUnfocusedBackgroundBrush" Color="{StaticResource Color_009}" />
-        <SolidColorBrush x:Key="CheckBoxInvalidFocusedBackgroundBrush" Color="{StaticResource Color_009}" />
-        <SolidColorBrush x:Key="CheckBoxBorderBrush" Color="{StaticResource Color_004}" />
-        <SolidColorBrush x:Key="CheckBoxHoverBorderBrush" Color="{StaticResource Color_003}" />
-        <SolidColorBrush x:Key="CheckBoxPressedBorderBrush" Color="{StaticResource PrimaryColor}" />
-        <SolidColorBrush x:Key="CheckBoxFocusedBorderBrush" Color="{StaticResource PrimaryColor}" />
-        <SolidColorBrush x:Key="CheckBoxInvalidUnfocusedBorderBrush" Color="{StaticResource Color_029}" />
-        <SolidColorBrush x:Key="CheckBoxInvalidFocusedBorderBrush" Color="{StaticResource Color_028}" />
-        <SolidColorBrush x:Key="CheckBoxIndeterminateCheckBackgroundBrush" Color="{StaticResource Color_003}" />
-        <SolidColorBrush x:Key="CheckBoxCheckBackgroundBrush" Color="{StaticResource PrimaryColor}" />
-        
-        <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="FontSize" Value="13.33" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="6,0,0,0" />
-            <Setter Property="MinHeight" Value="30" />
-            <Setter Property="MinWidth" Value="30" />
-            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="CheckBox">
-                        <Grid>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="MouseOver">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="hover" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="pressed" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To=".55" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="contentPresenter" />
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="disabled" />
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="CheckStates">
-                                    <VisualState x:Name="Checked">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="checkBox" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Unchecked" />
-                                    <VisualState x:Name="Indeterminate">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="IndeterminateCheck" />
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="FocusStates">
-                                    <VisualState x:Name="Focused">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="focused" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Unfocused" />
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="ValidationStates">
-                                    <VisualState x:Name="Valid" />
-                                    <VisualState x:Name="InvalidUnfocused">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="invalidUnfocused" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="InvalidFocused">
-                                        <Storyboard>
-                                            <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="invalidFocused" />
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Rectangle Fill="Transparent" />
-                            <Rectangle x:Name="normal" Opacity="1" Stroke="{StaticResource CheckBoxBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxBackgroundlBrush}" Width="18" Height="18" />
-                            <Rectangle x:Name="hover" Stroke="{StaticResource CheckBoxHoverBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxHoverBackgroundBrush}" Opacity="0" Width="18" Height="18" />
-                            <Rectangle x:Name="pressed" Opacity="0" Stroke="{StaticResource CheckBoxPressedBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxPressedBackgroundBrush}" Width="18" Height="18" />
-                            <Rectangle x:Name="focused" Opacity="0" Stroke="{StaticResource CheckBoxFocusedBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxFocusedBackgroundBrush}" Width="18" Height="18" />
-                            <Rectangle x:Name="invalidUnfocused" Opacity="0" Stroke="{StaticResource CheckBoxInvalidUnfocusedBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxInvalidUnfocusedBackgroundBrush}" Width="18" Height="18" />
-                            <Rectangle x:Name="invalidFocused" Opacity="0" Stroke="{StaticResource CheckBoxInvalidFocusedBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxInvalidFocusedBackgroundBrush}" Width="18" Height="18" />
-                            <Path x:Name="checkBox" Height="10" Width="12" Stretch="Fill" Opacity="0" Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" Fill="{StaticResource CheckBoxCheckBackgroundBrush}" UseLayoutRounding="False" />
-                            <Rectangle x:Name="IndeterminateCheck" Fill="{StaticResource CheckBoxIndeterminateCheckBackgroundBrush}" Height="3" Width="8" Opacity="0" />
-                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="10" />
+								<ColumnDefinition Width="30" />
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+							<Rectangle Fill="Transparent" />
+
+							<Grid x:Name="gridCheck" Opacity="0.1" Grid.Column="1" Height="10" Width="12" VerticalAlignment="Center" HorizontalAlignment="Center">
+								<Grid.RenderTransform>
+									<ScaleTransform CenterX="5" CenterY="6" ScaleX="1" ScaleY="1"/>
+								</Grid.RenderTransform>
+								<Path Height="10" Width="12" Stretch="Fill" Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" Fill="{DynamicResource PrimaryBrush}" UseLayoutRounding="False" />
+							</Grid>
+							<ContentPresenter x:Name="contentPresenter" Opacity="0.7" ContentTemplate="{TemplateBinding ContentTemplate}" 
+											  Content="{TemplateBinding Content}" Grid.Column="2" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+							<Rectangle Grid.ColumnSpan="3" VerticalAlignment="Bottom" Height="1" Fill="WhiteSmoke"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
     </Application.Resources>
 </Application>

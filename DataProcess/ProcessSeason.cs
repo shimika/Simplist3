@@ -191,6 +191,13 @@ namespace Simplist3 {
 			}
 
 			comboboxSync.SelectedIndex = focusIndex;
+
+			if (focusIndex == 0) {
+				textLinkTitle.Foreground = Brushes.Black;
+			}
+			else {
+				textLinkTitle.Foreground = FindResource("PrimaryBrush") as SolidColorBrush;
+			}
 		}
 	}
 }

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Simplist3" Margin="0,0,0,0"
-             mc:Ignorable="d" Height="40" d:DesignWidth="360" Opacity="0">
+             mc:Ignorable="d" Height="40" d:DesignWidth="360" Opacity="1">
 
 	<Grid Background="White" ClipToBounds="True" PreviewMouseDown="GridMouseDown" PreviewMouseUp="Grid_PreviewMouseUp">
         <Grid.ColumnDefinitions>
@@ -14,12 +14,12 @@
             <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.ColumnSpan="4" ClipToBounds="True" Width="560" Height="240" Margin="-200">
-            <Ellipse x:Name="circle" Fill="LightGray" Opacity="0" Width="200" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left"
+        <Grid Grid.ColumnSpan="4" ClipToBounds="True" Width="450" Height="130" Margin="-90">
+            <Ellipse x:Name="circle" Fill="#10000000" Opacity="0" Width="90" Height="90" VerticalAlignment="Top" HorizontalAlignment="Left"
                      Margin="0,0,0,0"/>
         </Grid>
 
-        <Rectangle x:Name="fill" Fill="WhiteSmoke" Opacity="0" Grid.ColumnSpan="4"/>
+		<Rectangle x:Name="fill" Fill="#07000000" Opacity="0" Grid.ColumnSpan="4"/>
 
         <TextBlock x:Name="textTime" Text="00:00" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Foreground="Gray"/>
 		<TextBlock x:Name="textTitle" Text="Very Long Title" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Center" FontSize="16" Margin="0,0,0,0"/>

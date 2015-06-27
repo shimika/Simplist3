@@ -207,9 +207,15 @@ namespace Simplist3 {
 					if (Data.DictArchive[arctitle].Episode < 0) {
 						Clipboard.SetText(title);
 					} else {
-						Clipboard.SetText(string.Format("{0} - {1:D2}",
-							title,
-							Data.DictArchive[arctitle].Episode));
+						try {
+							Clipboard.SetText(string.Format("{0} - {1:D2}",
+								title,
+								Data.DictArchive[arctitle].Episode));
+						}
+						catch {
+							Notice("클립보드 복사 실패");
+							return;
+						}
 					}
 					Notice("클립보드에 복사되었습니다");
 					break;

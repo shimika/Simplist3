@@ -76,6 +76,7 @@ namespace Simplist3 {
 					BackgroundWorker bwDownload = new BackgroundWorker();
 					bwDownload.DoWork += bwDownload_DoWork;
 					bwDownload.RunWorkerAsync(new Pair(e.Detail, e.Main));
+					RefreshDownloadControl("Subtitle");
 					break;
 			}
 		}

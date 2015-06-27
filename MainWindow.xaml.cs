@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,13 +26,34 @@ namespace Simplist3 {
 		public MainWindow() {
 			InitializeComponent();
 
-			this.Left = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right - 450;
-			this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height / 2 - 300;
+
+			//this.Left = SystemParameters.VirtualScreenLeft;
+			//this.Top = SystemParameters.VirtualScreenTop / 2 - 300;
 
 			m = this;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e) {
+			double dpiX = 0, dpiY = 0;
+			PresentationSource presentationsource = PresentationSource.FromVisual(this);
+
+			if (presentationsource != null) {
+				dpiX = presentationsource.CompositionTarget.TransformToDevice.M11;
+				dpiY = presentationsource.CompositionTarget.TransformToDevice.M22;
+			}
+
+			if (dpiX > 0) {
+				int r = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right;
+				int t = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Top;
+
+				this.Left = (r - (this.Width + 100) * dpiX * dpiX) / dpiX;
+				this.Top = t * dpiY + 50 * dpiY;
+			}
+			else {
+				this.Left = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Right - 450;
+				this.Top = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height / 2 - 300;
+			}
+
 			LoadSetting();
 			CheckLite();
 			ApplySettingToControl();

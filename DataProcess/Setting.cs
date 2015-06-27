@@ -50,6 +50,9 @@ namespace Simplist3 {
 							case "OldVersion":
 								Version.OldVersion = value.Value;
 								break;
+							case "ShowRaws":
+								Setting.ShowRaws = Convert.ToBoolean(value.Value);
+								break;
 						}
 					}
 
@@ -93,6 +96,8 @@ namespace Simplist3 {
 			checkTray.Unchecked += SettingCheck_Changed;
 			checkNoQuestion.Checked += SettingCheck_Changed;
 			checkNoQuestion.Unchecked += SettingCheck_Changed;
+			checkShowRaws.Checked += SettingCheck_Changed;
+			checkShowRaws.Unchecked += SettingCheck_Changed;
 
 			ResourceManager rm = Simplist3.Properties.Resources.ResourceManager;
 			Setting.ChangeLog = (string)rm.GetObject("ChangeLog");
@@ -114,6 +119,7 @@ namespace Simplist3 {
 		private void SettingCheck_Changed(object sender, RoutedEventArgs e) {
 			Setting.Tray = (bool)checkTray.IsChecked;
 			Setting.NoQuestion = (bool)checkNoQuestion.IsChecked;
+			Setting.ShowRaws = (bool)checkShowRaws.IsChecked;
 
 			Setting.SaveSetting();
 		}
@@ -121,6 +127,7 @@ namespace Simplist3 {
 		private void ApplySettingToControl() {
 			checkTray.IsChecked = Setting.Tray;
 			checkNoQuestion.IsChecked = Setting.NoQuestion;
+			checkShowRaws.IsChecked = Setting.ShowRaws;
 		}
 
 		private void CheckLite() {
@@ -145,13 +152,15 @@ namespace Simplist3 {
 	class Setting {
 		public static string PathFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SimpList\";
 		public static string FileSetting = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\SimpList3.txt";
-
 		public static string SaveDirectory = "";
-		public static bool Tray = false, NoQuestion = false;
+
+		private static object locker = new object();
 
 		public static string ChangeLog = "";
 
-		private static object locker = new object();
+		public static bool Tray = false;
+		public static bool NoQuestion = false;
+		public static bool ShowRaws = false;
 
 		public static void SaveSetting() {
 			JsonObjectCollection root = new JsonObjectCollection();
@@ -191,6 +200,7 @@ namespace Simplist3 {
 			setting.Add(new JsonStringValue("Tray", Tray.ToString()));
 			setting.Add(new JsonStringValue("NoQuestion", NoQuestion.ToString()));
 			setting.Add(new JsonStringValue("OldVersion", Version.NowVersion));
+			setting.Add(new JsonStringValue("ShowRaws", ShowRaws.ToString()));
 
 			root.Add(archive);
 			root.Add(season);

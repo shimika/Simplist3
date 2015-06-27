@@ -4,10 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" Opacity="0.5"
-             d:DesignHeight="40" d:DesignWidth="90">
+             d:DesignHeight="40" d:DesignWidth="72" PreviewMouseDown="Button_PreviewMouseDown" PreviewMouseUp="Button_PreviewMouseUp">
     <Grid x:Name="gridMain">
-        <Ellipse x:Name="circle" Width="90" Height="90" HorizontalAlignment="Left" VerticalAlignment="Center" Fill="WhiteSmoke" Opacity="0"/>
-        <Image x:Name="image" Margin="8"/>
+		<Grid Width="120" Height="120" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<Ellipse x:Name="circle" Width="120" Height="120" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="#77ffffff" Opacity="0"/>
+		</Grid>
+		<Image x:Name="image" Margin="8"/>
         <TextBlock x:Name="text" Text="" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
         <Button Click="Button_Click" Background="Transparent"/>
     </Grid>

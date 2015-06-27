@@ -36,9 +36,7 @@ namespace Simplist3 {
 					break;
 			}
 
-			if (mode == TabMode.Download) {
-				ChangeTitle("Torrent");
-			} else {
+			if (mode != TabMode.Download) {
 				ChangeTitle(mode.ToString());
 			}
 		}
@@ -83,7 +81,7 @@ namespace Simplist3 {
 
 			Storyboard sb = new Storyboard();
 
-			DoubleAnimation daOld = Animation.GetDoubleAnimation(0, textTitleOld, 350);
+			DoubleAnimation daOld = Animation.GetDoubleAnimation(0, textTitleOld, 200);
 			daOld.From = 1;
 			DoubleAnimation daNewStart = Animation.GetDoubleAnimation(0, textTitle, 0);
 			DoubleAnimation daNew = Animation.GetDoubleAnimation(1, textTitle, 350);
@@ -92,10 +90,10 @@ namespace Simplist3 {
 			ThicknessAnimation taOld = Animation.GetThicknessAnimation(
 				250, -30, 0, textTitleOld, 0, 0, 0, 3);
 			ThicknessAnimation taNew = Animation.GetThicknessAnimation(
-				250, 0, 0, textTitle, 0, 0, 0, 3);
+				350, 0, 0, textTitle, 0, 0, 100, 3);
 
 			taOld.From = new Thickness(0);
-			taNew.From = new Thickness(60, 0, 0, 0);
+			taNew.From = new Thickness(30, 0, 0, 0);
 
 			sb.Children.Add(daOld);
 			sb.Children.Add(daNewStart);

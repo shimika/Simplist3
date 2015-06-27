@@ -115,13 +115,67 @@ namespace Simplist3 {
 		private void Button_Click(object sender, RoutedEventArgs e) {
 			if (ViewMode == Mode.Focused || ViewMode == Mode.Hidden) { return; }
 
-			if (this.Text == null) {
-				AnimateCircle();
-			}
-
 			if (Response != null) {
 				Response(this, new CustomButtonEventArgs("Click", Type, ""));
 			}
+		}
+
+		private void Button_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+			if (ViewMode == Mode.Focused || ViewMode == Mode.Hidden) { return; }
+			AnimateCirclePressed();
+		}
+
+		private void Button_PreviewMouseUp(object sender, MouseButtonEventArgs e) {
+			if (ViewMode == Mode.Focused || ViewMode == Mode.Hidden) { return; }
+			AnimateCircleReleased();
+		}
+
+		private void AnimateCirclePressed() {
+			Storyboard sb = new Storyboard();
+
+			circle.RenderTransformOrigin = new Point(0.5, 0.5);
+			circle.RenderTransform = new ScaleTransform(0.1, 0.1);
+
+			DoubleAnimation opacity = Animation.GetDoubleAnimation(1, circle, 150);
+			DoubleAnimation uiopacity = Animation.GetDoubleAnimation(0.8, image, 250);
+
+			DoubleAnimation scalex = new DoubleAnimation(1, TimeSpan.FromMilliseconds(1000));
+			DoubleAnimation scaley = new DoubleAnimation(1, TimeSpan.FromMilliseconds(1000));
+			Storyboard.SetTarget(scalex, circle);
+			Storyboard.SetTarget(scaley, circle);
+			Storyboard.SetTargetProperty(scalex, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleX)"));
+			Storyboard.SetTargetProperty(scaley, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
+
+			sb.Children.Add(opacity);
+			sb.Children.Add(uiopacity);
+			sb.Children.Add(scalex);
+			sb.Children.Add(scaley);
+
+			sb.Begin(this);
+		}
+
+		private void AnimateCircleReleased() {
+			Storyboard sb = new Storyboard();
+
+			circle.RenderTransformOrigin = new Point(0.5, 0.5);
+			circle.Opacity = 1;
+
+			DoubleAnimation opacity = Animation.GetDoubleAnimation(0, circle, 250);
+			DoubleAnimation uiopacity = Animation.GetDoubleAnimation(1, image, 250);
+
+			DoubleAnimation scalex = new DoubleAnimation(1, TimeSpan.FromMilliseconds(350));
+			DoubleAnimation scaley = new DoubleAnimation(1, TimeSpan.FromMilliseconds(350));
+			Storyboard.SetTarget(scalex, circle);
+			Storyboard.SetTarget(scaley, circle);
+			Storyboard.SetTargetProperty(scalex, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleX)"));
+			Storyboard.SetTargetProperty(scaley, new PropertyPath("(UIElement.RenderTransform).(ScaleTransform.ScaleY)"));
+
+			sb.Children.Add(opacity);
+			sb.Children.Add(uiopacity);
+			sb.Children.Add(scalex);
+			sb.Children.Add(scaley);
+
+			sb.Begin(this);
 		}
 
 		private void AnimateCircle() {

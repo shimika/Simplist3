@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace Simplist3 {
@@ -68,6 +69,7 @@ namespace Simplist3 {
 			textCaution.Visibility = Visibility.Collapsed;
 			gridEpisode.Visibility = Visibility.Collapsed;
 			textboxTitle.IsEnabled = true;
+			textLinkTitle.Foreground = Brushes.Black;
 
 			if (Tab == TabMode.Season) {
 				RefreshSync();

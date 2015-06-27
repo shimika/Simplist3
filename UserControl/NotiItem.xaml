@@ -6,10 +6,11 @@
              mc:Ignorable="d" 
              Height="55" d:DesignWidth="360">
     <Grid Background="White" PreviewMouseDown="GridMouseDown" PreviewMouseUp="Grid_PreviewMouseUp" ClipToBounds="True">
-        <Grid Grid.ColumnSpan="3" ClipToBounds="True" Width="560" Height="255" Margin="-200">
-            <Ellipse x:Name="circle" Fill="LightGray" Opacity="0" Width="200" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left" ClipToBounds="True"/>
-        </Grid>
-        <Rectangle x:Name="fill" Fill="WhiteSmoke" Opacity="0"/>
+		<Grid Grid.ColumnSpan="4" ClipToBounds="True" Width="470" Height="165" Margin="-110">
+			<Ellipse x:Name="circle" Fill="#10000000" Opacity="0" Width="110" Height="110" VerticalAlignment="Top" HorizontalAlignment="Left"
+                     Margin="0,0,0,0"/>
+		</Grid>
+		<Rectangle x:Name="fill" Fill="#07000000" Opacity="0" Grid.ColumnSpan="4"/>
         
         <TextBlock x:Name="textTitle" TextTrimming="CharacterEllipsis" FontSize="16" Text="Title Title Title Title Title Title Title Title Title "
                    Margin="15,5" VerticalAlignment="Top" HorizontalAlignment="Left"/>

@@ -47,10 +47,19 @@ namespace Simplist3 {
 		public static List<Listdata> GetTorrentList(string keyword) {
 			List<Listdata> list = new List<Listdata>();
 
+			string url1 = "http://www.nyaa.eu/?page=rss&cats=1_0&term=";
+			string url2 = "http://www.nyaa.eu/?page=rss&cats=1_11&term=";
+
 			try {
 				int count = 0;
-				string result = Network.GET(
-					string.Format("{0}{1}", "http://www.nyaa.eu/?page=rss&cats=1_0&term=", keyword));
+				string result = "";
+
+				if (Setting.ShowRaws) {
+					result = Network.GET(string.Format("{0}{1}", url2, keyword));
+				}
+				else {
+					result = Network.GET(string.Format("{0}{1}", url1, keyword));
+				}
 
 				XmlDocument xmlDoc = new XmlDocument();
 				xmlDoc.LoadXml(result);

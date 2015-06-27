@@ -178,7 +178,6 @@ namespace Simplist3 {
 			Storyboard sb = new Storyboard();
 
 			circle.RenderTransformOrigin = new Point(0.5, 0.5);
-			circle.RenderTransform = new ScaleTransform(0.2, 0.2);
 
 			DoubleAnimation opacity = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(250));
 			DoubleAnimation uiopacity = new DoubleAnimation(1, TimeSpan.FromMilliseconds(500));

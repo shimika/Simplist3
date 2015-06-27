@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:Simplist3"
         Title="Simplist3" Height="660" Width="380"
         WindowStartupLocation="Manual" Topmost="True" AllowsTransparency="True"
-        ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="False" Background="Transparent"
+        ResizeMode="CanMinimize" WindowStyle="None" ShowInTaskbar="False" Background="Transparent" 
         Loaded="Window_Loaded" Deactivated="Window_Deactivated" Closing="Window_Closing" PreviewKeyDown="GlobalPreviewKeyDown" FocusVisualStyle="{x:Null}">
     
     <Window.Resources>
@@ -50,9 +50,9 @@
             <Grid x:Name="gridSetting" Background="Transparent" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="60"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
                     <RowDefinition Height="50"/>
+					<RowDefinition Height="50"/>
+					<RowDefinition Height="50"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -65,11 +65,9 @@
                     <TextBlock x:Name="textVersion" HorizontalAlignment="Right" FontSize="18" Margin="0,0,15,0"/>
                 </Grid>
 
-                <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1" Margin="10,0,0,0"/>
-                <CheckBox x:Name="checkNoQuestion" Content="묻지 않고 자막 다운로드" Grid.Row="2" Margin="10,0,0,0"/>
-                
-                <TextBlock Visibility="Collapsed" Text="Change Log" Grid.Row="3" Margin="15,0" FontSize="18" Foreground="{DynamicResource DarkPrimaryBrush}"/>
-                <TextBlock Visibility="Collapsed" x:Name="textChangeLog" Grid.Row="4" VerticalAlignment="Top" Margin="15" FontSize="14"/>
+                <CheckBox x:Name="checkTray" Content="종료 시 트레이로 이동" Grid.Row="1"/>
+				<CheckBox x:Name="checkNoQuestion" Content="묻지 않고 자막 다운로드" Grid.Row="2"/>
+				<CheckBox x:Name="checkShowRaws" Content="Raws 토렌트만 표시" Grid.Row="3"/>
             </Grid>
         </Grid>
 
@@ -80,13 +78,13 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
 
-            <local:TabButton x:Name="tabSeason" Grid.Column="0" Width="90" Height="40" Type="season" Source="Resources/season.png" Response="TabButton_Response" ViewMode="Focused"/>
-            <local:TabButton x:Name="tabArchive" Grid.Column="1" Width="90" Height="40" Type="archive" Source="Resources/archive.png" Response="TabButton_Response"/>
-            <local:TabButton x:Name="tabNotify" Grid.Column="2" Width="90" Height="40" Type="noti" Source="Resources/notion.png" Response="TabButton_Response"/>
-            <local:TabButton x:Name="tabSetting" Grid.Column="3" Width="90" Height="40" Type="setting" Source="Resources/setting.png" Response="TabButton_Response"/>
+            <local:TabButton x:Name="tabSeason" Grid.Column="0" Height="40" Type="season" Source="Resources/season.png" Response="TabButton_Response" ViewMode="Focused"/>
+            <local:TabButton x:Name="tabArchive" Grid.Column="1" Height="40" Type="archive" Source="Resources/archive.png" Response="TabButton_Response"/>
+            <local:TabButton x:Name="tabNotify" Grid.Column="2" Height="40" Type="noti" Source="Resources/notion.png" Response="TabButton_Response"/>
+            <local:TabButton x:Name="tabSetting" Grid.Column="3" Height="40" Type="setting" Source="Resources/setting.png" Response="TabButton_Response"/>
         </Grid>
 
         <!-- Add + Modify -->
@@ -144,7 +142,7 @@
                             <Image x:Name="imageKeyword" Grid.Row="2" Source="Resources/search.png" Width="20" Margin="5,0,0,0"/>
 
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="시간" FontSize="16" Margin="5,0,0,0"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="원제" FontSize="16" Margin="5,0,0,0"/>
+                            <TextBlock x:Name="textLinkTitle" Grid.Row="1" Grid.Column="1" Text="원제" FontSize="16" Margin="5,0,0,0"/>
                             <TextBlock x:Name="textKeyword" Grid.Row="2" Grid.Column="1" Text="검색어" FontSize="16" Margin="5,0,0,0"/>
 
                             <Grid Grid.Row="0" Grid.Column="2">

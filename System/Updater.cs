@@ -24,7 +24,7 @@ namespace ShimiKore {
 		public event EventHandler<UpdateCompleteArgs> UpdateComplete;
 
 		private DispatcherTimer timer;
-		private string UpdateFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Shimika");
+		private string UpdateFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Shimika\\");
 
 		public Updater(string p, string v) {
 			Project = p;
