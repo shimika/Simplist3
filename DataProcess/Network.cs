@@ -27,7 +27,7 @@ namespace Simplist3 {
 					httpWebRequest.Proxy = null;
 
 					HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-					StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream(), Encoding.UTF8);
+					StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream(), Encoding.GetEncoding(encoding));
 
 					return streamReader.ReadToEnd();
 				} catch (Exception ex) { }

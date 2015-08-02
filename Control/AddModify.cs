@@ -196,8 +196,8 @@ namespace Simplist3 {
 		private void AnimateAddModifyWindow(double opacity, double leftMargin) {
 			Storyboard sb = new Storyboard();
 
-			DoubleAnimation da = new DoubleAnimation(opacity, TimeSpan.FromMilliseconds(250));
-			ThicknessAnimation ta = new ThicknessAnimation(new Thickness(leftMargin, 0, 0, 0), TimeSpan.FromMilliseconds(350)) {
+			DoubleAnimation da = new DoubleAnimation(opacity, TimeSpan.FromMilliseconds(150));
+			ThicknessAnimation ta = new ThicknessAnimation(new Thickness(leftMargin / 2, 0, 0, 0), TimeSpan.FromMilliseconds(250)) {
 				EasingFunction = new ExponentialEase() {
 					Exponent = 5,
 					EasingMode = EasingMode.EaseOut,

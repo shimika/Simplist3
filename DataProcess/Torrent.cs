@@ -71,13 +71,15 @@ namespace Simplist3 {
 		}
 
 		private void TorrentItem_Response(object sender, CustomButtonEventArgs e) {
-			switch (e.ActionType) {
-				case "Torrent":
-					BackgroundWorker bwDownload = new BackgroundWorker();
-					bwDownload.DoWork += bwDownload_DoWork;
-					bwDownload.RunWorkerAsync(new Pair(e.Detail, e.Main));
+			if (e.ActionType == "Torrent" || e.ActionType == "TorrentRight") {
+				BackgroundWorker bwDownload = new BackgroundWorker();
+				bwDownload.DoWork += bwDownload_DoWork;
+				bwDownload.RunWorkerAsync(new Pair(e.Detail, e.Main));
+
+				if (e.ActionType == "TorrentRight") {
 					RefreshDownloadControl("Subtitle");
-					break;
+				}
+				return;
 			}
 		}
 
@@ -106,8 +108,11 @@ namespace Simplist3 {
 			tabSubtitle.ViewMode = hit ? TabButton.Mode.Clickable : TabButton.Mode.Focused;
 
 			Storyboard sb = new Storyboard();
-			sb.Children.Add(Animation.GetDoubleAnimation(op, scrollTorrent));
-			sb.Children.Add(Animation.GetDoubleAnimation(1 - op, gridSubtitle));
+
+			sb.Children.Add(Animation.GetDoubleAnimation(op, scrollTorrent, 150));
+			sb.Children.Add(Animation.GetDoubleAnimation(1 - op, gridSubtitle, 150));
+			sb.Children.Add(Animation.GetThicknessAnimation(250, 150 * (op - 1), 0, scrollTorrent));
+			sb.Children.Add(Animation.GetThicknessAnimation(250, 150 * op, 0, gridSubtitle));
 
 			sb.Begin(this);
 		}
@@ -115,16 +120,20 @@ namespace Simplist3 {
 			Storyboard sb = new Storyboard();
 
 			gridDown.IsHitTestVisible = opacity == 1 ? true : false;
+			//gridDown.Margin = new Thickness(0, 80, 0, 0);
 
 			DoubleAnimation opDown = Animation.GetDoubleAnimation(opacity, gridDown, 250, 250 * opacity);
 			DoubleAnimation opCont = Animation.GetDoubleAnimation(1 - opacity, gridContent, 250, 250 * (1 - opacity));
 			ThicknessAnimation taDownTab = Animation.GetThicknessAnimation(350, 0, topMargin, gridDownTab);
 			ThicknessAnimation taCont = Animation.GetThicknessAnimation(500, 0, -150 * opacity, gridContent, 0, 0, 250 * (1 - opacity));
 
+			ThicknessAnimation taDown = Animation.GetThicknessAnimation(350, 0, 40 + (1 - opacity) * 40, gridDown);
+
 			sb.Children.Add(opDown);
 			sb.Children.Add(opCont);
 			sb.Children.Add(taDownTab);
 			//sb.Children.Add(taCont);
+			sb.Children.Add(taDown);
 
 			sb.Begin(this);
 		}

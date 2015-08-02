@@ -224,6 +224,10 @@ namespace Simplist3 {
 						else if (ObjectType == ItemType.Season || ObjectType == ItemType.Archive) {
 							Response(this, new CustomButtonEventArgs("Modify", this.Title, ObjectType.ToString()));
 						}
+
+						if (this.Type == "Torrent") {
+							Response(this, new CustomButtonEventArgs("TorrentRight", this.Title, this.Reference));
+						}
 						break;
 				}
 			}

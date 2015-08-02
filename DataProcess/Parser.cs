@@ -361,10 +361,11 @@ namespace Simplist3 {
 					xmlDoc.LoadXml(str);
 					XmlElement root = xmlDoc.DocumentElement;
 
+					if (!root.HasAttribute("alt") && !root.HasAttribute("src") && !root.HasAttribute("border")) { continue; }
+					if (root.HasAttribute("width") || root.HasAttribute("height") || root.HasAttribute("style")) { continue; }
+
 					string alt = root.Attributes["alt"].Value;
 					string src = root.Attributes["src"].Value;
-
-					if (alt.IndexOf("자막") < 0) { continue; }
 
 					listData.Add(new Listdata() {
 						Title = alt,
@@ -387,11 +388,16 @@ namespace Simplist3 {
 				using (ZipArchive archive = ZipFile.OpenRead(path)) {
 					foreach (ZipArchiveEntry entry in archive.Entries) {
 						listFiles.Add(new Listdata() {
-							Title = entry.FullName, Url = path, Type = "Zip",
+							Title = entry.FullName, Url = path, Type = "InnerZip",
 						});
 					}
 				}
 			} catch { listFiles.Clear(); }
+
+			listFiles.Add(new Listdata() {
+				Title = "압축 파일 열기", Url = path,
+				Type = "OpenZip",
+			});
 
 			return listFiles;
 		}

@@ -91,7 +91,7 @@
         
         <Grid x:Name="gridAddModify" Grid.Row="1" Grid.RowSpan="2" Background="#AA000000" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
             <Grid Width="40" Background="Transparent" HorizontalAlignment="Right"  MouseDown="gridAddModify_MouseDown"/>
-            <StackPanel x:Name="stackAddModify" Background="White" Width="320" Margin="-320,0,0,0" HorizontalAlignment="Left">
+            <StackPanel x:Name="stackAddModify" Background="White" Width="320" Margin="-160,0,0,0" HorizontalAlignment="Left">
                 <Grid Height="50" Background="{DynamicResource DarkPrimaryBrush}">
                     <TextBlock x:Name="textAddScript" Text="" Margin="15,0,0,0"
                                Foreground="White" FontSize="16"/>
@@ -212,12 +212,12 @@
         
         <!-- Download -->
         
-        <Grid x:Name="gridDown" Grid.Row="1" Margin="0,40,0,0" Grid.RowSpan="2" Background="White" Opacity="0" IsHitTestVisible="False">
-            <local:AniScrollViewer x:Name="scrollTorrent">
+        <Grid x:Name="gridDown" Grid.Row="1" Margin="0,40,0,0" Grid.RowSpan="2" Background="White" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
+            <local:AniScrollViewer x:Name="scrollTorrent" Width="360">
                 <StackPanel x:Name="stackTorrent"/>
             </local:AniScrollViewer>
-            
-            <Grid x:Name="gridSubtitle" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
+
+			<Grid x:Name="gridSubtitle" Margin="360,0,0,0" Width="360" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
                 
             </Grid>
         </Grid>
@@ -239,17 +239,21 @@
                 </Grid>
             </Grid>
 
-            <Grid x:Name="gridSubtitleCaption">
+			<Grid x:Name="gridSubtitleCaption">
                 <local:ImageButton x:Name="buttonBack" Size="40" InnerMargin="5" Source="Resources/left.png"
                                Type="back" Response="BackButton_Response" Margin="1,0,0,0" ViewMode="Hidden"/>
 
-                <Grid Margin="40,0" ClipToBounds="True">
-                    <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
-                       HorizontalAlignment="Center" Opacity="0" Margin="40,0" TextTrimming="None"/>
+                <Grid ClipToBounds="True">
+					<Grid x:Name="gridNewCaption" Opacity="0" Width="280">
+	                    <TextBlock x:Name="textNewCaption" Text="Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+								   HorizontalAlignment="Center" Opacity="1" TextTrimming="CharacterEllipsis"/>
+					</Grid>
 
-                    <TextBlock x:Name="textOldCaption" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
-                       HorizontalAlignment="Center" Opacity="0" Margin="40,0" TextTrimming="None"/>
-                </Grid>
+					<Grid x:Name="gridOldCaption" Opacity="0" Width="280">
+						<TextBlock x:Name="textOldCaption" Text=" Very Long Title" Grid.Column="1" FontSize="16" Foreground="White"
+								   HorizontalAlignment="Center" Opacity="1" TextTrimming="CharacterEllipsis"/>
+					</Grid>
+				</Grid>
             </Grid>
         </Grid>
 

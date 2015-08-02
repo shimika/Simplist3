@@ -208,7 +208,10 @@ namespace Simplist3 {
 				case "File":
 					RefreshSubtitle(e.ActionType, new Pair(e.Main, e.Detail));
 					break;
-				case "Zip":
+				case "OpenZip":
+					Function.ExecuteFile(e.Detail);
+					break;
+				case "InnerZip":
 					if (Function.Unzip(e.Detail, e.Main, NowSubtitle) != "") {
 						Notice("저장되었습니다.");
 					}
@@ -243,15 +246,15 @@ namespace Simplist3 {
 
 			Storyboard sb = new Storyboard();
 
-			DoubleAnimation daOld = Animation.GetDoubleAnimation(0, textOldCaption, 350);
+			DoubleAnimation daOld = Animation.GetDoubleAnimation(0, gridOldCaption, 350);
 			daOld.From = 1;
-			DoubleAnimation daNewStart = Animation.GetDoubleAnimation(0, textNewCaption, 0);
-			DoubleAnimation daNew = Animation.GetDoubleAnimation(1, textNewCaption, 350);
+			DoubleAnimation daNewStart = Animation.GetDoubleAnimation(0, gridNewCaption, 0);
+			DoubleAnimation daNew = Animation.GetDoubleAnimation(1, gridNewCaption, 350);
 			daNew.From = 0;
 
-			ThicknessAnimation taOld = Animation.GetThicknessAnimation(350, -150 * m, 0, textOldCaption);
+			ThicknessAnimation taOld = Animation.GetThicknessAnimation(350, -150 * m, 0, gridOldCaption);
 			taOld.From = new Thickness(0);
-			ThicknessAnimation taNew = Animation.GetThicknessAnimation(350, 0, 0, textNewCaption);
+			ThicknessAnimation taNew = Animation.GetThicknessAnimation(350, 0, 0, gridNewCaption);
 			taNew.From = new Thickness(150 * m, 0, 0, 0);
 
 			sb.Children.Add(daOld);
