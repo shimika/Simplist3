@@ -233,7 +233,6 @@ namespace Simplist3 {
 
 			return value;
 		}
-
 		private static bool isNumber(char c) {
 			try {
 				int v = Convert.ToInt32(c.ToString());

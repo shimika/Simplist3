@@ -174,7 +174,7 @@ namespace Simplist3 {
 			if (DictCount[SiteType.Naver] > DictCount[SiteType.Other]) { sitetype = SiteType.Naver; }
 
 			if (sitetype == SiteType.Naver) {
-				result = Network.GET(url, "euc-kr");
+				result = Network.GET(url, "EUC-KR");
 				string nURL = "";
 
 				if (result.IndexOf("mainFrame") < 0 && result.IndexOf("aPostFiles") < 0) {
@@ -212,8 +212,7 @@ namespace Simplist3 {
 					if (nURL != "") { url = nURL; }
 				}
 
-				//result = Network.GET(url);
-				result = "";
+				result = Network.GET(url);
 			}
 
 			List<Listdata> list = null;
@@ -221,7 +220,7 @@ namespace Simplist3 {
 			if (isHakerano) {
 				list = Fc2Parse(result);
 			} else if (sitetype == SiteType.Naver) {
-				list = NaverParse(Network.NaverGET(url));
+				list = NaverParse(Network.GET(url, "EUC-KR"));
 			} else {
 				list = TistoryParse(result);
 			}
@@ -406,7 +405,7 @@ namespace Simplist3 {
 		public static List<Listdata> ExpandNaverBlog(string url) {
 			List<Listdata> list = new List<Listdata>();
 			try {
-				string result = Network.NaverGET(url);
+				string result = Network.GET(url, "EUC-KR");
 
 				Uri uri = new UriBuilder(url).Uri;
 				NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
