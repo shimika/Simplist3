@@ -137,10 +137,17 @@ namespace Simplist3 {
 		public static string SaveFile(string path, string filename, string title) {
 			title = Function.CleanFileName(title);
 			int num = FindNumberFromString(filename);
-			string savename = string.Format("{0}.smi", title, num);
+			string ext = Path.GetExtension(filename).ToLower();
+			string savename = "";
 
-			if (num >= 0) {
-				savename = string.Format("{0} - {1:D2}.smi", title, num);
+			if (ext == ".smi" || ext == ".ass") {
+				savename = string.Format("{0}{1}", title, num, ext);
+				if (num >= 0) {
+					savename = string.Format("{0} - {1:D2}{2}", title, num, ext);
+				}
+			}
+			else {
+				savename = filename;
 			}
 
 			if (Setting.NoQuestion && Setting.SaveDirectory != "") {
@@ -175,7 +182,8 @@ namespace Simplist3 {
 
 							try {
 								ext = name[name.Length - 1];
-							} catch { return ""; }
+							}
+							catch { return ""; }						
 
 							string extract = string.Format("{0}{1}.{2}", Setting.PathFolder, GetMD5Hash(DateTime.Now + entry.FullName), ext);
 							entry.ExtractToFile(extract);

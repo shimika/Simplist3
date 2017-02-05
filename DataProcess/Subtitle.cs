@@ -100,7 +100,7 @@ namespace Simplist3 {
 				case "File":
 					Pair pairFile = args.Second as Pair;
 					string fileurl = pairFile.Second as string;
-
+					
 					string path = Network.DownloadFile(fileurl, pairFile.First);
 					if (path == null) {
 						Notice("파일 다운로드 에러");

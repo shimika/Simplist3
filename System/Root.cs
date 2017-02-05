@@ -13,7 +13,8 @@ namespace Simplist3 {
 
 			foreach (SeasonData data in Data.DictSeason.Values) {
 				string at = data.ArchiveTitle;
-				string path = string.Format(@"X:\Anime\{0}", at);
+				string safePath = getSafeFileName(at);
+				string path = string.Format(@"X:\Anime\{0}", safePath);
 
 				if (!Directory.Exists(path) || Data.DictArchive[at].Episode < 0) {
 					continue;
@@ -42,14 +43,17 @@ namespace Simplist3 {
 						episode = i;
 						break;
 					} else {
-						string smi = string.Format("{0}.smi", Path.Combine(path, file));
+						string[] ext = { ".smi", ".ass" };
+						foreach (String e in ext) {
+							string smi = string.Format("{0}{1}", Path.Combine(path, file), e);
+							if (File.Exists(smi)) {
+								FileAttributes fileAttributes = File.GetAttributes(smi);
 
-						if (File.Exists(smi)) {
-							FileAttributes fileAttributes = File.GetAttributes(smi);
-
-							if (fileAttributes != FileAttributes.Hidden) {
-								smiCount++;
-								File.SetAttributes(smi, FileAttributes.Hidden);
+								if (fileAttributes != FileAttributes.Hidden) {
+									smiCount++;
+									File.SetAttributes(smi, FileAttributes.Hidden);
+								}
+								break;
 							}
 						}
 					}

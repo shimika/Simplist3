@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -122,7 +123,7 @@ namespace Simplist3 {
 
 				case "openfolder":
 					if (Status.Root) {
-						Function.ExecuteFile(string.Format(@"X:Anime\{0}", ModifyTag));
+						Function.ExecuteFile(string.Format(@"X:Anime\{0}", getSafeFileName(ModifyTag)));
 					}
 					break;
 
@@ -186,7 +187,7 @@ namespace Simplist3 {
 
 					break;
 				case "OpenFolder":
-					string dir = string.Format(@"X:Anime\{0}", e.Detail);
+					string dir = string.Format(@"X:Anime\{0}", getSafeFileName(e.Detail));
 
 					try {
 						if (!Directory.Exists(dir)) {
@@ -237,7 +238,6 @@ namespace Simplist3 {
 			this.Activate();
 		}
 
-
 		public void Notice(string message, bool alert = false, double duration = 2000) {
 			this.Dispatcher.BeginInvoke(new Action(() => {
 				textNotice.Text = message;
@@ -261,6 +261,10 @@ namespace Simplist3 {
 
 				sbNotice.Begin(this);
 			}));
+		}
+
+		public string getSafeFileName(String fileName) {
+			return Path.GetInvalidFileNameChars().Aggregate(fileName, (current, c) => current.Replace(c.ToString(), string.Empty));
 		}
 	}
 }

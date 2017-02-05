@@ -47,8 +47,8 @@ namespace Simplist3 {
 		public static List<Listdata> GetTorrentList(string keyword) {
 			List<Listdata> list = new List<Listdata>();
 
-			string url1 = "http://www.nyaa.eu/?page=rss&cats=1_0&term=";
-			string url2 = "http://www.nyaa.eu/?page=rss&cats=1_11&term=";
+			string url1 = "http://www.nyaa.se/?page=rss&cats=1_0&term=";
+			string url2 = "http://www.nyaa.se/?page=rss&cats=1_11&term=";
 
 			try {
 				int count = 0;
@@ -68,7 +68,7 @@ namespace Simplist3 {
 				foreach (XmlNode node in xmlnode) {
 					Listdata data = new Listdata() {
 						Title = node["title"].InnerText, Url = node["link"].InnerText,
-						Raw = node["category"].InnerText == "Raw Anime",
+						Raw = node["category"].InnerText == "Anime - Raw",
 						Type = "Torrent",
 					};
 
