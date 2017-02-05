@@ -30,7 +30,9 @@ namespace Simplist3 {
 					StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream(), Encoding.GetEncoding(encoding));
 
 					return streamReader.ReadToEnd();
-				} catch (Exception ex) { }
+				} catch (Exception ex) {
+					MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+				}
 			}
 
 			return "";

@@ -75,7 +75,7 @@ namespace Simplist3 {
 					list.Add(data);
 					if (++count >= 30) { break; }
 				}
-			} catch {
+			} catch (Exception ex) {
 				list.Clear();
 			}
 
