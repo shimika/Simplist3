@@ -31,7 +31,7 @@ namespace Simplist3 {
 
 					return streamReader.ReadToEnd();
 				} catch (Exception ex) {
-					MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+					//MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
 				}
 			}
 
