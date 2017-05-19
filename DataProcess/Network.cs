@@ -11,19 +11,22 @@ using System.Windows;
 namespace Simplist3 {
 	class Network {
 		public static string GET(string url, string encoding = "UTF-8") {
-			for (int i = 1; i <= 3; i++) {
+			for (int i = 1; i <= 4; i++) {
 				try {
 					HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(new UriBuilder(url).Uri);
 					httpWebRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
 					httpWebRequest.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
 					httpWebRequest.Method = "GET";
-					httpWebRequest.Referer = "google.com";
 					httpWebRequest.UserAgent =
-						"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; WOW64; " +
-						"Trident/4.0; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; " +
-						".NET CLR 3.5.21022; .NET CLR 3.5.30729; .NET CLR 3.0.30618; " +
-						"InfoPath.2; OfficeLiveConnector.1.3; OfficeLivePatch.0.0)";
-					httpWebRequest.ContentLength = 0;
+						"Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+						"AppleWebKit/537.36 (KHTML, like Gecko) " +
+						"Chrome/58.0.3029.110 Safari/537.36";
+					if (i % 2 == 0) {
+						httpWebRequest.Referer = "google.com";
+					}
+					if (i > 2) {
+						httpWebRequest.ContentLength = 0;
+					}
 					httpWebRequest.Proxy = null;
 
 					HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -31,7 +34,7 @@ namespace Simplist3 {
 
 					return streamReader.ReadToEnd();
 				} catch (Exception ex) {
-					//MessageBox.Show(ex.Message + "\n" + ex.StackTrace);
+					// MessageBox.Show(url + "\n" + ex.Message + "\n" + ex.StackTrace);
 				}
 			}
 

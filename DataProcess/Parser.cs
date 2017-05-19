@@ -44,7 +44,46 @@ namespace Simplist3 {
 			return list;
 		}
 
-		public static List<Listdata> GetTorrentList(string keyword) {
+		public static List<Listdata> GetTorrentListOhys(string keyword) {
+			List<Listdata> list = new List<Listdata>();
+
+			string urlOhys = "https://torrents.ohys.net/download/rss.php?dir=new&q=";
+
+			string[] urls = new string[] { urlOhys };
+
+			foreach (string url in urls) {
+				try {
+					int count = 0;
+					string result = result = Network.GET(string.Format("{0}{1}", url, keyword));
+
+					if (string.IsNullOrEmpty(result)) {
+						continue;
+					}
+
+					XmlDocument xmlDoc = new XmlDocument();
+					xmlDoc.LoadXml(result);
+					XmlNodeList xmlnode = xmlDoc.SelectNodes("rss/channel/item");
+
+					foreach (XmlNode node in xmlnode) {
+						Listdata data = new Listdata() {
+							Title = node["title"].InnerText,
+							Url = node["link"].InnerText,
+							Raw = true,
+							Type = "Torrent",
+						};
+
+						list.Add(data);
+						if (++count >= 30) { break; }
+					}
+				}
+				catch (Exception ex) {
+				}
+			}
+
+			return list;
+		}
+
+		public static List<Listdata> GetTorrentListNyaa(string keyword) {
 			List<Listdata> list = new List<Listdata>();
 
 			string url1 = "http://www.nyaa.se/?page=rss&cats=1_0&term=";
@@ -163,7 +202,9 @@ namespace Simplist3 {
 			string result = Network.GET(url);
 			bool isHakerano = url.IndexOf("hakerano") >= 0;
 
-			if (result == "") { return new List<Listdata>(); }
+			if (result == "") {
+				return new List<Listdata>() { new Listdata("블로그로 이동", "Blog", url) };
+			}
 
 			Dictionary<SiteType, int> DictCount = new Dictionary<SiteType, int>();
 			DictCount[SiteType.Naver] = Regex.Matches(result, "naver", RegexOptions.IgnoreCase).Cast<Match>().Count();
