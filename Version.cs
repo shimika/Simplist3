@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Simplist3 {
 	class Version {
-		public static string NowVersion = "3.2.7";
+		public static string NowVersion = "3.2.8";
 		public static string OldVersion = "?";
 	}
 }
