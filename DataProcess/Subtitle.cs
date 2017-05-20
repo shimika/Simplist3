@@ -136,7 +136,10 @@ namespace Simplist3 {
 		}
 
 		private void BwSubtitle_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
-			if (e.Cancelled) { return; }
+			if (e.Cancelled || e.Error != null) {
+				StopSubtitleIndicator();
+				return;
+			}
 
 			if (e.Result != null) {
 				Pair pair = e.Result as Pair;

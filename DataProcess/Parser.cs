@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Xml;
+using HtmlAgilityPack;
 
 namespace Simplist3 {
 	class Parser {
@@ -338,45 +339,35 @@ namespace Simplist3 {
 			}
 			return listData;
 		}
+
 		private static List<Listdata> TistoryParse(string html) {
-			List<Listdata> listData = new List<Listdata>();
-			int nIndex = 0, lastIndex = 0;
 			string[] ext = new string[] { "zip", "rar", "7z", "egg", "smi" };
-			List<int> lst = new List<int>();
-			string fileName, fileURL;
-
+			List<Listdata> listData = new List<Listdata>();
 			try {
-				for (; ; ) {
-					lst.Clear();
-					foreach (string str in ext) {
-						nIndex = html.IndexOf(string.Format(".{0}\"", str), lastIndex, StringComparison.OrdinalIgnoreCase);
-						if (nIndex < 0) { nIndex = 999999999; }
-						lst.Add(nIndex);
-					}
-					lst.Sort();
-					if (lst[0] == 999999999) { break; }
-					lastIndex = html.IndexOf("\"", lst[0]);
-					fileURL = "";
+				HtmlDocument doc = new HtmlDocument();
+				doc.LoadHtml(html);
 
-					for (int i = lastIndex - 1; i >= 0; i--) {
-						if (html[i] == '\"') { break; }
-						fileURL = html[i] + fileURL;
-					}
-
-					fileName = Network.GetFilenameFromURL(fileURL);
-
-					if (fileName != "" && fileURL != "") {
-						listData.Add(new Listdata() { 
-							Title = fileName, 
-							Url = fileURL, 
-							Type = "File" 
-						});
+				HtmlNodeCollection nodeList = doc.DocumentNode.SelectNodes("//a");
+				foreach (HtmlNode node in nodeList) {
+					string href = node.GetAttributeValue("href", "");
+					if (href.Contains("attachment")) {
+						foreach (string str in ext) {
+							if (href.Contains(str)) {
+								listData.Add(new Listdata() {
+									Title = node.InnerText.Trim(),
+									Url = href,
+									Type = "File"
+								});
+							}
+						}
 					}
 				}
-			} catch (Exception ex) {
 			}
+			catch { }
+
 			return listData;
 		}
+
 		private static List<Listdata> Fc2Parse(string html) {
 			List<Listdata> listData = new List<Listdata>();
 
