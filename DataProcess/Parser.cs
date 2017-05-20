@@ -350,15 +350,13 @@ namespace Simplist3 {
 				HtmlNodeCollection nodeList = doc.DocumentNode.SelectNodes("//a");
 				foreach (HtmlNode node in nodeList) {
 					string href = node.GetAttributeValue("href", "");
-					if (href.Contains("attachment")) {
-						foreach (string str in ext) {
-							if (href.Contains(str)) {
-								listData.Add(new Listdata() {
-									Title = node.InnerText.Trim(),
-									Url = href,
-									Type = "File"
-								});
-							}
+					foreach (string str in ext) {
+						if (href.Contains(string.Format(".{0}", str))) {
+							listData.Add(new Listdata() {
+								Title = node.InnerText.Trim(),
+								Url = href,
+								Type = "File"
+							});
 						}
 					}
 				}
