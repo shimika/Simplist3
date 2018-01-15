@@ -191,13 +191,14 @@
                             </Grid.RowDefinitions>
                             
                             <StackPanel x:Name="stackTableWeekday" Orientation="Horizontal" Background="{DynamicResource DarkPrimaryBrush}">
-                                <local:TabButton Size="45" Text="Sun" Type="0" Response="Weekday_Click" ViewMode="Focused"/>
-                                <local:TabButton Size="45" Text="Mon" Type="1" Response="Weekday_Click"/>
-                                <local:TabButton Size="45" Text="Tue" Type="2" Response="Weekday_Click"/>
-                                <local:TabButton Size="45" Text="Wed" Type="3" Response="Weekday_Click"/>
-                                <local:TabButton Size="45" Text="Thu" Type="4" Response="Weekday_Click"/>
-                                <local:TabButton Size="45" Text="Fri" Type="5" Response="Weekday_Click"/>
-                                <local:TabButton Size="45" Text="Sat" Type="6" Response="Weekday_Click"/>
+                                <local:TabButton Size="40" Text="일" Type="0" Response="Weekday_Click" ViewMode="Focused"/>
+                                <local:TabButton Size="40" Text="월" Type="1" Response="Weekday_Click"/>
+                                <local:TabButton Size="40" Text="화" Type="2" Response="Weekday_Click"/>
+                                <local:TabButton Size="40" Text="수" Type="3" Response="Weekday_Click"/>
+                                <local:TabButton Size="40" Text="목" Type="4" Response="Weekday_Click"/>
+                                <local:TabButton Size="40" Text="금" Type="5" Response="Weekday_Click"/>
+                                <local:TabButton Size="40" Text="토" Type="6" Response="Weekday_Click"/>
+								<local:TabButton Size="40" Text="#" Type="7" Response="Weekday_Click"/>
                             </StackPanel>
                             
                             <local:AniScrollViewer x:Name="scrollAnitable" Grid.Row="1">

@@ -49,8 +49,8 @@ namespace Simplist3 {
 		}
 
 		private void BwTorrent_DoWork(object sender, DoWorkEventArgs e) {
-			//e.Result = Parser.GetTorrentListNyaa(e.Argument.ToString());
-			e.Result = Parser.GetTorrentListOhys(e.Argument.ToString());
+			e.Result = Parser.GetTorrentListNyaa(e.Argument.ToString());
+			//e.Result = Parser.GetTorrentListOhys(e.Argument.ToString());
 			e.Cancel = CheckWorkerCancel(sender);
 		}
 

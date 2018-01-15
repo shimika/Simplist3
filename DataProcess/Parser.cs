@@ -87,8 +87,8 @@ namespace Simplist3 {
 		public static List<Listdata> GetTorrentListNyaa(string keyword) {
 			List<Listdata> list = new List<Listdata>();
 
-			string url1 = "http://www.nyaa.se/?page=rss&cats=1_0&term=";
-			string url2 = "http://www.nyaa.se/?page=rss&cats=1_11&term=";
+			string url1 = "https://www.nyaa.si/?page=rss&cats=1_0&term=";
+			string url2 = "https://www.nyaa.si/?page=rss&cats=1_4&term=";
 
 			try {
 				int count = 0;
@@ -108,7 +108,7 @@ namespace Simplist3 {
 				foreach (XmlNode node in xmlnode) {
 					Listdata data = new Listdata() {
 						Title = node["title"].InnerText, Url = node["link"].InnerText,
-						Raw = node["category"].InnerText == "Anime - Raw",
+						Raw = node["nyaa:categoryId"].InnerText == "1_4",
 						Type = "Torrent",
 					};
 
@@ -116,6 +116,7 @@ namespace Simplist3 {
 					if (++count >= 30) { break; }
 				}
 			} catch (Exception ex) {
+				// MessageBox.Show(ex.Message);
 				list.Clear();
 			}
 
@@ -182,7 +183,7 @@ namespace Simplist3 {
 				Uri uri = new UriBuilder(data.Url).Uri;
 				string host = uri.Host;
 
-				if (host.IndexOf("naver.com") >= 0 || host.IndexOf("naver.com") >= 0) {
+				if (host.IndexOf("naver.com") >= 0 || host.IndexOf("blog.me") >= 0) {
 					data.SiteType = 1;
 				} else if (host.IndexOf("tistory") >= 0) {
 					data.SiteType = 2;
@@ -198,13 +199,25 @@ namespace Simplist3 {
 			return data;
 		}
 
-		enum SiteType { Naver, Other };
-		public static List<Listdata> GetFileList(string url, bool expand = true) {
-			string result = Network.GET(url);
-			bool isHakerano = url.IndexOf("hakerano") >= 0;
+		static string[] naver = new string[] { "naver.com", "blog.me" };
+		static string[] other = new string[] { "tistory.com", "egloos.com", "blogspot.kr" };
 
-			if (result == "") {
-				return new List<Listdata>() { new Listdata("블로그로 이동", "Blog", url) };
+		static SiteType getSiteType(string url, string result) {
+			try {
+				if (!url.StartsWith("http")) {
+					url = string.Format("http://{0}", url);
+				}
+
+				Uri uri = new Uri(url);
+				string host = uri.Host;
+
+				if (naver.Where(x => host.IndexOf(x) >= 0).Count() > 0) {
+					return SiteType.Naver;
+				}
+				if (other.Where(x => host.IndexOf(x) >= 0).Count() > 0) {
+					return SiteType.Other;
+				}
+			} catch (Exception ex) {
 			}
 
 			Dictionary<SiteType, int> DictCount = new Dictionary<SiteType, int>();
@@ -214,6 +227,20 @@ namespace Simplist3 {
 
 			SiteType sitetype = SiteType.Other;
 			if (DictCount[SiteType.Naver] > DictCount[SiteType.Other]) { sitetype = SiteType.Naver; }
+
+			return sitetype;
+		}
+
+		enum SiteType { Naver, Other };
+		public static List<Listdata> GetFileList(string url, bool expand = true) {
+			string result = Network.GET(url);
+			bool isHakerano = url.IndexOf("hakerano") >= 0;
+
+			if (result == "") {
+				return new List<Listdata>() { new Listdata("블로그로 이동", "Blog", url) };
+			}
+
+			SiteType sitetype = getSiteType(url, result);
 
 			if (sitetype == SiteType.Naver) {
 				result = Network.GET(url, "EUC-KR");
@@ -341,7 +368,7 @@ namespace Simplist3 {
 		}
 
 		private static List<Listdata> TistoryParse(string html) {
-			string[] ext = new string[] { "zip", "rar", "7z", "egg", "smi" };
+			string[] part = new string[] { ".zip", ".rar", ".7z", ".egg", ".smi", "drive.google.com" };
 			List<Listdata> listData = new List<Listdata>();
 			try {
 				HtmlDocument doc = new HtmlDocument();
@@ -350,8 +377,8 @@ namespace Simplist3 {
 				HtmlNodeCollection nodeList = doc.DocumentNode.SelectNodes("//a");
 				foreach (HtmlNode node in nodeList) {
 					string href = node.GetAttributeValue("href", "");
-					foreach (string str in ext) {
-						if (href.Contains(string.Format(".{0}", str))) {
+					foreach (string str in part) {
+						if (href.Contains(str)) {
 							listData.Add(new Listdata() {
 								Title = node.InnerText.Trim(),
 								Url = href,

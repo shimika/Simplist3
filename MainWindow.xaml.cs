@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,6 +80,11 @@ namespace Simplist3 {
 				Setting.SaveSetting();
 				ShowChangeLog();
 			}
+
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+				| SecurityProtocolType.Tls11
+				| SecurityProtocolType.Tls12
+				| SecurityProtocolType.Ssl3;
 		}
 	}
 }
