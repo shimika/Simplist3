@@ -35,8 +35,9 @@
                     <local:Container x:Name="containWeek3" Title="수요일" Response="Container_Response"/>
                     <local:Container x:Name="containWeek4" Title="목요일" Response="Container_Response"/>
                     <local:Container x:Name="containWeek5" Title="금요일" Response="Container_Response"/>
-                    <local:Container x:Name="containWeek6" Title="토요일" Response="Container_Response"/>
-                </StackPanel>
+					<local:Container x:Name="containWeek6" Title="토요일" Response="Container_Response"/>
+					<local:Container x:Name="containWeek7" Title="#" Response="Container_Response"/>
+				</StackPanel>
             </local:AniScrollViewer>
 
             <local:AniScrollViewer x:Name="scrollArchive" VerticalScrollBarVisibility="Auto" Opacity="0" IsHitTestVisible="False" ClipToBounds="True">
@@ -160,8 +161,9 @@
                                     <ComboBoxItem Content="수"/>
                                     <ComboBoxItem Content="목"/>
                                     <ComboBoxItem Content="금"/>
-                                    <ComboBoxItem Content="토"/>
-                                </ComboBox>
+									<ComboBoxItem Content="토"/>
+									<ComboBoxItem Content="#"/>
+								</ComboBox>
 
                                 <TextBox x:Name="textboxHour" Grid.Column="1" Margin="10" ContextMenu="{x:Null}"/>
                                 <TextBlock Grid.Column="2" Text=":" FontSize="16"/>

@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Simplist3.DataProcess;
 
 namespace Simplist3 {
 	/// <summary>
@@ -62,7 +63,7 @@ namespace Simplist3 {
 			List<ArchiveData> listA = Data.DictArchive.Values.ToList();
 			containArchive.Add(false, listA.ToArray());
 
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < Const.WeekdayCount; i++) {
 				List<SeasonData> listS = Data.DictSeason.Values.Where(x => x.Week == i).ToList();
 				(FindName(string.Format("containWeek{0}", i)) as Container).Add(false, listS.ToArray());
 			}

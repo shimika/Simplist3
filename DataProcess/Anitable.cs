@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Simplist3.DataProcess;
 
 namespace Simplist3 {
 	public partial class MainWindow : Window {
 
 		int AnitableWeekday = 0;
-		static int WeekdayCount = 8;
 
 		private void Weekday_Click(object sender, CustomButtonEventArgs e) {
 			int day = -1;
@@ -23,7 +23,7 @@ namespace Simplist3 {
 
 		BackgroundWorker BwAnitable;
 		private void RefreshAnitable(int day) {
-			for (int i = 0; i < WeekdayCount; i++) {
+			for (int i = 0; i < Const.WeekdayCount; i++) {
 				(stackTableWeekday.Children[i] as TabButton).ViewMode
 					= TabButton.Mode.Clickable;
 			}
