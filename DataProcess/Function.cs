@@ -75,7 +75,7 @@ namespace Simplist3 {
 			string url2 = null, title2 = null;
 
 			foreach (Listdata data in list) {
-				int prefix = Function.StringPrefixMatch(subtitle, data.Title);
+				int prefix = Function.StringPrefixMatch(subtitle.Replace(" ", ""), data.Title.Replace(" ", ""));
 				if (prefix == subtitle.Length || prefix == data.Title.Length) {
 					return new Pair(data.Title, data.Url);
 				}
@@ -137,7 +137,11 @@ namespace Simplist3 {
 		public static string SaveFile(string path, string filename, string title) {
 			title = Function.CleanFileName(title);
 			int num = FindNumberFromString(filename);
-			string ext = Path.GetExtension(filename).ToLower();
+			if (num < 0) {
+				num = FindNumberFromString(Path.GetFileName(path));
+			}
+
+			string ext = Path.GetExtension(path).ToLower();
 			string savename = "";
 
 			if (ext == ".smi" || ext == ".ass") {
@@ -147,7 +151,7 @@ namespace Simplist3 {
 				}
 			}
 			else {
-				savename = filename;
+				savename = title + ext;
 			}
 
 			if (Setting.NoQuestion && Setting.SaveDirectory != "") {
@@ -237,7 +241,9 @@ namespace Simplist3 {
 
 			try {
 				value = Convert.ToInt32(sub);
-			} catch { }
+			} catch (Exception ex) {
+				return -1;
+			}
 
 			return value;
 		}

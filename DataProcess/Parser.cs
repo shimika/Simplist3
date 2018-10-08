@@ -295,12 +295,43 @@ namespace Simplist3 {
 				list = TistoryParse(result);
 			}
 
+			list.AddRange(parseGoogleDrive(result));
+
 			if (sitetype == SiteType.Naver && expand) {
 				list.Add(new Listdata("이전 자막 보기", "Expand", url));
 			}
 			list.Add(new Listdata("블로그로 이동", "Blog", url));
 
 			return list;
+		}
+
+		private static List<Listdata> parseGoogleDrive(string html) {
+			List<Listdata> listData = new List<Listdata>();
+
+			HtmlDocument doc = new HtmlDocument();
+			doc.LoadHtml(html);
+
+			HtmlNodeCollection nodeList = doc.DocumentNode.SelectNodes("//a[contains(@href, 'drive.google.com')]");
+
+			if (nodeList != null) {
+				foreach (HtmlNode node in nodeList) {
+					try {
+						string content = node.InnerText;
+						string url = node.GetAttributeValue("href", "");
+
+						if (!url.Contains("folder")) {
+							listData.Add(new Listdata() {
+								Title = content,
+								Url = url,
+								Type = "File"
+							});
+						}
+					}
+					catch { }
+				}
+			}
+
+			return listData;
 		}
 
 		private static List<Listdata> NaverParse(string html) {

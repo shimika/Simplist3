@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -77,12 +79,7 @@ namespace Simplist3 {
 					string contentDisposition = client.ResponseHeaders["content-disposition"];
 					string realName = "";
 					if (!string.IsNullOrEmpty(contentDisposition)) {
-						string lookFor = "filename=";
-						int index = contentDisposition.IndexOf(lookFor, StringComparison.CurrentCultureIgnoreCase);
-						if (index >= 0) {
-							fileName = contentDisposition.Substring(index + lookFor.Length);
-							realName = HttpUtility.UrlDecode(fileName, Encoding.GetEncoding("UTF-8"));
-						}
+						return new ContentDisposition(contentDisposition).FileName;
 					} else {
 						string[] strSplit = url.Split('/');
 						realName = strSplit[strSplit.Length - 1];
@@ -101,6 +98,10 @@ namespace Simplist3 {
 
 		public static string DownloadFile(string url, string caption) {
 			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(new UriBuilder(url).Uri);
+
+			if (url.Contains("drive.google.com")) {
+				return downloadGoogleDriveFile(url, caption);
+			}
 
 			if (Path.GetExtension(caption) == "") { caption += ".zip"; }
 			string path = string.Format("{0}{1:MM-dd HH_mm_ss}{2}_{3}", 
@@ -138,6 +139,28 @@ namespace Simplist3 {
 			}
 
 			return path;
+		}
+
+		private static string downloadGoogleDriveFile(string url, string caption) {
+			string path = string.Format(
+				"{0}{1:MM-dd HH_mm_ss}{2}_{3}_",
+				Setting.PathFolder,
+				DateTime.Now,
+				new Random().Next(),
+				Function.CleanFileName(caption));
+
+			try {
+				string newUrl = GoogleDriveDownloader.GetGoogleDriveDownloadLinkFromUrl(url);
+				path += Function.CleanFileName(GetFilenameFromURL(newUrl));
+				FileInfo fileInfo = GoogleDriveDownloader.DownloadFileFromURLToPath(url, path);
+
+				if (fileInfo != null) {
+					return path;
+				}
+			}
+			catch (Exception ex) { }
+
+			return null;
 		}
 	}
 }
