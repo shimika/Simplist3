@@ -127,7 +127,7 @@ namespace Simplist3 {
 				case "Expand":
 					Pair pairExpand = args.Second as Pair;
 
-					list = Parser.ExpandNaverBlog(pairExpand.Second as string);
+					list = Parser.getNaverCategoryPostList(pairExpand.Second as string);
 					e.Result = new Pair(pairExpand.First, list);
 					break;
 			}

@@ -491,85 +491,70 @@ namespace Simplist3 {
 			return listFiles;
 		}
 
-		public static List<Listdata> ExpandNaverBlog(string url) {
+		public static List<Listdata> getNaverCategoryPostList(string url) {
 			List<Listdata> list = new List<Listdata>();
+
 			try {
-				string result = Network.GET(url, "UTF-8");
+				string html = Network.GET(url, "UTF-8");
+
+				// Blog id
 
 				Uri uri = new UriBuilder(url).Uri;
 				NameValueCollection query = HttpUtility.ParseQueryString(uri.Query);
 				string blogId = query.Get("blogId");
 				string logNo = query.Get("logNo");
+				string categoryNo = query.Get("categoryNo");
+				string parentCategoryNo = query.Get("parentCategoryNo");
 
-				string extract = Function.GetSubstring(result, "postViewBottomTitleListController.start", "</script>");
-				if (extract == null) {
-					throw new Exception();
+				// etc
+
+				HtmlDocument doc = new HtmlDocument();
+				doc.LoadHtml(html);
+
+				if (logNo == null) {
+					string copyLinkIdPrefix = string.Format("url_{0}_", blogId);
+					HtmlNode copyLinkNode = doc.DocumentNode.SelectSingleNode(string.Format("//p[contains(@id, '{0}')]", copyLinkIdPrefix));
+					if (copyLinkNode != null) {
+						logNo = copyLinkNode.Id.Replace(copyLinkIdPrefix, "").Trim();
+					}
+					else {
+						return list;
+					}
 				}
 
-				string[] split = extract.Split(',');
-				string sortDateInMilli = "";
-
-				if (split.Length > 7) {
-					sortDateInMilli = split[7].Replace("\'", "").Trim();
-				}
-				else {
-					throw new Exception();
+				if (categoryNo == null) {
+					categoryNo = getJsValue(html, "categoryNo");
 				}
 
-				string categoryNo = "";
-				string parentCategoryNo = "";
+				if (parentCategoryNo == null) {
+					parentCategoryNo = getJsValue(html, "parentCategoryNo");
+				}
 
-				extract = Function.GetSubstring(result, "var categoryNo", ";");
-				categoryNo = extract.Split(new char[] { '=', ';' })[1].Replace("\'", "").Trim();
-
-				extract = Function.GetSubstring(result, "var parentCategoryNo", ";");
-				parentCategoryNo = extract.Split(new char[] { '=', ';' })[1].Replace("\'", "").Trim();
-
-
-				Dictionary<string, string> dict = new Dictionary<string, string>();
-				dict.Add("blogId", blogId);
-				dict.Add("logNo", logNo);
-				dict.Add("viewDate", "");
-				dict.Add("categoryNo", categoryNo == "0" ? "" : categoryNo);
-				dict.Add("parentCategoryNo", parentCategoryNo);
-				dict.Add("showNextPage", "false");
-				dict.Add("showPreviousPage", "false");
-				dict.Add("sortDateInMilli", sortDateInMilli);
+				Dictionary<string, string> dict = new Dictionary<string, string>() {
+					{ "blogId", blogId },
+					{ "logNo", logNo },
+					{ "viewDate", "" },
+					{ "categoryNo", categoryNo == "0" ? "" : categoryNo },
+					{ "parentCategoryNo", parentCategoryNo },
+					{ "showNextPage", "true" },
+					{ "showPreviousPage", "false" },
+					{ "sortDateInMilli", "" }
+				};
 
 				string data = Function.GetHttpParams(dict);
+
 				JsonTextParser parser = new JsonTextParser();
 
-				List<string> hash = new List<string>();
-
-				for (int i = 0; i < 6; i++) {
-					result = Network.POST("http://blog.naver.com/PostViewBottomTitleListAsync.nhn", data);
-					result = HttpUtility.UrlDecode(result);
-
-					//MessageBox.Show(String.Format("blogId: {0}\nlogNo: {1}\ncatogoryNo: {2}\nparentCategoryNo: {3}\nsortDateInMilli: {4}\n\n{5}",
-						//blogId, logNo, categoryNo, parentCategoryNo, sortDateInMilli, result));
+				for (int i = 0; i < 3; i++) {
+					string result = Network.POST("http://blog.naver.com/PostViewBottomTitleListAsync.nhn", data);
+					if (result == "") { break; }
 
 					JsonObjectCollection collect = (JsonObjectCollection)parser.Parse(result);
 					JsonArrayCollection array = (JsonArrayCollection)collect["postList"];
 
-					bool lastPage = false;
-					foreach (JsonObjectCollection obj in array) {
-						string l = obj["logNo"].GetValue().ToString();
-						if (hash.Contains(l)) {
-							lastPage = true;
-							break;
-						}
-						hash.Add(l);
-					}
-
-					if (lastPage) {
-						dict["showPreviousPage"] = "false";
-						data = Function.GetHttpParams(dict);
-						continue;
-					}
-
 					foreach (JsonObjectCollection obj in array) {
 						Listdata item = new Listdata(
-							obj["title"].GetValue().ToString(),
+							HttpUtility.HtmlDecode(HttpUtility.UrlDecode(obj["filteredEncodedTitle"].GetValue().ToString())),
 							"Maker2",
 							string.Format("http://blog.naver.com/{0}/{1}", blogId, obj["logNo"].GetValue()));
 
@@ -586,7 +571,6 @@ namespace Simplist3 {
 						dict["logNo"] = nextIndexLogNo;
 						dict["sortDateInMilli"] = nextIndexSortDate;
 						dict["showNextPage"] = hasNextPage.ToString().ToLower();
-						dict["showPreviousPage"] = hasPreviousPage.ToString().ToLower();
 
 						data = Function.GetHttpParams(dict);
 					}
@@ -595,9 +579,21 @@ namespace Simplist3 {
 					}
 				}
 			}
-			catch { }
-
+			catch (Exception ex) {
+			}
 			return list;
+		}
+
+		private static string getJsValue(string html, string id) {
+			string result = Function.GetSubstring(html, string.Format("var {0}", id), ";");
+		
+			if (result == null) { return null; }
+
+			string[] split= result.Split(new char[] { '=', ';' });
+			if (split.Length > 1) {
+				return split[1].Replace("\"", "").Replace("\'", "").Trim();
+			}
+			return null;
 		}
 	}
 }
