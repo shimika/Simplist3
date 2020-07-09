@@ -337,64 +337,33 @@ namespace Simplist3 {
 		private static List<Listdata> NaverParse(string html) {
 			List<Listdata> listData = new List<Listdata>();
 			int sIndex = 0, eIndex = 0;
-			string attachString;
 
-			string msg = "";
-			for (; ; ) {
+			try {
 				sIndex = html.IndexOf("aPostFiles[", sIndex);
-				if (sIndex < 0) { break; }
+				if (sIndex < 0) { throw new Exception(); }
 				sIndex = html.IndexOf("[{", sIndex);
-				if (sIndex < 0) { break; }
-				eIndex = html.IndexOf("}];", sIndex);
-				if (eIndex < 0) { break; }
+				if (sIndex < 0) { throw new Exception(); }
+				eIndex = html.IndexOf("}]", sIndex);
+				if (eIndex < 0) { throw new Exception(); }
 
-				attachString = html.Substring(sIndex + 2, eIndex - sIndex).Replace("\"", "\'");
+				string jsonString = html.Substring(sIndex, eIndex - sIndex + 2)
+					.Replace("\\'", "\"")
+					.Replace("\\\\", "\\");
 
-				int flag = 0;
-				string sKey = "", sValue = "";
-				string fileName = "", fileURL = "";
+				MessageBox.Show(jsonString);
 
-				for (int i = 0; i < attachString.Length; i++) {
-					if (attachString[i] == '\\' && i + 1 != attachString.Length) {
-						if (attachString[i + 1] == '\'') {
-							if (flag == 1) {
-								sKey += '\'';
-							} else if (flag == 3) {
-								sValue += '\'';
-							}
-							i++; continue;
-						}
-					}
-					if (attachString[i] == '\'') {
-						flag++; continue;
-					}
+				JsonTextParser parser = new JsonTextParser();
+				JsonArrayCollection files = (JsonArrayCollection)parser.Parse(jsonString);
 
-					switch (flag) {
-						case 1: sKey += attachString[i]; break;
-						case 3: sValue += attachString[i]; break;
-						case 4:
-							sKey = sKey.Trim(); sValue = sValue.Trim();
-							if (sKey == "encodedAttachFileName") { fileName = sValue; }
-							if (sKey == "encodedAttachFileUrl") { fileURL = sValue; }
-
-							msg += sKey + " = " + sValue + "\n";
-							sKey = sValue = "";
-							flag = 0;
-
-							break;
-					}
-					if (attachString[i] == '}') {
-						if (fileName != "" && fileURL != "") {
-							listData.Add(new Listdata() { 
-								Title = fileName, 
-								Url = fileURL, Type = "File" 
-							});
-							fileName = fileURL = "";
-						}
-					}
+				foreach (JsonObjectCollection file in files) {
+					listData.Add(new Listdata() {
+						Title = Regex.Unescape(file["encodedAttachFileName"].GetValue().ToString()),
+						Url = file["encodedAttachFileUrl"].GetValue().ToString(),
+						Type = "File"
+					});
 				}
-
-				msg += "\n";
+			}
+			catch (Exception ex) {
 			}
 			return listData;
 		}
