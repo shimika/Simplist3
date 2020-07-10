@@ -380,8 +380,15 @@ namespace Simplist3 {
 					string href = node.GetAttributeValue("href", "");
 					foreach (string str in part) {
 						if (href.Contains(str)) {
+							string title = node.InnerText;
+							int extensionIndex = title.IndexOf(str);
+
+							if (extensionIndex >= 0) {
+								title = title.Substring(0, extensionIndex + str.Length);
+							}
+
 							listData.Add(new Listdata() {
-								Title = node.InnerText.Trim(),
+								Title = title,
 								Url = href,
 								Type = "File"
 							});
