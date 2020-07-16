@@ -350,8 +350,6 @@ namespace Simplist3 {
 					.Replace("\\'", "\"")
 					.Replace("\\\\", "\\");
 
-				MessageBox.Show(jsonString);
-
 				JsonTextParser parser = new JsonTextParser();
 				JsonArrayCollection files = (JsonArrayCollection)parser.Parse(jsonString);
 
